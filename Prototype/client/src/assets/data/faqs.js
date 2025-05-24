@@ -1,42 +1,42 @@
 export const faqs = [
-    {
-      question: "What is the purpose of this platform?",
-      answer:
-        "Our platform connects students and community volunteers with NGO-led water resilience events, helping corporations fulfill CSR mandates under Schedule VII with verifiable impact tracking.",
-    },
-    {
-      question: "Who can use this platform?",
-      answer:
-        "The platform is designed for students seeking volunteering experience, NGOs organizing water conservation events, and corporate CSR teams tracking ESG and BRSR compliance.",
-    },
-    {
-      question: "How do students benefit from participating?",
-      answer:
-        "Students earn points, badges, and leaderboard ranks. Verified participation unlocks access to internships, mentorship sessions with industry leaders, and official certificates.",
-    },
-    {
-      question: "How are volunteers matched with events?",
-      answer:
-        "Our matching engine uses a volunteer’s location, interests, and skills to recommend suitable events. Check-ins at events are done via QR code or geo-tag for authenticity.",
-    },
-    {
-      question: "How do corporates track CSR impact?",
-      answer:
-        "Corporates get real-time dashboards showing impact metrics such as volunteer hours, environmental outcomes (like trees planted), and downloadable media kits for reporting.",
-    },
-    {
-      question: "How do NGOs manage their events?",
-      answer:
-        "NGOs can list events, assign volunteer roles, reschedule or cancel them, and track volunteer turnout and impact data through their dedicated dashboards.",
-    },
-    {
-      question: "Is the data secure?",
-      answer:
-        "We follow best practices with OAuth 2.0 authentication, AES-256 data encryption, TLS 1.3 for secure communication, and GDPR-compliant privacy policies.",
-    },
-    {
-      question: "Will more features be added in the future?",
-      answer:
-        "Yes! Upcoming features include AI-driven volunteer engagement suggestions, blockchain-based impact tracking, and integration with university credit systems.",
-    },
-  ];
+  {
+    question: "What is the purpose of this platform?",
+    answer:
+      "This platform helps users understand how adversarial attacks affect AI image classifiers. It allows you to visualize how small, often invisible changes to images can trick powerful AI models into making incorrect predictions.",
+  },
+  {
+    question: "Who can use this platform?",
+    answer:
+      "The platform is ideal for students, researchers, educators, and AI developers who want to explore, demonstrate, or study the vulnerabilities of deep learning models to adversarial attacks.",
+  },
+  {
+    question: "What are adversarial attacks?",
+    answer:
+      "Adversarial attacks are slight, calculated modifications to input data (like images) that cause AI models to make incorrect predictions. These changes are often imperceptible to the human eye but can completely fool the model.",
+  },
+  {
+    question: "What features does the dashboard offer?",
+    answer:
+      "Users can upload images, select pre-trained models, apply different attack techniques (like FGSM or PGD), and see how predictions change. The platform also provides confidence scores, perturbation heatmaps, and comparison visualizations.",
+  },
+  {
+    question: "What models and datasets are supported?",
+    answer:
+      "Common pre-trained models such as ResNet, VGG, and MobileNet are supported, along with datasets like CIFAR-10 and MNIST. More models and datasets will be added in future updates.",
+  },
+  {
+    question: "Can I customize attack parameters?",
+    answer:
+      "Yes, users can adjust attack-specific parameters like epsilon (perturbation magnitude) to see how sensitivity affects prediction accuracy and robustness.",
+  },
+  {
+    question: "Is this tool suitable for teaching and research?",
+    answer:
+      "Absolutely. The platform is designed to be intuitive for classroom demonstrations and robust enough for use in research experiments on adversarial robustness.",
+  },
+  {
+    question: "Will more features be added in the future?",
+    answer:
+      "Yes! Future features may include adversarial defense strategies, experiment saving/sharing, model comparison dashboards, and support for non-image classifiers.",
+  },
+];

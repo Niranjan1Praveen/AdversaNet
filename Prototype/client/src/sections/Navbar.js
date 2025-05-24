@@ -5,11 +5,10 @@ import logo from "@/assets/images/logo.png";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
+import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
 const navLinks = [
   { label: "Home", href: "" },
   { label: "Features", href: "#features" },
-  { label: "Integrations", href: "#integrations" },
   { label: "FAQs", href: "#faqs" },
 ];
 
@@ -22,12 +21,14 @@ export default function Navbar() {
           <div className="border border-white/15 rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur">
             <div className="grid grid-cols-2 lg:grid-cols-3 p-2 items-center px-4 md:pr-2">
               <div className="flex items-center">
-                <Image
+                {/* <Image
                   src={logo}
                   alt="Logo Icon"
                   className="h-10 w-14"
-                />
-                <h2 className="font-bold text-2xl md:inline-flex hidden text-lime-400">DropConnect</h2>
+                /> */}
+                <h2 className="font-bold text-2xl md:inline-flex hidden">
+                  LOGO
+                </h2>
               </div>
               <div className="lg:flex justify-center items-center hidden">
                 <nav className="flex gap-6 font-medium">
@@ -88,12 +89,14 @@ export default function Navbar() {
                     Log in
                   </Button>
                 </LoginLink>
-                <Button
-                  variant={"signup"}
-                  className="cursor-pointer hidden md:inline-flex items-center"
-                >
-                  <a href="#signUpOptions">Sign Up</a>
-                </Button>
+                <RegisterLink>
+                  <Button
+                    variant={"signup"}
+                    className="cursor-pointer hidden md:inline-flex items-center"
+                  >
+                    Sign Up
+                  </Button>
+                </RegisterLink>
               </div>
             </div>
             <AnimatePresence>

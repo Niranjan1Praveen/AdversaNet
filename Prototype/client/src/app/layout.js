@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { ClientThemeProvider } from "@/components/providers/ClientThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,8 +19,8 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "DropConnect",
-  description: "Mobilizing youth and CSR for water resilience",
+  title: "Adversarial Insight",
+  description: "Interactive Dashboard for Visualizing Adversarial Attacks on Image Classifiers",
 };
 
 export default function RootLayout({ children }) {

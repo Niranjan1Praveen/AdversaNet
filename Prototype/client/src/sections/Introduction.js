@@ -4,21 +4,27 @@ import { useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-const text = `Despite growing CSR funding and a motivated youth population, real-world volunteer impact remains fragmented, impulsively untracked, and severely undervalued.`;
+// New Intro Text
+const text = `AI systems are increasingly being adopted in critical applications, yet many remain vulnerable to subtle, adversarial manipulations—often invisible to the human eye but highly disruptive to machine learning models.`;
+
 const words = text.split(" ");
+
 export default function Introduction() {
-  const scrollTarget = useRef();
+  const scrollTarget = useRef(null);
   const { scrollYProgress } = useScroll({
     target: scrollTarget,
     offset: ["start end", "end end"],
   });
+
   const [currentWord, setCurrentWord] = useState(0);
   const wordIndex = useTransform(scrollYProgress, [0, 1], [0, words.length]);
+
   useEffect(() => {
     wordIndex.on("change", (latest) => {
       setCurrentWord(latest);
     });
   }, [wordIndex]);
+
   return (
     <section className="py-28 px-4 lg:py-40 flex items-center justify-center">
       <div className="container">
@@ -27,19 +33,19 @@ export default function Introduction() {
             <Tags title={"Introduction"} />
           </div>
           <div className="text-4xl md:text-5xl text-center font-medium mt-10">
-            <span>Social impact should be measurable and meaningful.</span>{" "}
+            <span>Understanding vulnerabilities is the first step to building robust AI.</span>{" "}
             <span className="text-white/15 leading-tight">
               {words.map((word, index) => {
                 const isVisible = index < currentWord;
                 const shouldUnderline =
                   isVisible &&
-                  (word.toLowerCase().includes("funding") ||
-                    word.toLowerCase().includes("youth"));
-                const shouldHightlight =
-                  (isVisible &&
-                    (word.toLowerCase().includes("fragmented") ||
-                      word.toLowerCase().includes("untracked"))) ||
-                  word.toLowerCase().includes("undervalued");
+                  (word.toLowerCase().includes("ai") ||
+                    word.toLowerCase().includes("critical"));
+                const shouldHighlight =
+                  isVisible &&
+                  (word.toLowerCase().includes("vulnerable") ||
+                    word.toLowerCase().includes("manipulations") ||
+                    word.toLowerCase().includes("disruptive"));
 
                 return (
                   <span
@@ -47,12 +53,9 @@ export default function Introduction() {
                     className={twMerge(
                       "transition duration-500",
                       isVisible ? "text-white" : "text-white/15",
-                      isVisible &&
-                        shouldHightlight &&
-                        "text-red-500 italic transition",
-                      isVisible &&
-                        shouldUnderline &&
-                        "underline decoration-lime-400 underline-offset-8 transition"
+                      shouldHighlight && "text-red-500 italic transition",
+                      shouldUnderline &&
+                        "underline decoration-indigo-400 underline-offset-8 transition"
                     )}
                   >
                     {word + " "}
@@ -60,8 +63,8 @@ export default function Introduction() {
                 );
               })}
             </span>
-            <span className="text-lime-400 block mt-3">
-              That’s why we built DropConnect.
+            <span className="text-indigo-400 block mt-3">
+              That’s why we built <strong>Adversarial Insight</strong>.
             </span>
           </div>
         </div>

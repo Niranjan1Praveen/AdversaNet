@@ -1,20 +1,18 @@
 import {
   Home,
-  Inbox,
-  Calendar,
-  Search,
   Settings,
+  FlaskConical, 
+  BarChart3, 
+  BookOpenText, 
   User2,
   ChevronUp,
-  Plus,
-  Projector,
 } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -40,18 +38,23 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "/dashboard/inbox",
-    icon: Inbox,
+    title: "Attack Playground",
+    url: "/dashboard/playground",
+    icon: FlaskConical, 
   },
   {
-    title: "Events",
-    url: "/dashboard/yourevents",
-    icon: Calendar,
+    title: "Analytics",
+    url: "/dashboard/analytics",
+    icon: BarChart3, 
+  },
+  {
+    title: "Documentation",
+    url: "/dashboard/documentation",
+    icon: BookOpenText, 
   },
   {
     title: "Settings",
-    url: "/dashboard",
+    url: "/dashboard/settings",
     icon: Settings,
   },
 ];
@@ -101,34 +104,6 @@ const AppSidebar = async () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Events</SidebarGroupLabel>
-          <SidebarGroupAction asChild>
-            <Link href={"/dashboard/events/new"}>
-              <Plus /> <span className="sr-only">Add event</span>
-            </Link>
-          </SidebarGroupAction>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/dashboard/events">
-                    <Projector />
-                    See All Events
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/dashboard/events/new">
-                    <Plus />
-                    Add Event
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
@@ -136,7 +111,7 @@ const AppSidebar = async () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> John Doe <ChevronUp className="ml-auto" />
+                  <User2 /> {user.given_name} <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
