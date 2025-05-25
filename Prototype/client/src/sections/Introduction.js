@@ -64,7 +64,7 @@ export default function Introduction() {
               })}
             </span>
             <span className="text-indigo-400 block mt-3">
-              That’s why we built <strong>Adversarial Insight</strong>.
+              That’s why we built <strong>AdversaNet</strong>.
             </span>
           </div>
         </div>

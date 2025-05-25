@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adversarial Attack Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    select, input[type="file"], button {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    .images-container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 2rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .image-block {
+      flex: 1 1 45%;
+      max-width: 45%;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      margin-bottom: 0.5rem;
+      background: #f7f7f7;
+    }
+    p {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin: 0;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Adversarial Attack Demo</h1>
+
+  <label for="model-select">Select a Model:</label>
+  <select id="model-select">
+    <option value="mnist">MNIST</option>
+    <option value="imagenet">ImageNet</option>
+  </select><br />
+
+  <label for="image-input">Upload Image:</label>
+  <input type="file" id="image-input" accept="image/*" /><br />
+
+  <button id="submit-btn">Generate Adversarial</button>
+
+  <div class="images-container">
+    <div class="image-block">
+      <h2>Original Image</h2>
+      <img id="original-image" src="" alt="Original" />
+      <p id="original-prediction">No prediction yet</p>
+    </div>
+    <div class="image-block">
+      <h2>Adversarial Image</h2>
+      <img id="adv-image" src="" alt="Adversarial" />
+      <p id="adv-prediction">No prediction yet</p>
+    </div>
+  </div>
+
+  <script>
+    const submitBtn = document.getElementById('submit-btn');
+    const modelSelect = document.getElementById('model-select');
+    const imageInput = document.getElementById('image-input');
+    const originalImage = document.getElementById('original-image');
+    const advImage = document.getElementById('adv-image');
+    const originalPrediction = document.getElementById('original-prediction');
+    const advPrediction = document.getElementById('adv-prediction');
+    submitBtn.addEventListener('click', async () => {
+      if (!imageInput.files.length) {
+        alert('Please upload an image first!');
+        return;
+      }
+
+      const model = modelSelect.value;
+      const file = imageInput.files[0];
+
+      // Show original image preview immediately
+      originalImage.src = URL.createObjectURL(file);
+      originalPrediction.textContent = 'Predicting...';
+      advImage.src = '';
+      advPrediction.textContent = '';
+
+      const formData = new FormData();
+      formData.append('model', model);
+      formData.append('image', file);
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        
+        // Show predictions and adversarial image
+        originalPrediction.textContent = 'Original Prediction: ' + data.original_prediction.class_name;
+        advPrediction.textContent = 'Adversarial Prediction: ' + data.adversarial_prediction.class_name;
+        advImage.src = 'data:image/png;base64,' + data.adversarial_image;
+
+      } catch (error) {
+        originalPrediction.textContent = 'Error in prediction';
+        advPrediction.textContent = '';
+        advImage.src = '';
+        alert('Error: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

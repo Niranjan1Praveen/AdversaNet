@@ -1,7 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import logo from "@/assets/images/logo.png";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
@@ -27,7 +25,7 @@ export default function Navbar() {
                   className="h-10 w-14"
                 /> */}
                 <h2 className="font-bold text-2xl md:inline-flex hidden">
-                  LOGO
+                  AdversaNet
                 </h2>
               </div>
               <div className="lg:flex justify-center items-center hidden">

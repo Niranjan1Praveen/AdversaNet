@@ -19,7 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Adversarial Insight",
+  title: "AdversaNet",
   description: "Interactive Dashboard for Visualizing Adversarial Attacks on Image Classifiers",
 };
 
