@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS 
 import numpy as np
 import tensorflow as tf
 from PIL import Image
@@ -11,7 +12,7 @@ from tensorflow.keras.applications.mobilenet_v2 import (
 )
 
 app = Flask(__name__, template_folder="templates")
-
+CORS(app) 
 # Load your MNIST model
 mnist_model = tf.keras.models.load_model("models/mnist_model.h5")
 
