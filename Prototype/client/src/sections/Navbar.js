@@ -4,6 +4,7 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
+
 const navLinks = [
   { label: "Home", href: "" },
   { label: "Features", href: "#features" },
@@ -15,8 +16,8 @@ export default function Navbar() {
   return (
     <>
       <section className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100">
-        <div className="container max-w-5xl">
-          <div className="border border-white/15 rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur">
+        <div className="container">
+          <div className="backdrop-blur">
             <div className="grid grid-cols-2 lg:grid-cols-3 p-2 items-center px-4 md:pr-2">
               <div className="flex items-center">
                 {/* <Image

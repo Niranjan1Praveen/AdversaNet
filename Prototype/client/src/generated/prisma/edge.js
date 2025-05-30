@@ -126,7 +126,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\nithi\\Desktop\\NTCC-2025\\Prototype\\client\\src\\generated\\prisma",
+      "value": "/Users/serb9/Desktop/NTCC-TermPaper/NTCC-2025/Prototype/client/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -135,17 +135,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\nithi\\Desktop\\NTCC-2025\\Prototype\\client\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/serb9/Desktop/NTCC-TermPaper/NTCC-2025/Prototype/client/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.8.1",
@@ -154,7 +153,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
