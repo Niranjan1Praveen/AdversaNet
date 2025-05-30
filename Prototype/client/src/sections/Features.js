@@ -22,7 +22,7 @@ export default function Features() {
           <Tags title={"Platform Features"} />
         </div>
         <h2 className="text-3xl font-medium text-center mt-6 max-w-3xl mx-auto">
-          Explore <span className="text-indigo-400">Adversarial Vulnerabilities</span> in AI
+          Explore <span className="text-primary-400">Adversarial Vulnerabilities</span> in AI
         </h2>
 
         {/* Feature Cards */}
@@ -36,7 +36,7 @@ export default function Features() {
             className="md:col-span-2 lg:col-span-1"
           >
             <div className="aspect-video flex items-center justify-center">
-              <Image src={dashboard} className="rounded-xl" height={650} width={650} />
+              <Image src={dashboard} className="rounded-xl" height={650} width={650} alt="dashboard design"/>
             </div>
           </FeatureCard>
 
@@ -51,7 +51,7 @@ export default function Features() {
             <div className="aspect-video flex items-center justify-center">
               <p className="text-3xl font-bold text-white/20 text-center leading-relaxed">
                 What <br />
-                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
+                <span className="bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA] bg-clip-text">
                   changed
                 </span>{" "}
                 in the prediction?
@@ -80,9 +80,9 @@ export default function Features() {
           {features.map((feature) => (
             <div
               key={feature}
-              className="bg-neutral-900 border-white/10 inline-flex gap-3 items-center px-3 md:px-5 py-1.5 md:py-2 rounded-2xl hover:scale-105 transition duration-500 group"
+              className="bg-primary-1300 border-primary/10 inline-flex gap-3 items-center px-3 md:px-5 py-1.5 md:py-2 rounded-2xl hover:scale-105 transition duration-500 group"
             >
-              <span className="bg-indigo-400 text-neutral-950 size-5 rounded-full inline-flex items-center justify-center text-xl group-hover:rotate-45 transition duration-500">
+              <span className="bg-primary-400 text-neutral-950 size-5 rounded-full inline-flex items-center justify-center text-xl group-hover:rotate-45 transition duration-500">
                 &#10038;
               </span>
               <span className="font-medium md:text-lg">{feature}</span>

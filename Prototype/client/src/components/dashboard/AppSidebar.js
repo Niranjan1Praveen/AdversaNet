@@ -52,11 +52,6 @@ const items = [
     url: "/dashboard/documentation",
     icon: BookOpenText, 
   },
-  {
-    title: "Settings",
-    url: "/dashboard/settings",
-    icon: Settings,
-  },
 ];
 
 const AppSidebar = async () => {

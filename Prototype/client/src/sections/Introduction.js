@@ -26,7 +26,7 @@ export default function Introduction() {
   }, [wordIndex]);
 
   return (
-    <section className="py-28 px-4 lg:py-40 flex items-center justify-center">
+    <section className="py-28 px-4 lg:py-45 flex items-center justify-center">
       <div className="container">
         <div className="sticky top-20 md:top-28 lg:top-40">
           <div className="flex justify-center">
@@ -55,7 +55,7 @@ export default function Introduction() {
                       isVisible ? "text-white" : "text-white/15",
                       shouldHighlight && "text-red-500 italic transition",
                       shouldUnderline &&
-                        "underline decoration-indigo-400 underline-offset-8 transition"
+                        "underline decoration-primary-400 underline-offset-8 transition"
                     )}
                   >
                     {word + " "}
@@ -63,7 +63,7 @@ export default function Introduction() {
                 );
               })}
             </span>
-            <span className="text-indigo-400 block mt-3">
+            <span className="text-primary-400 block mt-3">
               That’s why we built <strong>AdversaNet</strong>.
             </span>
           </div>

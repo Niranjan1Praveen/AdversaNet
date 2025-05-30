@@ -4,7 +4,8 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
-
+import logo from "@/assets/images/logo.png";
+import Image from "next/image";
 const navLinks = [
   { label: "Home", href: "" },
   { label: "Features", href: "#features" },
@@ -15,16 +16,16 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <section className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100">
+      <header className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100 backdrop-blur">
         <div className="container">
-          <div className="backdrop-blur">
+          <div>
             <div className="grid grid-cols-2 lg:grid-cols-3 p-2 items-center px-4 md:pr-2">
               <div className="flex items-center">
-                {/* <Image
+                <Image
                   src={logo}
                   alt="Logo Icon"
                   className="h-10 w-14"
-                /> */}
+                />
                 <h2 className="font-bold text-2xl md:inline-flex hidden">
                   AdversaNet
                 </h2>
@@ -121,8 +122,7 @@ export default function Navbar() {
                       </Button>
                     </LoginLink>
                     <Button
-                      variant={"signup"}
-                      className="cursor-pointer md:inline-flex items-center"
+                      className="bg-primary-500 cursor-pointer md:inline-flex items-center"
                     >
                       <a href="#signUpOptions">Sign Up</a>
                     </Button>
@@ -132,7 +132,7 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
         </div>
-      </section>
+      </header>
       <div className="pb-[86px] md:pb-[98px] lg:pb-[130px]"></div>
     </>
   );

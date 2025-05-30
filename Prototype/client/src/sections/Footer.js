@@ -14,8 +14,8 @@ export default function Footer() {
       <footer className="container flex flex-col md:flex-row md:justify-between items-center gap-6">
         <div className="flex flex-col gap-2 items-center text-center md:items-start">
           <div className="flex items-center">
-            {/* <Image src={logo} alt="Logo Icon" className="h-auto w-20" /> */}
-            <h2 className="font-bold text-2xl md:inline-flex hidden text-indigo-400">
+            <Image src={logo} alt="Logo Icon" className="h-auto w-20" />
+            <h2 className="font-bold text-2xl md:inline-flex hidden text-primary-400">
               AdversaNet
             </h2>
           </div>

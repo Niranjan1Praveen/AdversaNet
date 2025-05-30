@@ -20,7 +20,7 @@ export default function Faqs() {
         
         <h2 className="text-4xl font-bold">
           Questions? We&rsquo;ve got{" "}
-          <span className="text-indigo-400">answers</span>
+          <span className="text-primary-400">answers</span>
         </h2>
       </div>
       <div className="mt-10 max-w-2xl mx-auto">
@@ -29,7 +29,7 @@ export default function Faqs() {
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="rounded-xl bg-[#1a1a1a] px-6"
+              className="rounded-xl bg-primary-1300 px-6"
             >
               <AccordionTrigger className="text-white py-6">
                 {faq.question}
