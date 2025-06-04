@@ -1,142 +1,205 @@
+# Adversarial Attack Flask App with FGSM, PGD, BIM, and C&W
+
 from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS 
+from flask_cors import CORS
 import numpy as np
 import tensorflow as tf
 from PIL import Image
 import io
 import base64
+import uuid
+import os
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+
+HEATMAP_FOLDER = 'static/heatmaps'
+os.makedirs(HEATMAP_FOLDER, exist_ok=True)
+
 from tensorflow.keras.applications.mobilenet_v2 import (
     MobileNetV2,
-    preprocess_input,
-    decode_predictions
+    preprocess_input as mobilenet_preprocess,
+    decode_predictions as mobilenet_decode
+)
+from tensorflow.keras.applications.resnet50 import (
+    ResNet50,
+    preprocess_input as resnet_preprocess,
+    decode_predictions as resnet_decode
+)
+from tensorflow.keras.applications.vgg16 import (
+    VGG16,
+    preprocess_input as vgg_preprocess,
+    decode_predictions as vgg_decode
 )
 
 app = Flask(__name__, template_folder="templates")
-CORS(app) 
-# Load your MNIST model
+CORS(app)
+
+# Load models
 mnist_model = tf.keras.models.load_model("models/mnist_model.h5")
-
-# Load pretrained MobileNetV2 model for ImageNet
 imagenet_model = MobileNetV2(weights="imagenet")
+resnet_model = ResNet50(weights="imagenet")
+vgg_model = VGG16(weights="imagenet")
 
-def fgsm_attack_mnist(image_np, model, epsilon=0.1):
-    image = tf.convert_to_tensor(image_np, dtype=tf.float32)
+# Model configuration
+MODEL_CONFIG = {
+    'mnist': {
+        'preprocess': lambda x: x / 255.0,
+        'decode': lambda x: [(str(i), str(prob)) for i, prob in enumerate(x[0])],
+        'input_size': (28, 28),
+        'model': mnist_model
+    },
+    'imagenet': {
+        'preprocess': mobilenet_preprocess,
+        'decode': mobilenet_decode,
+        'input_size': (224, 224),
+        'model': imagenet_model
+    },
+    'resnet50': {
+        'preprocess': resnet_preprocess,
+        'decode': resnet_decode,
+        'input_size': (224, 224),
+        'model': resnet_model
+    },
+    'vgg16': {
+        'preprocess': vgg_preprocess,
+        'decode': vgg_decode,
+        'input_size': (224, 224),
+        'model': vgg_model
+    }
+}
+def generate_heatmap(original, adversarial):
+    diff = np.abs(adversarial - original)
+    diff = np.squeeze(diff)
+
+    if diff.shape[-1] == 1:  # Grayscale
+        diff = diff[:, :, 0]
+
+    # Normalize diff to [0, 1]
+    diff -= diff.min()
+    if diff.max() != 0:
+        diff /= diff.max()
+
+    plt.figure(figsize=(3, 3))
+    plt.imshow(diff, cmap='hot')
+    plt.axis('off')
+
+    filename = f"{uuid.uuid4().hex}.png"
+    filepath = os.path.join(HEATMAP_FOLDER, filename)
+
+    plt.savefig(filepath, format='png', bbox_inches='tight', pad_inches=0)
+    plt.close()
+
+    return f"/{filepath}"
+
+
+def fgsm_attack(image, model, epsilon, is_imagenet=False):
     image = tf.Variable(image)
-    
-    # Get the original prediction to determine the true label
     with tf.GradientTape() as tape:
         tape.watch(image)
         prediction = model(image)
         label = tf.argmax(prediction[0])
-        loss = tf.keras.losses.sparse_categorical_crossentropy(
-            tf.expand_dims(label, 0), 
-            prediction,
-            from_logits=False
-        )
+        label_tensor = tf.convert_to_tensor([int(label)], dtype=tf.int32)
+        loss = tf.keras.losses.sparse_categorical_crossentropy(label_tensor, prediction)
 
     gradient = tape.gradient(loss, image)
     signed_grad = tf.sign(gradient)
-
     adv_image = image + epsilon * signed_grad
-    adv_image = tf.clip_by_value(adv_image, 0.0, 1.0)
+    return tf.clip_by_value(adv_image, -1 if is_imagenet else 0, 1).numpy()
+
+def pgd_attack(image, model, epsilon, alpha, num_iter, is_imagenet=False):
+    adv_image = tf.Variable(image)
+    orig_image = image.copy()
+    for _ in range(num_iter):
+        with tf.GradientTape() as tape:
+            tape.watch(adv_image)
+            prediction = model(adv_image)
+            label = tf.argmax(prediction[0])
+            loss = tf.keras.losses.sparse_categorical_crossentropy(tf.expand_dims(label, 0), prediction)
+
+        gradient = tape.gradient(loss, adv_image)
+        adv_image.assign_add(alpha * tf.sign(gradient))
+        adv_image.assign(tf.clip_by_value(adv_image, orig_image - epsilon, orig_image + epsilon))
+        adv_image.assign(tf.clip_by_value(adv_image, -1 if is_imagenet else 0, 1))
+    return adv_image.numpy()
+
+def bim_attack(image, model, epsilon, alpha, num_iter, is_imagenet=False):
+    adv_image = tf.Variable(image)
+    for _ in range(num_iter):
+        with tf.GradientTape() as tape:
+            tape.watch(adv_image)
+            prediction = model(adv_image)
+            label = tf.argmax(prediction[0])
+            loss = tf.keras.losses.sparse_categorical_crossentropy(tf.expand_dims(label, 0), prediction)
+        gradient = tape.gradient(loss, adv_image)
+        adv_image.assign_add(alpha * tf.sign(gradient))
+        adv_image.assign(tf.clip_by_value(adv_image, image - epsilon, image + epsilon))
+        adv_image.assign(tf.clip_by_value(adv_image, -1 if is_imagenet else 0, 1))
     return adv_image.numpy()
 
 def array_to_base64(img_array, model_type):
-    """Convert numpy array to base64 encoded image"""
     if model_type == "mnist":
         img = Image.fromarray((img_array[0,:,:,0] * 255).astype(np.uint8))
     else:
-        # Denormalize ImageNet image
-        img_array = img_array[0] + 1.0  # Scale back to 0-2
-        img_array = img_array * 127.5    # Scale to 0-255
-        img = Image.fromarray(img_array.astype(np.uint8))
-    
+        img_array = ((img_array[0] + 1.0) * 127.5).astype(np.uint8) if 'vgg' not in model_type else (img_array[0] + [103.939, 116.779, 123.68]).astype(np.uint8)
+        img = Image.fromarray(img_array)
     buffered = io.BytesIO()
     img.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode('utf-8')
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    if 'model' not in request.form or 'image' not in request.files:
-        return jsonify({"error": "Missing model type or image"}), 400
-        
     model_type = request.form['model']
+    attack_type = request.form['attack']
     file = request.files['image']
-    
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
-        
-    try:
-        img = Image.open(file)
-    except:
-        return jsonify({"error": "Invalid image file"}), 400
 
-    if model_type == 'mnist':
-        # Preprocess image for MNIST model
-        img = img.convert("L").resize((28, 28))
-        img_array = np.array(img).astype("float32") / 255.0
-        img_array = img_array.reshape(1, 28, 28, 1)
+    config = MODEL_CONFIG.get(model_type)
+    if not config:
+        return jsonify({"error": "Invalid model type"}), 400
 
-        # Original prediction
-        original_pred = mnist_model.predict(img_array)
-        original_class = int(np.argmax(original_pred[0]))
+    img = Image.open(file).convert("RGB" if model_type != "mnist" else "L")
+    img = img.resize(config['input_size'])
+    img_array = np.array(img).astype("float32")
 
-        # Generate adversarial image and prediction
-        try:
-            adv_img = fgsm_attack_mnist(img_array, mnist_model)
-            adv_pred = mnist_model.predict(adv_img)
-            adv_class = int(np.argmax(adv_pred[0]))
-            
-            # Convert adversarial image to base64
-            adv_img_base64 = array_to_base64(adv_img, "mnist")
-        except Exception as e:
-            return jsonify({"error": f"Adversarial attack failed: {str(e)}"}), 500
+    preprocessed = config['preprocess'](img_array)
+    input_tensor = tf.convert_to_tensor(preprocessed.reshape((1, *config['input_size'], 3 if model_type != "mnist" else 1)))
 
-        return jsonify({
-            "original_prediction": original_class,
-            "adversarial_prediction": adv_class,
-            "model_type": "mnist",
-            "adversarial_image": adv_img_base64
-        })
+    original_pred = config['model'].predict(input_tensor)
+    original_decoded = config['decode'](original_pred)[0][0]
 
-    elif model_type == 'imagenet':
-        # Preprocess image for ImageNet model
-        img = img.convert("RGB").resize((224, 224))
-        img_array = np.array(img).astype("float32")
-        preprocessed = preprocess_input(img_array)
-        input_tensor = tf.convert_to_tensor(preprocessed.reshape((1, 224, 224, 3)))
+    is_imagenet = model_type != "mnist"
+    epsilon = 0.01 if is_imagenet else 0.1
+    alpha = 0.005
+    num_iter = 10
 
-        # Original prediction
-        original_pred = imagenet_model.predict(input_tensor)
-        original_decoded = decode_predictions(original_pred)[0][0]
+    attack_type = attack_type.lower()
+    if attack_type == 'fgsm':
+        adv_img = fgsm_attack(input_tensor.numpy(), config['model'], epsilon, is_imagenet)
+    elif attack_type == 'pgd':
+        adv_img = pgd_attack(input_tensor.numpy(), config['model'], epsilon, alpha, num_iter, is_imagenet)
+    elif attack_type == 'bim':
+        adv_img = bim_attack(input_tensor.numpy(), config['model'], epsilon, alpha, num_iter, is_imagenet)
+    else:
+        return jsonify({"error": "Unsupported attack type"}), 400
 
-        # Generate adversarial image
-        input_var = tf.Variable(input_tensor)
-        with tf.GradientTape() as tape:
-            tape.watch(input_var)
-            prediction = imagenet_model(input_var)
-            pred_class = tf.argmax(prediction[0])
-            # Convert to one-hot encoding for categorical crossentropy
-            target = tf.one_hot([pred_class], 1000)
-            loss = tf.keras.losses.categorical_crossentropy(target, prediction)
+    adv_prediction = config['model'].predict(adv_img)
+    adv_decoded = config['decode'](adv_prediction)[0][0]
 
-        gradient = tape.gradient(loss, input_var)
-        signed_grad = tf.sign(gradient)
-        epsilon = 0.01
-        adv_img = tf.clip_by_value(input_var + epsilon * signed_grad, -1, 1)
+    adv_img_base64 = array_to_base64(adv_img, model_type)
+    heatmap_path = generate_heatmap(input_tensor.numpy(), adv_img)
 
-        # Adversarial prediction
-        adv_prediction = imagenet_model(adv_img)
-        adv_decoded = decode_predictions(adv_prediction.numpy())[0][0]
 
-        # Convert adversarial image to base64
-        adv_img_base64 = array_to_base64(adv_img.numpy(), "imagenet")
-
-        return jsonify({
+    if model_type == "mnist":
+        response = {
+            "original_prediction": int(original_decoded[0]),
+            "adversarial_prediction": int(adv_decoded[0]),
+            "model_type": model_type,
+            "attack_type": attack_type,
+            "adversarial_image": adv_img_base64,
+            "heatmap_image": heatmap_path
+        }
+    else:
+        response = {
             "original_prediction": {
                 "class_name": original_decoded[1],
                 "probability": float(original_decoded[2])
@@ -145,12 +208,15 @@ def predict():
                 "class_name": adv_decoded[1],
                 "probability": float(adv_decoded[2])
             },
-            "model_type": "imagenet",
-            "adversarial_image": adv_img_base64
-        })
+            "original_confidence": float(original_decoded[2]),
+            "adversarial_confidence": float(adv_decoded[2]),
+            "model_type": model_type,
+            "attack_type": attack_type,
+            "adversarial_image": adv_img_base64,
+            "heatmap_image": heatmap_path
+        }
 
-    else:
-        return jsonify({"error": "Invalid model type"}), 400
+    return jsonify(response)
 
 if __name__ == '__main__':
     app.run(debug=True)

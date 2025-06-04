@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import heroDesign from "@/assets/images/heroDesign.png";
 import Image from "next/image";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
+import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
@@ -47,13 +48,24 @@ export default function Hero() {
         </div>
 
         <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-          <Image
-            src={heroDesign}
-            alt="Hero Design"
-            width={500}
-            height={500}
-            priority
-          />
+          <motion.div
+            animate={{
+              y: [0, -10, 0], // Moves from 0 to -10px and back to 0
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity, // Makes the animation loop forever
+              ease: "easeInOut",
+            }}
+          >
+            <Image
+              src={heroDesign}
+              alt="Hero Design"
+              width={500}
+              height={500}
+              priority
+            />
+          </motion.div>
         </div>
       </div>
     </section>

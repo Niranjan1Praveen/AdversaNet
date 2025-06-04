@@ -51,29 +51,6 @@ const Homepage = () => {
           </Button>
         </Link>
       </section>
-      {/* Latest Experiments */}
-      <div className="flex flex-col items-center justify-center border border-dashed p-8 text-center animate-in fade-in-50 rounded-md">
-        <div className="bg-primary/15 flex items-center justify-center rounded-full size-20 border-4 border-indigo-600">
-          <FlaskConicalIcon className="size-10 text-indigo-600" />
-        </div>
-        <h2 className="mt-6 font-semibold text-2xl">No experiments found!</h2>
-        <p className="mb-8 mt-2 text-center text-xl text-muted-foreground max-w-lg">
-          You haven’t run any experiments yet. Start by choosing a model and
-          attack to simulate adversarial behavior and analyze the results
-          visually.
-        </p>
-        <Button
-          variant={"secondary"}
-          size={"lg"}
-          className={"bg-indigo-600 text-white"}
-          asChild
-        >
-          <Link href={"/dashboard/playground"}>
-            <PlusIcon className="mr-2" />
-            Start Experiment
-          </Link>
-        </Button>
-      </div>
       {/* Highlights or Quick Start */}
       <section className="space-y-4">
         <h2 className="text-xl font-medium">Highlights</h2>
@@ -121,6 +98,29 @@ const Homepage = () => {
           </Card>
         </div>
       </section>
+      {/* Latest Experiments */}
+      {/* <div className="flex flex-col items-center justify-center border border-dashed p-8 text-center animate-in fade-in-50 rounded-md">
+        <div className="bg-primary/15 flex items-center justify-center rounded-full size-20 border-4 border-indigo-600">
+          <FlaskConicalIcon className="size-10 text-indigo-600" />
+        </div>
+        <h2 className="mt-6 font-semibold text-2xl">No experiments found!</h2>
+        <p className="mb-8 mt-2 text-center text-xl text-muted-foreground max-w-lg">
+          You haven’t run any experiments yet. Start by choosing a model and
+          attack to simulate adversarial behavior and analyze the results
+          visually.
+        </p>
+        <Button
+          variant={"secondary"}
+          size={"lg"}
+          className={"bg-indigo-600 text-white"}
+          asChild
+        >
+          <Link href={"/dashboard/playground"}>
+            <PlusIcon className="mr-2" />
+            Start Experiment
+          </Link>
+        </Button>
+      </div> */}
     </div>
   );
 };
