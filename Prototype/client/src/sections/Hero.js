@@ -1,8 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import heroDesign from "@/assets/images/logo.png";
+import heroDesign from "@/assets/images/heroDesign.png";
 import Image from "next/image";
+import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
 
 export default function Hero() {
   return (
@@ -10,7 +11,7 @@ export default function Hero() {
       <div className="container mx-auto flex flex-col-reverse md:flex-row items-center gap-12">
         <div className="w-full md:w-3/4">
           <div className="flex">
-            <div className="inline-flex py-1 px-3 bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA] rounded-full text-neutral-900 font-semibold">
+            <div className="inline-flex py-1 px-3 text-center bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA] rounded-full text-neutral-900 font-semibold">
               Trusted by AI Researchers, Students, and Educators
             </div>
           </div>
@@ -26,29 +27,31 @@ export default function Hero() {
             it easier to learn, teach, and build more secure systems.
           </p>
 
-          <form className="flex border border-white/15 rounded-full p-2 mt-8 md:max-w-lg">
+          <div className="flex border border-white/15 rounded-full p-2 mt-8 md:max-w-lg">
             <Input
               type="email"
               placeholder="Enter your email"
               className="border-none px-4 !bg-transparent md:flex-1 w-full"
             />
-            <Button
-              type="submit"
-              variant="signup"
-              size="sm"
-              className="whitespace-nowrap"
-            >
-              Sign Up
-            </Button>
-          </form>
+            <RegisterLink>
+              <Button
+                type="submit"
+                variant="signup"
+                size="sm"
+                className="whitespace-nowrap"
+              >
+                Sign Up
+              </Button>
+            </RegisterLink>
+          </div>
         </div>
 
         <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-          <img
-            src="https://reliable-kitsune-f970c5.netlify.app/assets/HeroGraphic-Bs5xx1ZR.webp"
-            alt="Hero"
-            width={400}
-            height={400}
+          <Image
+            src={heroDesign}
+            alt="Hero Design"
+            width={500}
+            height={500}
             priority
           />
         </div>

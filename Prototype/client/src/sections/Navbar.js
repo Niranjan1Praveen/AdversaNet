@@ -39,7 +39,7 @@ export default function Navbar() {
                   ))}
                 </nav>
               </div>
-              <div className="flex justify-end gap-4">
+              <div className="flex justify-end">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -84,7 +84,7 @@ export default function Navbar() {
                 <LoginLink>
                   <Button
                     variant={"login"}
-                    className="cursor-pointer hidden md:inline-flex items-center"
+                    className="cursor-pointer hidden md:inline-flex items-center mr-2"
                   >
                     Log in
                   </Button>
