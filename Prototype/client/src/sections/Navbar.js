@@ -16,7 +16,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <header className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100 backdrop-blur">
+      <header className="px-4 flex items-center justify-center fixed w-full top-0 z-100 backdrop-blur">
         <div className="container">
           <div>
             <div className="grid grid-cols-2 lg:grid-cols-3 p-2 items-center px-4 md:pr-2">
@@ -24,7 +24,7 @@ export default function Navbar() {
                 <Image
                   src={logo}
                   alt="Logo Icon"
-                  className="h-10 w-14"
+                  className="h-18 w-18"
                 />
                 <h2 className="font-bold text-2xl md:inline-flex hidden">
                   AdversaNet

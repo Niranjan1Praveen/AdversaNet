@@ -2,6 +2,7 @@
 import AppConfidenceChart from "@/components/dashboard/AppConfidenceChart";
 import MagnifierImage from "@/components/dashboard/AppImageMagnifier";
 import AppInfoSlider from "@/components/dashboard/AppInfoSlider";
+import { EyeIcon } from "lucide-react";
 import { useState, useRef } from "react";
 
 export default function AdversarialAttackDemo() {
@@ -46,6 +47,7 @@ export default function AdversarialAttackDemo() {
     setAdversarialImage(null);
     setOriginalPrediction("No prediction yet");
     setAdversarialPrediction("No prediction yet");
+    setHeatmapImage(null);
     setError(null);
   };
 
@@ -79,7 +81,7 @@ export default function AdversarialAttackDemo() {
       if (data.error) throw new Error(data.error);
 
       setAdversarialImage(`data:image/png;base64,${data.adversarial_image}`);
-      setHeatmapImage(data.heatmapImage);
+      setHeatmapImage(`http://localhost:5000${data.heatmap_image}`);
       if (model === "mnist") {
         setOriginalPrediction(`Original: ${data.original_prediction}`);
         setAdversarialPrediction(`Adversarial: ${data.adversarial_prediction}`);
@@ -336,20 +338,49 @@ export default function AdversarialAttackDemo() {
             originalConfidence={originalScore}
             adversarialConfidence={adversialScore}
           />
-          {heatmapImage && (
-            <img
-              src={`data:image/png;base64,${heatmapImage}`}
-              alt="Adversarial perturbation heatmap"
-              style={{ maxWidth: "300px" }}
-            />
-          )}
-
-          <div className="mt-12">
-            <h3 className="text-lg text-center font-bold mb-4">
-              Learn About Models and Attacks
+          {/* Heatmap Section */}
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-center mb-4">
+              Adversarial Perturbation Heatmap
             </h3>
-            <AppInfoSlider />
+            {heatmapImage ? (
+              <div className="flex flex-col items-center space-y-3">
+                <div className="relative w-full max-w-sm rounded-lg overflow-hidden">
+                  <img
+                    src={heatmapImage}
+                    alt="Adversarial perturbation heatmap"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 text-center flex gap-1 justify-center items-center">
+                  Red areas show where the model was most sensitive to changes
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 rounded-lg border-2 border-dashed">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                  />
+                </svg>
+                <p className="text-center">
+                  Heatmap will appear here <br /> after generating adversarial
+                  example
+                </p>
+              </div>
+            )}
           </div>
+
+          
         </div>
       </section>
     </main>

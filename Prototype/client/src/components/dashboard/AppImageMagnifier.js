@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 
-const MagnifierImage = ({ src, alt, grayscale }) => {
+const MagnifierImage = ({ src, alt }) => {
   const containerRef = useRef(null);
   const [backgroundPos, setBackgroundPos] = useState("center");
 
@@ -20,7 +20,7 @@ const MagnifierImage = ({ src, alt, grayscale }) => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative w-full h-[300px] md:h-[400px] rounded-md border overflow-hidden bg-no-repeat bg-cover ${grayscale ? "grayscale" : ""}`}
+      className={`relative w-full h-[300px] md:h-[400px] rounded-md border overflow-hidden bg-no-repeat bg-cover`}
       style={{
         backgroundImage: `url(${src})`,
         backgroundPosition: backgroundPos,
