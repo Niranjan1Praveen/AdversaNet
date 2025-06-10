@@ -6,7 +6,7 @@ import { content } from "@/assets/data/infoSlider";
 const ButtonStyle = "px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition";
 
 export default function AppInfoSlider() {
-  const [type, setType] = useState("models"); // "models" or "attacks"
+  const [type, setType] = useState("models");
   const [selectedKey, setSelectedKey] = useState("mnist");
 
   const keys = Object.keys(content[type]);
@@ -15,12 +15,14 @@ export default function AppInfoSlider() {
     <div>
       <div className="mb-4 flex gap-4">
         <Button
+          variant={"outline"}
           className={`${ButtonStyle} ${type === "models" ? "opacity-100" : "opacity-60"}`}
           onClick={() => setType("models")}
         >
           Models
         </Button>
         <Button
+          variant={"outline"}
           className={`${ButtonStyle} ${type === "attacks" ? "opacity-100" : "opacity-60"}`}
           onClick={() => setType("attacks")}
         >
@@ -43,7 +45,7 @@ export default function AppInfoSlider() {
           </Button>
         ))}
       </div>
-      <div className="relative">
+      <div className="relative overflow-hidden min-h-[50vh]">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedKey}
@@ -53,7 +55,7 @@ export default function AppInfoSlider() {
             transition={{ duration: 0.4 }}
             className="absolute top-0 left-0 right-0"
           >
-            <p className="text-lg font-medium ">
+            <p className="text-lg font-medium">
               {content[type][selectedKey]}
             </p>
           </motion.div>

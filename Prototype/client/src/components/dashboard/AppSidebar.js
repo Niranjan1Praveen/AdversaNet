@@ -1,11 +1,10 @@
 import {
   Home,
-  Settings,
   FlaskConical, 
   BarChart3, 
-  BookOpenText, 
   User2,
   ChevronUp,
+  Grid,
 } from "lucide-react";
 
 import {
@@ -43,14 +42,14 @@ const items = [
     icon: FlaskConical, 
   },
   {
+    title: "Gallery",
+    url: "/dashboard/gallery",
+    icon: Grid, 
+  },
+  {
     title: "Analytics",
     url: "/dashboard/analytics",
     icon: BarChart3, 
-  },
-  {
-    title: "Documentation",
-    url: "/dashboard/documentation",
-    icon: BookOpenText, 
   },
 ];
 

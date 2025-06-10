@@ -5,7 +5,7 @@ function FeatureCard({ title, description, children, className }) {
   return (
     <div
       className={twMerge(
-        "bg-primary-1300 border border-primary/10 p-6 rounded-3xl",
+        "border border-primary/10 p-6 rounded-3xl",
         className
       )}
     >

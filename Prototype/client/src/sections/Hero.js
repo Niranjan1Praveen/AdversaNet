@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import heroDesign from "@/assets/images/heroDesign.png";
 import Image from "next/image";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
@@ -28,39 +28,25 @@ export default function Hero() {
             it easier to learn, teach, and build more secure systems.
           </p>
 
-          <div className="flex border border-white/15 rounded-full p-2 mt-8 md:max-w-lg">
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              className="border-none px-4 !bg-transparent md:flex-1 w-full"
-            />
-            <RegisterLink>
-              <Button
-                type="submit"
-                variant="signup"
-                size="sm"
-                className="whitespace-nowrap"
-              >
-                Sign Up
-              </Button>
-            </RegisterLink>
-          </div>
+          <RegisterLink>
+            <Button
+              type="submit"
+              variant="signup"
+              size="sm"
+              className="whitespace-nowrap mt-4 rounded-md bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA]"
+            >
+              Get Started
+            </Button>
+          </RegisterLink>
         </div>
+        <div className="w-full md:w-1/2 justify-center hidden md:flex md:justify-end">
+          <motion.div className="relative">
+            <div className="absolute -inset-2 z-0 rounded-full blur-xl opacity-80 bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA]"></div>
 
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-          <motion.div
-            animate={{
-              y: [0, -10, 0], // Moves from 0 to -10px and back to 0
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity, // Makes the animation loop forever
-              ease: "easeInOut",
-            }}
-          >
             <Image
-              src={heroDesign}
+              // src={heroDesign}
               alt="Hero Design"
+              className="relative z-10 rounded-full"
               width={500}
               height={500}
               priority

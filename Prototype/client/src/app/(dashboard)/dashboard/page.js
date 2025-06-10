@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, FlaskConical, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import AppInfoSlider from "@/components/dashboard/AppInfoSlider";
-
+import { docs } from "@/assets/data/docs";
 const Homepage = () => {
   return (
     <div className="p-6 space-y-10 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -12,7 +12,10 @@ const Homepage = () => {
         {/* Welcome Section */}
         <section className="space-y-3">
           <h1 className="text-3xl font-semibold">
-            Welcome to the Adversarial Attack Dashboard
+            Welcome to the{" "}
+            <span className="text-indigo-600 font-bold">
+              Adversarial Attack Dashboard
+            </span>
           </h1>
           <p className="text-muted-foreground max-w-3xl">
             This interactive dashboard helps you visualize, simulate, and
@@ -24,61 +27,35 @@ const Homepage = () => {
             <Button
               className="mt-2"
               icon={<FlaskConical className="mr-2 h-4 w-4" />}
+              variant={"outline"}
             >
               Launch Playground
             </Button>
           </Link>
         </section>
-        {/* Highlights or Quick Start */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-medium">Highlights</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-            <Card>
-              <CardContent className="p-4 space-y-2">
-                <h3 className="font-semibold flex items-center">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Attack Analytics
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  View precision, accuracy, and attack success rate across
-                  models and datasets.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 space-y-2">
-                <h3 className="font-semibold flex items-center">
-                  <FlaskConical className="h-4 w-4 mr-2" />
-                  Adversarial Playground
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Choose a model, dataset, and attack type to run visual
-                  experiments in real-time.
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 space-y-2">
-                <h3 className="font-semibold flex items-center">
-                  <ArrowRight className="h-4 w-4 mr-2" />
-                  Quick Start
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Go to the playground, pick an image and an attack, and
-                  instantly see the visual impact.
-                </p>
-                <Link href="/dashboard/playground">
-                  <Button variant="link" className="pl-0 text-indigo-500">
-                    Try Now <ArrowRight />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {docs.map(({ title, description, href, icon: Icon, external }) => (
+            <Link
+              key={title}
+              href={href}
+              target={external ? "_blank" : "_self"}
+              rel={external ? "noopener noreferrer" : undefined}
+              className="border border-indigo-600/10 p-6 rounded-xl transition-colors duration-300"
+            >
+              <div className="flex items-center gap-4 mb-3">
+                <div className="bg-indigo-600/20 p-2 rounded-lg">
+                  <Icon className="text-indigo-500 size-6" />
+                </div>
+                <h2 className="text-xl font-semibold">{title}</h2>
+              </div>
+              <p className="text-muted-foreground">{description}</p>
+            </Link>
+          ))}
+        </div>
       </div>
       <div>
-        <h3 className="text-lg font-bold mb-4">
+        <h3 className="text-2xl font-bold mb-4">
           Learn About Models and Attacks
         </h3>
         <AppInfoSlider />

@@ -29,7 +29,7 @@ export default function Faqs() {
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="rounded-xl bg-primary-1300 px-6"
+              className="rounded-xl px-6"
             >
               <AccordionTrigger className="text-white py-6">
                 {faq.question}

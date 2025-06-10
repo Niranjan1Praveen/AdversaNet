@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="flex flex-col gap-2 items-center text-center md:items-start">
           <div className="flex items-center">
             <Image src={logo} alt="Logo Icon" className="h-auto w-20" />
-            <h2 className="font-bold text-2xl md:inline-flex hidden text-[#35ccbe]">
+            <h2 className="font-bold text-2xl md:inline-flex hidden">
               AdversaNet
             </h2>
           </div>
