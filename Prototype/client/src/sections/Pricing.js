@@ -5,62 +5,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { motion } from "framer-motion";
-
-const pricingPlans = [
-  {
-    title: "Starter",
-    price: "₹0",
-    frequency: "/month",
-    buttonText: "Get Started",
-    features: [
-      "Real-time voice transcription (limited)",
-      "Basic clinical note generation",
-      "Up to 10 patient records",
-      "Standard support",
-    ],
-    popular: false,
-  },
-  {
-    title: "Pro Clinic",
-    price: "₹350",
-    frequency: "/month",
-    buttonText: "Upgrade Now",
-    features: [
-      "Unlimited transcriptions with Whisper",
-      "AI-generated digital prescriptions",
-      "Personalized diet & exercise plans",
-      "Doctor review & approval interface",
-      "Basic analytics & reporting",
-      "Priority support",
-    ],
-    popular: true,
-  },
-  {
-    title: "Enterprise",
-    price: "Custom",
-    frequency: "/month",
-    buttonText: "Contact Sales",
-    features: [
-      "Multi-user access with Admin dashboard",
-      "FHIR-based EMR integration",
-      "Custom branding & modules",
-      "Advanced analytics dashboard",
-      "On-premise deployment (optional)",
-      "Dedicated account manager",
-    ],
-    popular: false,
-  },
-];
+import { pricingPlans } from "@/assets/data/pricingPlans";
 
 function Pricing() {
   return (
     <section className="py-24 px-4 flex items-center justify-center">
       <div className="container">
-        <h3 className="text-3xl font-medium text-center mt-6 max-w-3xl mx-auto">
-          Subscription Plans for Every Practice
+        <h3 className="text-3xl font-medium text-center mt-6 max-w-4xl mx-auto">
+          Flexible Plans for Researchers, Educators & ML Teams
         </h3>
+
         <p className="text-center text-xl mt-5 text-muted-foreground">
-          Start free and scale as your clinic grows with MediScribe&apos;s flexible SaaS plans.
+          Get started for free and scale your experiments with advanced
+          adversarial tools and visualizations.
         </p>
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 items-center lg:items-end mx-auto">
@@ -100,18 +57,13 @@ function Pricing() {
                       {plan.frequency}
                     </span>
                   </div>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "mt-6 w-full",
-                    )}
-                  >
+                  <Button variant={"outline"} className={cn("mt-6 w-full")}>
                     {plan.buttonText}
                   </Button>
                   <ul className="mt-6 space-y-2 text-sm">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start">
-                        <Check className="text-[#5EF7BA] mr-2" /> {feature}
+                        <Check className="text-primary-400 mr-2" /> {feature}
                       </li>
                     ))}
                   </ul>

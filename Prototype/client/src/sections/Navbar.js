@@ -1,11 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import logo from "@/assets/images/favicon.ico";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
-import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
-import logo from "@/assets/images/logo.png";
-import Image from "next/image";
+import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
 const navLinks = [
   { label: "Home", href: "" },
   { label: "Features", href: "#features" },
@@ -16,19 +16,17 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <header className="px-4 flex items-center justify-center fixed w-full top-0 z-100 backdrop-blur">
-        <div className="container">
-          <div>
+      <section className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100">
+        <div className="container max-w-5xl">
+          <div className="border border-white/15 rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur">
             <div className="grid grid-cols-2 lg:grid-cols-3 p-2 items-center px-4 md:pr-2">
               <div className="flex items-center">
-                <Image
-                  src={logo}
-                  alt="Logo Icon"
-                  className="h-18 w-18"
-                />
-                <h2 className="font-bold text-2xl md:inline-flex hidden">
-                  AdversaNet
-                </h2>
+                <Image src={logo} alt="Logo Icon" className="h-13 w-12" />
+                <p className="text-2xl font-bold text-white/20 md:inline-flex hidden">
+                  <span className="bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA] bg-clip-text">
+                    AdversaNet
+                  </span>
+                </p>
               </div>
               <div className="lg:flex justify-center items-center hidden">
                 <nav className="flex gap-6 font-medium">
@@ -39,7 +37,7 @@ export default function Navbar() {
                   ))}
                 </nav>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -84,19 +82,17 @@ export default function Navbar() {
                 <LoginLink>
                   <Button
                     variant={"login"}
-                    className="cursor-pointer hidden md:inline-flex items-center mr-2"
+                    className="cursor-pointer hidden md:inline-flex items-center"
                   >
                     Log in
                   </Button>
                 </LoginLink>
-                <RegisterLink>
-                  <Button
-                    variant={"signup"}
-                    className="cursor-pointer hidden md:inline-flex items-center"
-                  >
-                    Sign Up
-                  </Button>
-                </RegisterLink>
+                <Button
+                  variant={"signup"}
+                  className="cursor-pointer hidden md:inline-flex items-center"
+                >
+                  <a href="#signUpOptions">Sign Up</a>
+                </Button>
               </div>
             </div>
             <AnimatePresence>
@@ -122,7 +118,8 @@ export default function Navbar() {
                       </Button>
                     </LoginLink>
                     <Button
-                      className="bg-primary-500 cursor-pointer md:inline-flex items-center"
+                      variant={"signup"}
+                      className="cursor-pointer md:inline-flex items-center"
                     >
                       <a href="#signUpOptions">Sign Up</a>
                     </Button>
@@ -132,7 +129,7 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
         </div>
-      </header>
+      </section>
       <div className="pb-[86px] md:pb-[98px] lg:pb-[130px]"></div>
     </>
   );

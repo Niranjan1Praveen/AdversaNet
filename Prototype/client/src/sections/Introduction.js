@@ -37,14 +37,10 @@ export default function Introduction() {
             <span className="text-white/15 leading-tight">
               {words.map((word, index) => {
                 const isVisible = index < currentWord;
-                const shouldUnderline =
-                  isVisible &&
-                  (word.toLowerCase().includes("ai") ||
-                    word.toLowerCase().includes("critical"));
                 const shouldHighlight =
                   isVisible &&
                   (word.toLowerCase().includes("vulnerable") ||
-                    word.toLowerCase().includes("manipulations") ||
+                    word.toLowerCase().includes("invisible") ||
                     word.toLowerCase().includes("disruptive"));
 
                 return (
@@ -54,8 +50,6 @@ export default function Introduction() {
                       "transition duration-500",
                       isVisible ? "text-white" : "text-white/15",
                       shouldHighlight && "text-red-500 italic transition",
-                      shouldUnderline &&
-                        "underline decoration-primary-400 underline-offset-8 transition"
                     )}
                   >
                     {word + " "}

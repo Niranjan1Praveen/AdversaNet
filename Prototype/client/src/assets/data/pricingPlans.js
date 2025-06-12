@@ -1,0 +1,47 @@
+export const pricingPlans = [
+  {
+    title: "Starter",
+    price: "₹0",
+    frequency: "/month",
+    buttonText: "Get Started",
+    features: [
+      "Upload & visualize up to 5 images",
+      "Access to 2 pretrained models (ResNet, VGG)",
+      "Use FGSM attack (basic configuration)",
+      "Limited visualizations (confidence drop only)",
+    ],
+    popular: false,
+  },
+  {
+    title: "Pro Researcher",
+    price: "₹490",
+    frequency: "/month",
+    buttonText: "Upgrade Now",
+    features: [
+      "Unlimited image uploads & comparisons",
+      "Full model library access (ResNet, VGG, MobileNet)",
+      "FGSM, PGD, DeepFool attacks with custom parameters",
+      "Heatmaps, confidence plots, perturbation viewers",
+      "Side-by-side comparison viewer",
+      "Export sessions & share snapshots",
+    ],
+    popular: true,
+  },
+  {
+    title: "Enterprise Lab",
+    price: "Custom",
+    frequency: "/month",
+    buttonText: "Contact Sales",
+    features: [
+      "Team collaboration & role-based access",
+      "Custom model/attack integrations",
+      "API access for automation & pipelines",
+      "On-premise or private cloud deployment",
+      "Dedicated account manager",
+      "Early access to new features",
+      "Priority email support",
+      "Community support access",
+    ],
+    popular: false,
+  },
+];

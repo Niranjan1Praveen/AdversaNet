@@ -2,7 +2,7 @@ import FeatureCard from "@/components/ui/featureCard";
 import Tags from "@/components/ui/tags";
 import Image from "next/image";
 import Key from "@/components/ui/key";
-import dashboard from "@/assets/images/dashboard-new.png";
+import dashboard from "@/assets/images/heroDesign.jpg";
 
 const features = [
   "Upload Custom or Sample Images",
@@ -16,13 +16,18 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-24 px-4 flex items-center justify-center" id="features">
+    <section
+      className="py-24 px-4 flex items-center justify-center"
+      id="features"
+    >
       <div className="container">
         <div className="flex justify-center">
           <Tags title={"Platform Features"} />
         </div>
         <h2 className="text-3xl font-medium text-center mt-6 max-w-3xl mx-auto">
-          Explore <span className="text-primary-400">Adversarial Vulnerabilities</span> in AI
+          Explore{" "}
+          <span className="text-primary-400">Adversarial Vulnerabilities</span>{" "}
+          in AI
         </h2>
 
         {/* Feature Cards */}
@@ -35,8 +40,14 @@ export default function Features() {
             }
             className="md:col-span-2 lg:col-span-1"
           >
-            <div className="aspect-video flex items-center justify-center">
-              <Image src={dashboard} className="rounded-xl" height={650} width={650} alt="dashboard design"/>
+            <div className="aspect-video flex items-center justify-center rounded-xl">
+              <Image
+                src={dashboard}
+                className="rounded-xl"
+                height={450}
+                width={450}
+                alt="dashboard design"
+              />
             </div>
           </FeatureCard>
 
@@ -51,7 +62,7 @@ export default function Features() {
             <div className="aspect-video flex items-center justify-center">
               <p className="text-3xl font-bold text-white/20 text-center leading-relaxed">
                 What <br />
-                <span className="bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA] bg-clip-text">
+                <span className="bg-gradient-to-r from-primary-500 via-[#30f6d5] to-[#5EF7BA] bg-clip-text">
                   changed
                 </span>{" "}
                 in the prediction?
