@@ -1,34 +1,40 @@
 "use client";
+import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
+import { AuroraText } from "@/components/magicui/aurora-text";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
-import design1 from "@/assets/images/design-example-1.png";
-import design2 from "@/assets/images/design-example-2.png";
-import Image from "next/image";
-import { SparkleIcon } from "lucide-react";
+import { ChevronRight, SparkleIcon } from "lucide-react";
 
 export default function Hero() {
   return (
     <section className="py-20 px-4 overflow-x-clip">
       <div className="container relative mx-auto flex flex-col-reverse md:flex-row items-center justify-center gap-12">
-        {/* <div className="absolute -left-32 top-16 hidden lg:block z-[-10]">
-          <Image src={design1} alt="hero-design-1-example" />
-        </div>
-        <div className="absolute -right-64 -top-16 hidden lg:block z-[-10]">
-          <Image src={design2} alt="hero-design-2-example" />
-        </div> */}
         <div className="w-full md:w-3/4">
           <div className="flex items-center justify-center">
-            <div className="inline-flex py-1 px-3 text-center bg-gradient-to-r from-primary-500 via-[#30f6d5] to-[#5EF7BA] rounded-full text-neutral-900 font-semibold">
-              <span className="text-blue-400 mr-1 animate-spin animation-delay-2000 "><SparkleIcon/></span> Trusted by AI Researchers, Students, and Educators
+            <div className="group relative mx-auto flex items-center justify-center rounded-full px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f] ">
+              🎉 <hr className="mx-2 h-4 w-px shrink-0 bg-neutral-500" />
+              <AnimatedGradientText
+                className="text-sm font-medium"
+                speed={1}
+                colorFrom="#4ade80"
+                colorTo="#06b6d4"
+              >
+                Introducing AdversaNet
+              </AnimatedGradientText>
+              <ChevronRight
+                className="ml-1 size-4 stroke-neutral-500 transition-transform
+ duration-300 ease-in-out group-hover:translate-x-0.5"
+              />
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-medium mt-6 leading-tight text-center">
-            Understand and Visualize How AI Can Be Fooled
+          <h1 className="text-4xl md:text-7xl font-medium mt-6 leading-tight text-center">
+            Understand and Visualize <br/> How AI Can Be <AuroraText colors={["#4ade80", "#30f6d5", "#5EF7BA", "#06b6d4"]}>Fooled?</AuroraText>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/50 mt-8 leading-relaxed text-center">
+          <p className="text-lg md:text-xl text-muted-foreground mt-8 leading-relaxed text-center">
             Our interactive dashboard helps you explore adversarial attacks on
             image classifiers. Upload images, apply attacks like FGSM and PGD,
             and see how even small changes can trick powerful AI models—making

@@ -18,7 +18,7 @@ export default function Navbar() {
     <>
       <section className="py-4 px-4 lg:py-8 flex items-center justify-center fixed w-full top-0 z-100">
         <div className="container max-w-5xl">
-          <div className="border border-white/15 rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur">
+          <div className="rounded-[27px] md:rounded-full bg-neutral-950/70 backdrop-blur">
             <div className="grid grid-cols-2 lg:grid-cols-3 p-2 items-center px-4 md:pr-2">
               <div className="flex items-center">
                 <Image src={logo} alt="Logo Icon" className="h-13 w-12" />
@@ -91,7 +91,7 @@ export default function Navbar() {
                   variant={"signup"}
                   className="cursor-pointer hidden md:inline-flex items-center"
                 >
-                  <a href="#signUpOptions">Sign Up</a>
+                  <a href="#pricing">Sign Up</a>
                 </Button>
               </div>
             </div>

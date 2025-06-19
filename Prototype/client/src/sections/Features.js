@@ -3,6 +3,7 @@ import Tags from "@/components/ui/tags";
 import Image from "next/image";
 import Key from "@/components/ui/key";
 import dashboard from "@/assets/images/heroDesign.jpg";
+import { OrbitingCircles } from "@/components/magicui/orbiting-circles";
 
 const features = [
   "Upload Custom or Sample Images",
@@ -29,7 +30,6 @@ export default function Features() {
           <span className="text-primary-400">Adversarial Vulnerabilities</span>{" "}
           in AI
         </h2>
-
         {/* Feature Cards */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-3 gap-8">
           {/* Card-1 */}
@@ -78,10 +78,12 @@ export default function Features() {
             }
             className="md:col-span-2 md:col-start-2 lg:col-span-1 lg:col-start-auto"
           >
-            <div className="aspect-video flex items-center justify-center gap-4 flex-wrap">
-              <Key className={"w-28"}>Epsilon</Key>
-              <Key className={"w-28"}>Steps</Key>
-              <Key className={"w-28"}>Method</Key>
+            <div className="aspect-video flex items-center justify-center relative w-full overflow-hidden min-h-[200px]">
+              <OrbitingCircles radius={100}>
+                <Key className={"w-28 p-5 text-sm md:text-lg"}>Epsilon</Key>
+                <Key className={"w-28 p-5 text-sm md:text-lg"}>Steps</Key>
+                <Key className={"w-28 p-5 text-sm md:text-lg"}>Method</Key>
+              </OrbitingCircles>
             </div>
           </FeatureCard>
         </div>

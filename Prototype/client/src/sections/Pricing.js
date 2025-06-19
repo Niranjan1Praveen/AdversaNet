@@ -6,21 +6,19 @@ import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { pricingPlans } from "@/assets/data/pricingPlans";
+import Tags from "@/components/ui/tags";
 
 function Pricing() {
   return (
-    <section className="py-24 px-4 flex items-center justify-center">
+    <section className="py-24 px-4 flex items-center justify-center" id="pricing">
       <div className="container">
+        <div className="flex justify-center">
+                    <Tags title={"Pricing"} />
+                  </div>  
         <h3 className="text-3xl font-medium text-center mt-6 max-w-4xl mx-auto">
           Flexible Plans for Researchers, Educators & ML Teams
         </h3>
-
-        <p className="text-center text-xl mt-5 text-muted-foreground">
-          Get started for free and scale your experiments with advanced
-          adversarial tools and visualizations.
-        </p>
-
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 items-center lg:items-end mx-auto">
+        <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 items-center lg:items-end mx-auto">
           {pricingPlans.map((plan, idx) => (
             <Card
               key={idx}

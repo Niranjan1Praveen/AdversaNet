@@ -46,11 +46,6 @@ const items = [
     url: "/dashboard/gallery",
     icon: Grid, 
   },
-  {
-    title: "Analytics",
-    url: "/dashboard/analytics",
-    icon: BarChart3, 
-  },
 ];
 
 const AppSidebar = async () => {
