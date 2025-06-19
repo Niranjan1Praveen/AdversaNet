@@ -47,7 +47,6 @@ const items = [
     icon: Grid, 
   },
 ];
-
 const AppSidebar = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();

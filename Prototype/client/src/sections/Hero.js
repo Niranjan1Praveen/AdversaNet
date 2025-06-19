@@ -1,6 +1,7 @@
 "use client";
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { AuroraText } from "@/components/magicui/aurora-text";
+import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,10 @@ export default function Hero() {
           </div>
 
           <h1 className="text-4xl md:text-7xl font-medium mt-6 leading-tight text-center">
-            Understand and Visualize <br/> How AI Can Be <AuroraText colors={["#4ade80", "#30f6d5", "#5EF7BA", "#06b6d4"]}>Fooled?</AuroraText>
+            Understand and Visualize <br /> How AI Can Be{" "}
+            <AuroraText colors={["#4ade80", "#30f6d5", "#5EF7BA", "#06b6d4"]}>
+              Fooled?
+            </AuroraText>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground mt-8 leading-relaxed text-center">
@@ -40,22 +44,9 @@ export default function Hero() {
             and see how even small changes can trick powerful AI models—making
             it easier to learn, teach, and build more secure systems.
           </p>
-          <div className="flex border border-white/15 rounded-full p-2 mt-8 md:max-w-lg mx-auto items-center">
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              className="border-none px-4 !bg-transparent md:flex-1 w-full"
-            />
-            <RegisterLink>
-              <Button
-                type="submit"
-                variant="signup"
-                size="sm"
-                className="whitespace-nowrap"
-              >
-                Sign Up
-              </Button>
-            </RegisterLink>
+          <div className="flex mt-8 md:max-w-lg mx-auto items-center justify-center gap-5">
+            <RainbowButton variant={"outline"} className="rounded-full text-black p-6">Read Docs</RainbowButton>
+            <RainbowButton className="text-white rounded-full p-6"><a href="#pricing">Get Started Now</a></RainbowButton>
           </div>
         </div>
       </div>

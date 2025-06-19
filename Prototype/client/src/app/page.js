@@ -12,9 +12,8 @@ import Pricing from "@/sections/Pricing";
 const Home = () => {
   return (
     <main>
-      <div className="relative">
+      <div className="relative w-full">
         <Navbar />
-        <Hero />
         <DotPattern
           width={30}
           height={30}
@@ -22,12 +21,14 @@ const Home = () => {
           cy={1}
           cr={1}
           className={cn(
-            "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] "
+            "absolute inset-0",
+            "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)]",
+            "z-0"
           )}
           glow="true"
         />
+        <Hero />
       </div>
-
       <Introduction />
       <div className="relative flex size-full w-full flex-col items-center justify-center overflow-hidden">
         <Features />
