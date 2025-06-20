@@ -18,6 +18,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  * 
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+/**
+ * Model CustomModel
+ * 
+ */
+export type CustomModel = $Result.DefaultSelection<Prisma.$CustomModelPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -153,6 +158,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customModel`: Exposes CRUD operations for the **CustomModel** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomModels
+    * const customModels = await prisma.customModel.findMany()
+    * ```
+    */
+  get customModel(): Prisma.CustomModelDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -593,7 +608,8 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    User: 'User'
+    User: 'User',
+    CustomModel: 'CustomModel'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -612,7 +628,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user"
+      modelProps: "user" | "customModel"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -687,6 +703,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      CustomModel: {
+        payload: Prisma.$CustomModelPayload<ExtArgs>
+        fields: Prisma.CustomModelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomModelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomModelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomModelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomModelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>
+          }
+          findMany: {
+            args: Prisma.CustomModelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>[]
+          }
+          create: {
+            args: Prisma.CustomModelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>
+          }
+          createMany: {
+            args: Prisma.CustomModelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomModelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomModelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>
+          }
+          update: {
+            args: Prisma.CustomModelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomModelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomModelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomModelUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomModelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomModelPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomModelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomModel>
+          }
+          groupBy: {
+            args: Prisma.CustomModelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomModelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomModelCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomModelCountAggregateOutputType> | number
           }
         }
       }
@@ -775,6 +865,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    customModel?: CustomModelOmit
   }
 
   /* Types for Logging */
@@ -863,6 +954,36 @@ export namespace Prisma {
    * Count Types
    */
 
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    UserModel: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    UserModel?: boolean | UserCountOutputTypeCountUserModelArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountUserModelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomModelWhereInput
+  }
 
 
   /**
@@ -1041,6 +1162,8 @@ export namespace Prisma {
     lastName?: boolean
     profileImage?: boolean
     createdAt?: boolean
+    UserModel?: boolean | User$UserModelArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1071,10 +1194,18 @@ export namespace Prisma {
   }
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "profileImage" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    UserModel?: boolean | User$UserModelArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {}
+    objects: {
+      UserModel: Prisma.$CustomModelPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
@@ -1476,6 +1607,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    UserModel<T extends User$UserModelArgs<ExtArgs> = {}>(args?: Subset<T, User$UserModelArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1528,6 +1660,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1546,6 +1682,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1563,6 +1703,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -1612,6 +1756,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -1660,6 +1808,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which Users to fetch.
      */
     where?: UserWhereInput
@@ -1702,6 +1854,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to create a User.
      */
@@ -1750,6 +1906,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -1817,6 +1977,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -1843,6 +2007,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -1863,6 +2031,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.UserModel
+   */
+  export type User$UserModelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    where?: CustomModelWhereInput
+    orderBy?: CustomModelOrderByWithRelationInput | CustomModelOrderByWithRelationInput[]
+    cursor?: CustomModelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomModelScalarFieldEnum | CustomModelScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1874,6 +2066,1167 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomModel
+   */
+
+  export type AggregateCustomModel = {
+    _count: CustomModelCountAggregateOutputType | null
+    _avg: CustomModelAvgAggregateOutputType | null
+    _sum: CustomModelSumAggregateOutputType | null
+    _min: CustomModelMinAggregateOutputType | null
+    _max: CustomModelMaxAggregateOutputType | null
+  }
+
+  export type CustomModelAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type CustomModelSumAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type CustomModelMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    fileName: string | null
+    fileType: string | null
+    fileSize: number | null
+    filePath: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomModelMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    fileName: string | null
+    fileType: string | null
+    fileSize: number | null
+    filePath: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomModelCountAggregateOutputType = {
+    id: number
+    userId: number
+    name: number
+    fileName: number
+    fileType: number
+    fileSize: number
+    filePath: number
+    description: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CustomModelAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type CustomModelSumAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type CustomModelMinAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    fileName?: true
+    fileType?: true
+    fileSize?: true
+    filePath?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomModelMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    fileName?: true
+    fileType?: true
+    fileSize?: true
+    filePath?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomModelCountAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    fileName?: true
+    fileType?: true
+    fileSize?: true
+    filePath?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CustomModelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomModel to aggregate.
+     */
+    where?: CustomModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomModels to fetch.
+     */
+    orderBy?: CustomModelOrderByWithRelationInput | CustomModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomModels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomModels
+    **/
+    _count?: true | CustomModelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CustomModelAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomModelSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomModelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomModelMaxAggregateInputType
+  }
+
+  export type GetCustomModelAggregateType<T extends CustomModelAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomModel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomModel[P]>
+      : GetScalarType<T[P], AggregateCustomModel[P]>
+  }
+
+
+
+
+  export type CustomModelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomModelWhereInput
+    orderBy?: CustomModelOrderByWithAggregationInput | CustomModelOrderByWithAggregationInput[]
+    by: CustomModelScalarFieldEnum[] | CustomModelScalarFieldEnum
+    having?: CustomModelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomModelCountAggregateInputType | true
+    _avg?: CustomModelAvgAggregateInputType
+    _sum?: CustomModelSumAggregateInputType
+    _min?: CustomModelMinAggregateInputType
+    _max?: CustomModelMaxAggregateInputType
+  }
+
+  export type CustomModelGroupByOutputType = {
+    id: string
+    userId: string
+    name: string
+    fileName: string
+    fileType: string
+    fileSize: number
+    filePath: string
+    description: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CustomModelCountAggregateOutputType | null
+    _avg: CustomModelAvgAggregateOutputType | null
+    _sum: CustomModelSumAggregateOutputType | null
+    _min: CustomModelMinAggregateOutputType | null
+    _max: CustomModelMaxAggregateOutputType | null
+  }
+
+  type GetCustomModelGroupByPayload<T extends CustomModelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomModelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomModelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomModelGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomModelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomModelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    fileName?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    filePath?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customModel"]>
+
+  export type CustomModelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    fileName?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    filePath?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customModel"]>
+
+  export type CustomModelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    fileName?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    filePath?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customModel"]>
+
+  export type CustomModelSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    fileName?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    filePath?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CustomModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "fileName" | "fileType" | "fileSize" | "filePath" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["customModel"]>
+  export type CustomModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CustomModelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CustomModelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $CustomModelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomModel"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      name: string
+      fileName: string
+      fileType: string
+      fileSize: number
+      filePath: string
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["customModel"]>
+    composites: {}
+  }
+
+  type CustomModelGetPayload<S extends boolean | null | undefined | CustomModelDefaultArgs> = $Result.GetResult<Prisma.$CustomModelPayload, S>
+
+  type CustomModelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomModelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomModelCountAggregateInputType | true
+    }
+
+  export interface CustomModelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomModel'], meta: { name: 'CustomModel' } }
+    /**
+     * Find zero or one CustomModel that matches the filter.
+     * @param {CustomModelFindUniqueArgs} args - Arguments to find a CustomModel
+     * @example
+     * // Get one CustomModel
+     * const customModel = await prisma.customModel.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomModelFindUniqueArgs>(args: SelectSubset<T, CustomModelFindUniqueArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomModel that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomModelFindUniqueOrThrowArgs} args - Arguments to find a CustomModel
+     * @example
+     * // Get one CustomModel
+     * const customModel = await prisma.customModel.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomModelFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomModelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomModel that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomModelFindFirstArgs} args - Arguments to find a CustomModel
+     * @example
+     * // Get one CustomModel
+     * const customModel = await prisma.customModel.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomModelFindFirstArgs>(args?: SelectSubset<T, CustomModelFindFirstArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomModel that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomModelFindFirstOrThrowArgs} args - Arguments to find a CustomModel
+     * @example
+     * // Get one CustomModel
+     * const customModel = await prisma.customModel.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomModelFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomModelFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomModels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomModelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomModels
+     * const customModels = await prisma.customModel.findMany()
+     * 
+     * // Get first 10 CustomModels
+     * const customModels = await prisma.customModel.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customModelWithIdOnly = await prisma.customModel.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomModelFindManyArgs>(args?: SelectSubset<T, CustomModelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomModel.
+     * @param {CustomModelCreateArgs} args - Arguments to create a CustomModel.
+     * @example
+     * // Create one CustomModel
+     * const CustomModel = await prisma.customModel.create({
+     *   data: {
+     *     // ... data to create a CustomModel
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomModelCreateArgs>(args: SelectSubset<T, CustomModelCreateArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomModels.
+     * @param {CustomModelCreateManyArgs} args - Arguments to create many CustomModels.
+     * @example
+     * // Create many CustomModels
+     * const customModel = await prisma.customModel.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomModelCreateManyArgs>(args?: SelectSubset<T, CustomModelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomModels and returns the data saved in the database.
+     * @param {CustomModelCreateManyAndReturnArgs} args - Arguments to create many CustomModels.
+     * @example
+     * // Create many CustomModels
+     * const customModel = await prisma.customModel.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomModels and only return the `id`
+     * const customModelWithIdOnly = await prisma.customModel.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomModelCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomModelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomModel.
+     * @param {CustomModelDeleteArgs} args - Arguments to delete one CustomModel.
+     * @example
+     * // Delete one CustomModel
+     * const CustomModel = await prisma.customModel.delete({
+     *   where: {
+     *     // ... filter to delete one CustomModel
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomModelDeleteArgs>(args: SelectSubset<T, CustomModelDeleteArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomModel.
+     * @param {CustomModelUpdateArgs} args - Arguments to update one CustomModel.
+     * @example
+     * // Update one CustomModel
+     * const customModel = await prisma.customModel.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomModelUpdateArgs>(args: SelectSubset<T, CustomModelUpdateArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomModels.
+     * @param {CustomModelDeleteManyArgs} args - Arguments to filter CustomModels to delete.
+     * @example
+     * // Delete a few CustomModels
+     * const { count } = await prisma.customModel.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomModelDeleteManyArgs>(args?: SelectSubset<T, CustomModelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomModels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomModelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomModels
+     * const customModel = await prisma.customModel.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomModelUpdateManyArgs>(args: SelectSubset<T, CustomModelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomModels and returns the data updated in the database.
+     * @param {CustomModelUpdateManyAndReturnArgs} args - Arguments to update many CustomModels.
+     * @example
+     * // Update many CustomModels
+     * const customModel = await prisma.customModel.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomModels and only return the `id`
+     * const customModelWithIdOnly = await prisma.customModel.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomModelUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomModelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomModel.
+     * @param {CustomModelUpsertArgs} args - Arguments to update or create a CustomModel.
+     * @example
+     * // Update or create a CustomModel
+     * const customModel = await prisma.customModel.upsert({
+     *   create: {
+     *     // ... data to create a CustomModel
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomModel we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomModelUpsertArgs>(args: SelectSubset<T, CustomModelUpsertArgs<ExtArgs>>): Prisma__CustomModelClient<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomModels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomModelCountArgs} args - Arguments to filter CustomModels to count.
+     * @example
+     * // Count the number of CustomModels
+     * const count = await prisma.customModel.count({
+     *   where: {
+     *     // ... the filter for the CustomModels we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomModelCountArgs>(
+      args?: Subset<T, CustomModelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomModelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomModel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomModelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomModelAggregateArgs>(args: Subset<T, CustomModelAggregateArgs>): Prisma.PrismaPromise<GetCustomModelAggregateType<T>>
+
+    /**
+     * Group by CustomModel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomModelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomModelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomModelGroupByArgs['orderBy'] }
+        : { orderBy?: CustomModelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomModelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomModelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomModel model
+   */
+  readonly fields: CustomModelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomModel.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomModelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomModel model
+   */
+  interface CustomModelFieldRefs {
+    readonly id: FieldRef<"CustomModel", 'String'>
+    readonly userId: FieldRef<"CustomModel", 'String'>
+    readonly name: FieldRef<"CustomModel", 'String'>
+    readonly fileName: FieldRef<"CustomModel", 'String'>
+    readonly fileType: FieldRef<"CustomModel", 'String'>
+    readonly fileSize: FieldRef<"CustomModel", 'Int'>
+    readonly filePath: FieldRef<"CustomModel", 'String'>
+    readonly description: FieldRef<"CustomModel", 'String'>
+    readonly createdAt: FieldRef<"CustomModel", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomModel", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomModel findUnique
+   */
+  export type CustomModelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomModel to fetch.
+     */
+    where: CustomModelWhereUniqueInput
+  }
+
+  /**
+   * CustomModel findUniqueOrThrow
+   */
+  export type CustomModelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomModel to fetch.
+     */
+    where: CustomModelWhereUniqueInput
+  }
+
+  /**
+   * CustomModel findFirst
+   */
+  export type CustomModelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomModel to fetch.
+     */
+    where?: CustomModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomModels to fetch.
+     */
+    orderBy?: CustomModelOrderByWithRelationInput | CustomModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomModels.
+     */
+    cursor?: CustomModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomModels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomModels.
+     */
+    distinct?: CustomModelScalarFieldEnum | CustomModelScalarFieldEnum[]
+  }
+
+  /**
+   * CustomModel findFirstOrThrow
+   */
+  export type CustomModelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomModel to fetch.
+     */
+    where?: CustomModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomModels to fetch.
+     */
+    orderBy?: CustomModelOrderByWithRelationInput | CustomModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomModels.
+     */
+    cursor?: CustomModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomModels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomModels.
+     */
+    distinct?: CustomModelScalarFieldEnum | CustomModelScalarFieldEnum[]
+  }
+
+  /**
+   * CustomModel findMany
+   */
+  export type CustomModelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomModels to fetch.
+     */
+    where?: CustomModelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomModels to fetch.
+     */
+    orderBy?: CustomModelOrderByWithRelationInput | CustomModelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomModels.
+     */
+    cursor?: CustomModelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomModels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomModels.
+     */
+    skip?: number
+    distinct?: CustomModelScalarFieldEnum | CustomModelScalarFieldEnum[]
+  }
+
+  /**
+   * CustomModel create
+   */
+  export type CustomModelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomModel.
+     */
+    data: XOR<CustomModelCreateInput, CustomModelUncheckedCreateInput>
+  }
+
+  /**
+   * CustomModel createMany
+   */
+  export type CustomModelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomModels.
+     */
+    data: CustomModelCreateManyInput | CustomModelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomModel createManyAndReturn
+   */
+  export type CustomModelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomModels.
+     */
+    data: CustomModelCreateManyInput | CustomModelCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomModel update
+   */
+  export type CustomModelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomModel.
+     */
+    data: XOR<CustomModelUpdateInput, CustomModelUncheckedUpdateInput>
+    /**
+     * Choose, which CustomModel to update.
+     */
+    where: CustomModelWhereUniqueInput
+  }
+
+  /**
+   * CustomModel updateMany
+   */
+  export type CustomModelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomModels.
+     */
+    data: XOR<CustomModelUpdateManyMutationInput, CustomModelUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomModels to update
+     */
+    where?: CustomModelWhereInput
+    /**
+     * Limit how many CustomModels to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomModel updateManyAndReturn
+   */
+  export type CustomModelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomModels.
+     */
+    data: XOR<CustomModelUpdateManyMutationInput, CustomModelUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomModels to update
+     */
+    where?: CustomModelWhereInput
+    /**
+     * Limit how many CustomModels to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomModel upsert
+   */
+  export type CustomModelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomModel to update in case it exists.
+     */
+    where: CustomModelWhereUniqueInput
+    /**
+     * In case the CustomModel found by the `where` argument doesn't exist, create a new CustomModel with this data.
+     */
+    create: XOR<CustomModelCreateInput, CustomModelUncheckedCreateInput>
+    /**
+     * In case the CustomModel was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomModelUpdateInput, CustomModelUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomModel delete
+   */
+  export type CustomModelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
+    /**
+     * Filter which CustomModel to delete.
+     */
+    where: CustomModelWhereUniqueInput
+  }
+
+  /**
+   * CustomModel deleteMany
+   */
+  export type CustomModelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomModels to delete
+     */
+    where?: CustomModelWhereInput
+    /**
+     * Limit how many CustomModels to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomModel without action
+   */
+  export type CustomModelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomModel
+     */
+    select?: CustomModelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomModel
+     */
+    omit?: CustomModelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomModelInclude<ExtArgs> | null
   }
 
 
@@ -1903,6 +3256,22 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const CustomModelScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    name: 'name',
+    fileName: 'fileName',
+    fileType: 'fileType',
+    fileSize: 'fileSize',
+    filePath: 'filePath',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CustomModelScalarFieldEnum = (typeof CustomModelScalarFieldEnum)[keyof typeof CustomModelScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -1917,6 +3286,14 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -1964,6 +3341,20 @@ export namespace Prisma {
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
   /**
    * Deep Input Types
    */
@@ -1979,6 +3370,7 @@ export namespace Prisma {
     lastName?: StringFilter<"User"> | string
     profileImage?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
+    UserModel?: CustomModelListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -1988,19 +3380,21 @@ export namespace Prisma {
     lastName?: SortOrder
     profileImage?: SortOrder
     createdAt?: SortOrder
+    UserModel?: CustomModelOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    email?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    email?: StringFilter<"User"> | string
     firstName?: StringFilter<"User"> | string
     lastName?: StringFilter<"User"> | string
     profileImage?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
-  }, "id" | "id">
+    UserModel?: CustomModelListRelationFilter
+  }, "id" | "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -2026,6 +3420,88 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
+  export type CustomModelWhereInput = {
+    AND?: CustomModelWhereInput | CustomModelWhereInput[]
+    OR?: CustomModelWhereInput[]
+    NOT?: CustomModelWhereInput | CustomModelWhereInput[]
+    id?: StringFilter<"CustomModel"> | string
+    userId?: StringFilter<"CustomModel"> | string
+    name?: StringFilter<"CustomModel"> | string
+    fileName?: StringFilter<"CustomModel"> | string
+    fileType?: StringFilter<"CustomModel"> | string
+    fileSize?: IntFilter<"CustomModel"> | number
+    filePath?: StringFilter<"CustomModel"> | string
+    description?: StringNullableFilter<"CustomModel"> | string | null
+    createdAt?: DateTimeFilter<"CustomModel"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomModel"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type CustomModelOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    fileName?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    filePath?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type CustomModelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    filePath?: string
+    AND?: CustomModelWhereInput | CustomModelWhereInput[]
+    OR?: CustomModelWhereInput[]
+    NOT?: CustomModelWhereInput | CustomModelWhereInput[]
+    userId?: StringFilter<"CustomModel"> | string
+    name?: StringFilter<"CustomModel"> | string
+    fileName?: StringFilter<"CustomModel"> | string
+    fileType?: StringFilter<"CustomModel"> | string
+    fileSize?: IntFilter<"CustomModel"> | number
+    description?: StringNullableFilter<"CustomModel"> | string | null
+    createdAt?: DateTimeFilter<"CustomModel"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomModel"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "filePath">
+
+  export type CustomModelOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    fileName?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    filePath?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CustomModelCountOrderByAggregateInput
+    _avg?: CustomModelAvgOrderByAggregateInput
+    _max?: CustomModelMaxOrderByAggregateInput
+    _min?: CustomModelMinOrderByAggregateInput
+    _sum?: CustomModelSumOrderByAggregateInput
+  }
+
+  export type CustomModelScalarWhereWithAggregatesInput = {
+    AND?: CustomModelScalarWhereWithAggregatesInput | CustomModelScalarWhereWithAggregatesInput[]
+    OR?: CustomModelScalarWhereWithAggregatesInput[]
+    NOT?: CustomModelScalarWhereWithAggregatesInput | CustomModelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomModel"> | string
+    userId?: StringWithAggregatesFilter<"CustomModel"> | string
+    name?: StringWithAggregatesFilter<"CustomModel"> | string
+    fileName?: StringWithAggregatesFilter<"CustomModel"> | string
+    fileType?: StringWithAggregatesFilter<"CustomModel"> | string
+    fileSize?: IntWithAggregatesFilter<"CustomModel"> | number
+    filePath?: StringWithAggregatesFilter<"CustomModel"> | string
+    description?: StringNullableWithAggregatesFilter<"CustomModel"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CustomModel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomModel"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     email: string
@@ -2033,6 +3509,7 @@ export namespace Prisma {
     lastName: string
     profileImage: string
     createdAt?: Date | string
+    UserModel?: CustomModelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -2042,6 +3519,7 @@ export namespace Prisma {
     lastName: string
     profileImage: string
     createdAt?: Date | string
+    UserModel?: CustomModelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -2051,6 +3529,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     profileImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UserModel?: CustomModelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -2060,6 +3539,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     profileImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UserModel?: CustomModelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -2089,6 +3569,96 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CustomModelCreateInput = {
+    id?: string
+    name: string
+    fileName: string
+    fileType: string
+    fileSize: number
+    filePath: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutUserModelInput
+  }
+
+  export type CustomModelUncheckedCreateInput = {
+    id?: string
+    userId: string
+    name: string
+    fileName: string
+    fileType: string
+    fileSize: number
+    filePath: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomModelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    filePath?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserModelNestedInput
+  }
+
+  export type CustomModelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    filePath?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomModelCreateManyInput = {
+    id?: string
+    userId: string
+    name: string
+    fileName: string
+    fileType: string
+    fileSize: number
+    filePath: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomModelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    filePath?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomModelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    filePath?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -2113,6 +3683,16 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type CustomModelListRelationFilter = {
+    every?: CustomModelWhereInput
+    some?: CustomModelWhereInput
+    none?: CustomModelWhereInput
+  }
+
+  export type CustomModelOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -2174,12 +3754,197 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type CustomModelCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    fileName?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    filePath?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomModelAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type CustomModelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    fileName?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    filePath?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomModelMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    fileName?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    filePath?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomModelSumOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type CustomModelCreateNestedManyWithoutUserInput = {
+    create?: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput> | CustomModelCreateWithoutUserInput[] | CustomModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomModelCreateOrConnectWithoutUserInput | CustomModelCreateOrConnectWithoutUserInput[]
+    createMany?: CustomModelCreateManyUserInputEnvelope
+    connect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+  }
+
+  export type CustomModelUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput> | CustomModelCreateWithoutUserInput[] | CustomModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomModelCreateOrConnectWithoutUserInput | CustomModelCreateOrConnectWithoutUserInput[]
+    createMany?: CustomModelCreateManyUserInputEnvelope
+    connect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type CustomModelUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput> | CustomModelCreateWithoutUserInput[] | CustomModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomModelCreateOrConnectWithoutUserInput | CustomModelCreateOrConnectWithoutUserInput[]
+    upsert?: CustomModelUpsertWithWhereUniqueWithoutUserInput | CustomModelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CustomModelCreateManyUserInputEnvelope
+    set?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    disconnect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    delete?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    connect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    update?: CustomModelUpdateWithWhereUniqueWithoutUserInput | CustomModelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CustomModelUpdateManyWithWhereWithoutUserInput | CustomModelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CustomModelScalarWhereInput | CustomModelScalarWhereInput[]
+  }
+
+  export type CustomModelUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput> | CustomModelCreateWithoutUserInput[] | CustomModelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CustomModelCreateOrConnectWithoutUserInput | CustomModelCreateOrConnectWithoutUserInput[]
+    upsert?: CustomModelUpsertWithWhereUniqueWithoutUserInput | CustomModelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CustomModelCreateManyUserInputEnvelope
+    set?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    disconnect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    delete?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    connect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+    update?: CustomModelUpdateWithWhereUniqueWithoutUserInput | CustomModelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CustomModelUpdateManyWithWhereWithoutUserInput | CustomModelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CustomModelScalarWhereInput | CustomModelScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutUserModelInput = {
+    create?: XOR<UserCreateWithoutUserModelInput, UserUncheckedCreateWithoutUserModelInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserModelInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutUserModelNestedInput = {
+    create?: XOR<UserCreateWithoutUserModelInput, UserUncheckedCreateWithoutUserModelInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserModelInput
+    upsert?: UserUpsertWithoutUserModelInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserModelInput, UserUpdateWithoutUserModelInput>, UserUncheckedUpdateWithoutUserModelInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -2247,6 +4012,241 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type CustomModelCreateWithoutUserInput = {
+    id?: string
+    name: string
+    fileName: string
+    fileType: string
+    fileSize: number
+    filePath: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomModelUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    fileName: string
+    fileType: string
+    fileSize: number
+    filePath: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomModelCreateOrConnectWithoutUserInput = {
+    where: CustomModelWhereUniqueInput
+    create: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput>
+  }
+
+  export type CustomModelCreateManyUserInputEnvelope = {
+    data: CustomModelCreateManyUserInput | CustomModelCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomModelUpsertWithWhereUniqueWithoutUserInput = {
+    where: CustomModelWhereUniqueInput
+    update: XOR<CustomModelUpdateWithoutUserInput, CustomModelUncheckedUpdateWithoutUserInput>
+    create: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput>
+  }
+
+  export type CustomModelUpdateWithWhereUniqueWithoutUserInput = {
+    where: CustomModelWhereUniqueInput
+    data: XOR<CustomModelUpdateWithoutUserInput, CustomModelUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CustomModelUpdateManyWithWhereWithoutUserInput = {
+    where: CustomModelScalarWhereInput
+    data: XOR<CustomModelUpdateManyMutationInput, CustomModelUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CustomModelScalarWhereInput = {
+    AND?: CustomModelScalarWhereInput | CustomModelScalarWhereInput[]
+    OR?: CustomModelScalarWhereInput[]
+    NOT?: CustomModelScalarWhereInput | CustomModelScalarWhereInput[]
+    id?: StringFilter<"CustomModel"> | string
+    userId?: StringFilter<"CustomModel"> | string
+    name?: StringFilter<"CustomModel"> | string
+    fileName?: StringFilter<"CustomModel"> | string
+    fileType?: StringFilter<"CustomModel"> | string
+    fileSize?: IntFilter<"CustomModel"> | number
+    filePath?: StringFilter<"CustomModel"> | string
+    description?: StringNullableFilter<"CustomModel"> | string | null
+    createdAt?: DateTimeFilter<"CustomModel"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomModel"> | Date | string
+  }
+
+  export type UserCreateWithoutUserModelInput = {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    profileImage: string
+    createdAt?: Date | string
+  }
+
+  export type UserUncheckedCreateWithoutUserModelInput = {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    profileImage: string
+    createdAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutUserModelInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserModelInput, UserUncheckedCreateWithoutUserModelInput>
+  }
+
+  export type UserUpsertWithoutUserModelInput = {
+    update: XOR<UserUpdateWithoutUserModelInput, UserUncheckedUpdateWithoutUserModelInput>
+    create: XOR<UserCreateWithoutUserModelInput, UserUncheckedCreateWithoutUserModelInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserModelInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserModelInput, UserUncheckedUpdateWithoutUserModelInput>
+  }
+
+  export type UserUpdateWithoutUserModelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    profileImage?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutUserModelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    profileImage?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomModelCreateManyUserInput = {
+    id?: string
+    name: string
+    fileName: string
+    fileType: string
+    fileSize: number
+    filePath: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomModelUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    filePath?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomModelUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    filePath?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomModelUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    filePath?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

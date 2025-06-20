@@ -2,7 +2,7 @@
 import AppConfidenceChart from "@/components/dashboard/AppConfidenceChart";
 import { Lens } from "@/components/magicui/lens";
 import { Button } from "@/components/ui/button";
-import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
+import { ArrowBigLeft, ArrowBigRight, RotateCcw } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export default function AdversarialAttackDemo() {
@@ -20,6 +20,7 @@ export default function AdversarialAttackDemo() {
   const [adversarialPrediction, setAdversarialPrediction] =
     useState("No prediction yet");
   const [isLoading, setIsLoading] = useState(false);
+  const [customModelFile, setCustomModelFile] = useState(null);
   const [error, setError] = useState(null);
   useEffect(() => {
     const stored = localStorage.getItem("uploadedImages");
@@ -74,10 +75,11 @@ export default function AdversarialAttackDemo() {
   };
 
   const resetState = () => {
-    setAdversarialImage(null);
     setOriginalPrediction("No prediction yet");
     setAdversarialPrediction("No prediction yet");
     setHeatmapImage(null);
+    setOriginalScore(0);
+    setAdversialScore(0);
     setError(null);
   };
 
@@ -88,20 +90,23 @@ export default function AdversarialAttackDemo() {
       setError("Please upload or select an image first!");
       return;
     }
+    const formData = new FormData();
+    formData.append("model", model);
+    formData.append("attack", attack);
+
+    if (customModelFile) {
+      formData.append("custom_model", customModelFile);
+    }
 
     setIsLoading(true);
     setAdversarialPrediction("Generating...");
     setError(null);
 
-    const formData = new FormData();
-    formData.append("model", model);
-    formData.append("attack", attack);
+    
 
-    // 🧠 Distinguish between uploaded file or base64 image from localStorage
     if (fileInputFile) {
       formData.append("image", fileInputFile);
     } else if (originalImage) {
-      // Convert base64 data URL to Blob (so it can be appended to FormData)
       const byteString = atob(originalImage.split(",")[1]);
       const mimeString = originalImage
         .split(",")[0]
@@ -207,6 +212,9 @@ export default function AdversarialAttackDemo() {
                   <option value="vgg16" className="text-black">
                     VGG16 (ImageNet)
                   </option>
+                  <option value="custom" className="text-black">
+                    Custom Model (Upload .h5)
+                  </option>
                 </select>
                 <p className="mt-1 text-sm text-gray-500">
                   {model === "mnist"
@@ -230,13 +238,13 @@ export default function AdversarialAttackDemo() {
                   disabled={isLoading}
                 >
                   <option value="fgsm" className="text-black">
-                    FGSM (Fast Gradient Sign Method)
+                    Fast Gradient Sign Method (weak)
                   </option>
                   <option value="pgd" className="text-black">
-                    PGD (Projected Gradient Descent)
+                    Projected Gradient Descent (stronger)
                   </option>
                   <option value="bim" className="text-black">
-                    BIM (Basic Iterative Method)
+                    Basic Iterative Method (strongest)
                   </option>
                 </select>
                 <p className="mt-1 text-sm text-gray-500">
@@ -275,7 +283,6 @@ export default function AdversarialAttackDemo() {
                     <ArrowBigLeft className="mr-2" /> Previous
                   </Button>
 
-                  {/* Image index counter */}
                   <span className="text-sm text-muted-foreground">
                     {uploadedImages.length > 0
                       ? `Image ${currentImageIndex + 1} of ${
@@ -294,44 +301,55 @@ export default function AdversarialAttackDemo() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isLoading || !originalImage}
-                className={`w-fit cursor-pointer flex my-6 justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                  isLoading || !originalImage
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
-              >
-                {isLoading ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Processing...
-                  </>
-                ) : (
-                  "Generate Adversarial"
-                )}
-              </button>
+              <div className="flex items-center justify-between flex-wrap gap-4 pt-6">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isLoading || !originalImage}
+                  className={`w-fit cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm text-primary font-medium bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                    isLoading || !originalImage
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  {isLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Processing...
+                    </>
+                  ) : (
+                    "Generate Adversarial"
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={resetState}
+                  className="text-sm font-medium"
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Reset
+                </Button>
+              </div>
             </div>
 
             {error && (
@@ -469,6 +487,7 @@ export default function AdversarialAttackDemo() {
             )}
           </div>
         </div>
+        
       </section>
     </main>
   );

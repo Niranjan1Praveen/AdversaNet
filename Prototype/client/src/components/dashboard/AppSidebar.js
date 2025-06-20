@@ -1,10 +1,11 @@
 import {
   Home,
   FlaskConical, 
-  BarChart3, 
   User2,
   ChevronUp,
   Grid,
+  Sword,
+  SwordsIcon,
 } from "lucide-react";
 
 import {
@@ -45,6 +46,11 @@ const items = [
     title: "Attack Playground",
     url: "/dashboard/playground",
     icon: FlaskConical, 
+  },
+  {
+    title: "Custom Models",
+    url: "/dashboard/customModel",
+    icon: SwordsIcon, 
   },
 ];
 const AppSidebar = async () => {

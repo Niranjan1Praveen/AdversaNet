@@ -92,7 +92,6 @@ def generate_heatmap(original, adversarial):
 
     return f"/{filepath}"
 
-
 def fgsm_attack(image, model, epsilon, is_imagenet=False):
     image = tf.Variable(image)
     with tf.GradientTape() as tape:
@@ -152,43 +151,68 @@ def predict():
     model_type = request.form['model']
     attack_type = request.form['attack']
     file = request.files['image']
+    custom_model_file = request.files.get('custom_model')
 
-    config = MODEL_CONFIG.get(model_type)
-    if not config:
-        return jsonify({"error": "Invalid model type"}), 400
+    # If a custom model is provided
+    if model_type == 'custom' and custom_model_file:
+        import tempfile
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as tmp:
+            custom_model_path = tmp.name
+            custom_model_file.save(custom_model_path)
 
-    img = Image.open(file).convert("RGB" if model_type != "mnist" else "L")
-    img = img.resize(config['input_size'])
-    img_array = np.array(img).astype("float32")
+        try:
+            custom_model = tf.keras.models.load_model(custom_model_path)
+            input_size = (224, 224)
+            preprocess_fn = lambda x: x / 255.0
+            decode_fn = lambda x: [(str(i), str(prob)) for i, prob in enumerate(x[0])]
+        except Exception as e:
+            return jsonify({"error": f"Failed to load custom model: {str(e)}"}), 500
+    else:
+        config = MODEL_CONFIG.get(model_type)
+        if not config:
+            return jsonify({"error": "Invalid model type"}), 400
 
-    preprocessed = config['preprocess'](img_array)
-    input_tensor = tf.convert_to_tensor(preprocessed.reshape((1, *config['input_size'], 3 if model_type != "mnist" else 1)))
-
-    original_pred = config['model'].predict(input_tensor)
-    original_decoded = config['decode'](original_pred)[0][0]
+        custom_model = config['model']
+        input_size = config['input_size']
+        preprocess_fn = config['preprocess']
+        decode_fn = config['decode']
 
     is_imagenet = model_type != "mnist"
     epsilon = 0.01 if is_imagenet else 0.1
     alpha = 0.005
     num_iter = 10
 
+    # Preprocess image
+    img = Image.open(file).convert("RGB" if model_type != "mnist" else "L")
+    img = img.resize(input_size)
+    img_array = np.array(img).astype("float32")
+    preprocessed = preprocess_fn(img_array)
+    input_tensor = tf.convert_to_tensor(preprocessed.reshape((1, *input_size, 3 if model_type != "mnist" else 1)))
+
+    # Get original prediction
+    original_pred = custom_model.predict(input_tensor)
+    original_decoded = decode_fn(original_pred)[0][0]
+
+    # Apply attack
     attack_type = attack_type.lower()
     if attack_type == 'fgsm':
-        adv_img = fgsm_attack(input_tensor.numpy(), config['model'], epsilon, is_imagenet)
+        adv_img = fgsm_attack(input_tensor.numpy(), custom_model, epsilon, is_imagenet)
     elif attack_type == 'pgd':
-        adv_img = pgd_attack(input_tensor.numpy(), config['model'], epsilon, alpha, num_iter, is_imagenet)
+        adv_img = pgd_attack(input_tensor.numpy(), custom_model, epsilon, alpha, num_iter, is_imagenet)
     elif attack_type == 'bim':
-        adv_img = bim_attack(input_tensor.numpy(), config['model'], epsilon, alpha, num_iter, is_imagenet)
+        adv_img = bim_attack(input_tensor.numpy(), custom_model, epsilon, alpha, num_iter, is_imagenet)
     else:
         return jsonify({"error": "Unsupported attack type"}), 400
 
-    adv_prediction = config['model'].predict(adv_img)
-    adv_decoded = config['decode'](adv_prediction)[0][0]
+    # Get adversarial prediction
+    adv_prediction = custom_model.predict(adv_img)
+    adv_decoded = decode_fn(adv_prediction)[0][0]
 
+    # Convert image and heatmap
     adv_img_base64 = array_to_base64(adv_img, model_type)
     heatmap_path = generate_heatmap(input_tensor.numpy(), adv_img)
 
-
+    # Prepare response
     if model_type == "mnist":
         response = {
             "original_prediction": int(original_decoded[0]),
@@ -217,6 +241,7 @@ def predict():
         }
 
     return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
