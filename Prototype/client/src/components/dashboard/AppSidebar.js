@@ -37,14 +37,14 @@ const items = [
     icon: Home,
   },
   {
-    title: "Attack Playground",
-    url: "/dashboard/playground",
-    icon: FlaskConical, 
-  },
-  {
     title: "Gallery",
     url: "/dashboard/gallery",
     icon: Grid, 
+  },
+  {
+    title: "Attack Playground",
+    url: "/dashboard/playground",
+    icon: FlaskConical, 
   },
 ];
 const AppSidebar = async () => {

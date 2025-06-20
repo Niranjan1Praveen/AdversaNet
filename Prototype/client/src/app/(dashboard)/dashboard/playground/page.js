@@ -375,7 +375,7 @@ export default function AdversarialAttackDemo() {
                       <img
                         src={originalImage}
                         alt="Original"
-                        grayscale={model === "mnist"}
+                        className={model === "mnist" ? "grayscale" : ""}
                       />
                     </Lens>
                   </div>
@@ -404,7 +404,7 @@ export default function AdversarialAttackDemo() {
                       <img
                         src={adversarialImage}
                         alt="Adversarial"
-                        grayscale={model === "mnist"}
+                        className={model === "mnist" ? "grayscale" : ""}
                       />
                     </Lens>
                   </div>
