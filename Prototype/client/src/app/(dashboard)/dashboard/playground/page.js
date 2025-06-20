@@ -1,9 +1,9 @@
 "use client";
 import AppConfidenceChart from "@/components/dashboard/AppConfidenceChart";
-import MagnifierImage from "@/components/dashboard/AppImageMagnifier";
-import AppInfoSlider from "@/components/dashboard/AppInfoSlider";
-import { EyeIcon } from "lucide-react";
-import { useState, useRef } from "react";
+import { Lens } from "@/components/magicui/lens";
+import { Button } from "@/components/ui/button";
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 export default function AdversarialAttackDemo() {
   const [model, setModel] = useState("mnist");
@@ -13,13 +13,43 @@ export default function AdversarialAttackDemo() {
   const [originalScore, setOriginalScore] = useState(0);
   const [adversialScore, setAdversialScore] = useState(0);
   const [heatmapImage, setHeatmapImage] = useState(null);
-
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [originalPrediction, setOriginalPrediction] =
     useState("No prediction yet");
   const [adversarialPrediction, setAdversarialPrediction] =
     useState("No prediction yet");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  useEffect(() => {
+    const stored = localStorage.getItem("uploadedImages");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setUploadedImages(parsed);
+          setOriginalImage(parsed[0]?.url);
+        }
+      } catch (err) {
+        console.error("Failed to parse uploadedImages:", err);
+      }
+    }
+  }, []);
+  const handleNextImage = () => {
+    if (uploadedImages.length === 0) return;
+    const nextIndex = (currentImageIndex + 1) % uploadedImages.length;
+    setCurrentImageIndex(nextIndex);
+    setOriginalImage(uploadedImages[nextIndex].url);
+  };
+
+  const handlePreviousImage = () => {
+    if (uploadedImages.length === 0) return;
+    const prevIndex =
+      (currentImageIndex - 1 + uploadedImages.length) % uploadedImages.length;
+    setCurrentImageIndex(prevIndex);
+    setOriginalImage(uploadedImages[prevIndex].url);
+  };
+
   const fileInputRef = useRef(null);
 
   const handleModelChange = (e) => {
@@ -52,12 +82,13 @@ export default function AdversarialAttackDemo() {
   };
 
   const handleSubmit = async () => {
-    if (!fileInputRef.current?.files?.length) {
-      setError("Please upload an image first!");
+    const fileInputFile = fileInputRef.current?.files?.[0];
+
+    if (!fileInputFile && !originalImage) {
+      setError("Please upload or select an image first!");
       return;
     }
 
-    const file = fileInputRef.current.files[0];
     setIsLoading(true);
     setAdversarialPrediction("Generating...");
     setError(null);
@@ -65,7 +96,28 @@ export default function AdversarialAttackDemo() {
     const formData = new FormData();
     formData.append("model", model);
     formData.append("attack", attack);
-    formData.append("image", file);
+
+    // 🧠 Distinguish between uploaded file or base64 image from localStorage
+    if (fileInputFile) {
+      formData.append("image", fileInputFile);
+    } else if (originalImage) {
+      // Convert base64 data URL to Blob (so it can be appended to FormData)
+      const byteString = atob(originalImage.split(",")[1]);
+      const mimeString = originalImage
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      const blob = new Blob([ab], { type: mimeString });
+      const fileFromBlob = new File([blob], "image.png", { type: mimeString });
+      formData.append("image", fileFromBlob);
+    }
 
     try {
       const response = await fetch("http://127.0.0.1:5000/predict", {
@@ -82,6 +134,7 @@ export default function AdversarialAttackDemo() {
 
       setAdversarialImage(`data:image/png;base64,${data.adversarial_image}`);
       setHeatmapImage(`http://localhost:5000${data.heatmap_image}`);
+
       if (model === "mnist") {
         setOriginalPrediction(`Original: ${data.original_prediction}`);
         setAdversarialPrediction(`Adversarial: ${data.adversarial_prediction}`);
@@ -122,7 +175,7 @@ export default function AdversarialAttackDemo() {
             <h1 className="text-3xl font-bold">
               Adversarial Attack Playground
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-muted-foreground mt-2">
               Test how different models respond to adversarial examples
             </p>
           </div>
@@ -209,6 +262,37 @@ export default function AdversarialAttackDemo() {
                   className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-black hover:file:bg-indigo-100"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Select an Image from Gallery
+                </label>
+                <div className="flex items-center gap-4 mt-2">
+                  <Button
+                    variant="outline"
+                    onClick={handlePreviousImage}
+                    disabled={uploadedImages.length === 0}
+                  >
+                    <ArrowBigLeft className="mr-2" /> Previous
+                  </Button>
+
+                  {/* Image index counter */}
+                  <span className="text-sm text-muted-foreground">
+                    {uploadedImages.length > 0
+                      ? `Image ${currentImageIndex + 1} of ${
+                          uploadedImages.length
+                        }`
+                      : "No images"}
+                  </span>
+
+                  <Button
+                    variant="outline"
+                    onClick={handleNextImage}
+                    disabled={uploadedImages.length === 0}
+                  >
+                    Next <ArrowBigRight className="ml-2" />
+                  </Button>
+                </div>
+              </div>
 
               <button
                 type="button"
@@ -287,11 +371,13 @@ export default function AdversarialAttackDemo() {
               <div className="py-5 flex flex-1 flex-col">
                 {originalImage ? (
                   <div className="flex-1 flex items-center justify-center cursor-zoom-in">
-                    <MagnifierImage
-                      src={originalImage}
-                      alt="Original"
-                      grayscale={model === "mnist"}
-                    />
+                    <Lens>
+                      <img
+                        src={originalImage}
+                        alt="Original"
+                        grayscale={model === "mnist"}
+                      />
+                    </Lens>
                   </div>
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center border border-dashed p-8 text-center animate-in fade-in-50 rounded-md">
@@ -314,11 +400,13 @@ export default function AdversarialAttackDemo() {
               <div className="py-5 flex flex-col">
                 {adversarialImage ? (
                   <div className="flex-1 flex items-center justify-center cursor-zoom-in">
-                    <MagnifierImage
-                      src={adversarialImage}
-                      alt="Adversarial"
-                      grayscale={model === "mnist"}
-                    />
+                    <Lens>
+                      <img
+                        src={adversarialImage}
+                        alt="Adversarial"
+                        grayscale={model === "mnist"}
+                      />
+                    </Lens>
                   </div>
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center border border-dashed p-8 text-center animate-in fade-in-50 rounded-md">
@@ -352,8 +440,9 @@ export default function AdversarialAttackDemo() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <p className="text-sm text-gray-500 text-center flex gap-1 justify-center items-center">
-                  Red areas show where the model was most sensitive to changes
+                <p className="text-sm text-muted-foreground text-center flex gap-1 justify-center items-center">
+                  <span className="w-2 h-2 bg-red-700 rounded-full"></span>Red
+                  areas show where the model was most sensitive to changes
                 </p>
               </div>
             ) : (
@@ -379,8 +468,6 @@ export default function AdversarialAttackDemo() {
               </div>
             )}
           </div>
-
-          
         </div>
       </section>
     </main>

@@ -55,7 +55,7 @@ export default function AppInfoSlider() {
             transition={{ duration: 0.4 }}
             className="absolute top-0 left-0 right-0"
           >
-            <p className="text-lg font-medium">
+            <p className="text-lg">
               {content[type][selectedKey]}
             </p>
           </motion.div>

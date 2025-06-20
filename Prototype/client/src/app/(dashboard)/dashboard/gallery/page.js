@@ -1,4 +1,3 @@
-// app/page.js
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -7,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash2, UploadCloud, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
+
 const getLocalStorageImages = () => {
   if (typeof window !== "undefined") {
     const storedImages = localStorage.getItem("uploadedImages");
@@ -14,11 +14,11 @@ const getLocalStorageImages = () => {
   }
   return [];
 };
+
 export default function Page() {
- const [images, setImages] = useState(getLocalStorageImages());
+  const [images, setImages] = useState(getLocalStorageImages());
   const [isUploading, setIsUploading] = useState(false);
 
-  // Save images to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("uploadedImages", JSON.stringify(images));
   }, [images]);
@@ -116,7 +116,10 @@ export default function Page() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((image) => (
-            <Card key={image.id} className="overflow-hidden group bg-transparent border-0 rounded-xl">
+            <Card
+              key={image.id}
+              className="overflow-hidden group bg-transparent border-0 rounded-xl"
+            >
               <CardContent className="p-0 relative">
                 <img
                   src={image.url}
