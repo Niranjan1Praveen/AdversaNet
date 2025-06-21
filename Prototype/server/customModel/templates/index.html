@@ -1,89 +1,203 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Model File Viewer</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
-      <h1 class="text-2xl font-bold mb-6">Model File Viewer</h1>
-
-      <div class="mb-6">
-        <label
-          for="file-select"
-          class="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Select a Model File
-        </label>
-        <select
-          id="file-select"
-          class="w-full p-2 border border-gray-300 rounded-md"
-        >
-          <option value="">-- Select a file --</option>
-          {% for file in files %}
-          <option value="{{ file.id }}">
-            {{ file.name }} ({{ file.fileType }})
-          </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div id="file-info" class="hidden">
-        <h2 class="text-xl font-semibold mb-2" id="file-name"></h2>
-        <div class="bg-gray-50 p-4 rounded-md">
-          <pre id="file-content" class="whitespace-pre-wrap"></pre>
+<head>
+    <title>Model Classifier</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-6xl mx-auto space-y-8">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h1 class="text-3xl font-bold text-gray-800">Model Classifier</h1>
+            <p class="text-gray-600 mt-2">Upload images and classify them using your custom models</p>
         </div>
-      </div>
 
-      <div id="error-message" class="hidden text-red-500 mt-4"></div>
+        <!-- Model Selection -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Model Selection</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="model-select" class="block text-sm font-medium text-gray-700 mb-1">
+                        Select a Model
+                    </label>
+                    <select id="model-select" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- Select a model --</option>
+                        {% for file in files %}
+                        <option value="{{ file.id }}">{{ file.name }} ({{ file.fileType }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div id="model-info" class="hidden bg-gray-50 p-4 rounded-md">
+                    <h3 class="font-medium text-gray-800" id="model-name"></h3>
+                    <pre id="model-content" class="mt-2 whitespace-pre-wrap text-sm text-gray-600 overflow-auto max-h-40"></pre>
+                </div>
+
+                <div id="model-error" class="hidden text-red-500 text-sm"></div>
+            </div>
+        </div>
+
+        <!-- Image Classification -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Image Classification</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Upload Image
+                    </label>
+                    <div class="mt-1 flex items-center">
+                        <input type="file" id="image-upload" accept="image/*" class="hidden">
+                        <label for="image-upload" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">
+                            Choose File
+                        </label>
+                        <span id="file-name" class="ml-2 text-sm text-gray-500">No file selected</span>
+                    </div>
+                </div>
+
+                <button id="classify-btn" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50" disabled>
+                    Classify Image
+                </button>
+
+                <div id="result-container" class="hidden bg-gray-50 p-4 rounded-md">
+                    <h3 class="font-medium text-gray-800">Classification Results</h3>
+                    <p class="text-sm text-gray-600 mt-1">Model: <span id="result-model-name" class="font-medium"></span></p>
+                    <div id="predictions" class="mt-3 space-y-2"></div>
+                </div>
+
+                <div id="classification-error" class="hidden text-red-500 text-sm"></div>
+            </div>
+        </div>
     </div>
 
     <script>
-      document
-        .getElementById("file-select")
-        .addEventListener("change", async function () {
-          const fileId = this.value;
-          const fileInfo = document.getElementById("file-info");
-          const errorMessage = document.getElementById("error-message");
+        // Model Viewer Functionality
+        document.getElementById('model-select').addEventListener('change', async function() {
+            const fileId = this.value;
+            const modelInfo = document.getElementById('model-info');
+            const modelError = document.getElementById('model-error');
 
-          // Reset UI
-          fileInfo.classList.add("hidden");
-          errorMessage.classList.add("hidden");
+            // Reset UI
+            modelInfo.classList.add('hidden');
+            modelError.classList.add('hidden');
 
-          if (!fileId) return;
+            if (!fileId) return;
 
-          try {
-            const response = await fetch("/get_file_content", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              body: `file_id=${encodeURIComponent(fileId)}`,
-            });
+            try {
+                const response = await fetch('/get_file_content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `file_id=${encodeURIComponent(fileId)}`,
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (data.success) {
-              document.getElementById("file-name").textContent = data.name;
-              document.getElementById("file-content").textContent =
-                data.content;
-              fileInfo.classList.remove("hidden");
-            } else {
-              // Show detailed error message
-              let errorMsg = data.error;
-              if (data.debug_info?.attempted_storage_path) {
-                errorMsg += `\n(Tried path: ${data.debug_info.attempted_storage_path})`;
-              }
-              throw new Error(errorMsg);
+                if (data.success) {
+                    document.getElementById('model-name').textContent = data.name;
+                    document.getElementById('model-content').textContent = data.content;
+                    modelInfo.classList.remove('hidden');
+                } else {
+                    throw new Error(data.error || 'Failed to load model');
+                }
+            } catch (error) {
+                modelError.textContent = `Error: ${error.message}`;
+                modelError.classList.remove('hidden');
             }
-          } catch (error) {
-            errorMessage.textContent = `Error: ${error.message}`;
-            errorMessage.classList.remove("hidden");
-          }
+        });
+
+        // Image Classification Functionality
+        const imageUpload = document.getElementById('image-upload');
+        const classifyBtn = document.getElementById('classify-btn');
+        const fileName = document.getElementById('file-name');
+
+        imageUpload.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                fileName.textContent = this.files[0].name;
+                classifyBtn.disabled = !document.getElementById('model-select').value;
+            } else {
+                fileName.textContent = 'No file selected';
+                classifyBtn.disabled = true;
+            }
+        });
+
+        document.getElementById('model-select').addEventListener('change', function() {
+            classifyBtn.disabled = !this.value || !imageUpload.files.length;
+        });
+
+        classifyBtn.addEventListener('click', async function() {
+            const modelId = document.getElementById('model-select').value;
+            const imageFile = imageUpload.files[0];
+            const resultContainer = document.getElementById('result-container');
+            const classificationError = document.getElementById('classification-error');
+
+            // Reset UI
+            resultContainer.classList.add('hidden');
+            classificationError.classList.add('hidden');
+
+            if (!imageFile || !modelId) return;
+
+            const formData = new FormData();
+            formData.append('image', imageFile);
+            formData.append('model_id', modelId);
+
+            try {
+                classifyBtn.disabled = true;
+                classifyBtn.textContent = 'Processing...';
+
+                const response = await fetch('/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                // Display results
+                document.getElementById('result-model-name').textContent = result.model_name;
+                const predictionsDiv = document.getElementById('predictions');
+                predictionsDiv.innerHTML = '';
+
+                result.predictions.forEach(pred => {
+                    const predictionElement = document.createElement('div');
+                    predictionElement.className = 'flex justify-between items-center';
+                    
+                    const labelElement = document.createElement('span');
+                    labelElement.className = 'text-gray-800';
+                    labelElement.textContent = `Class ${pred.class}`;
+                    
+                    const progressContainer = document.createElement('div');
+                    progressContainer.className = 'w-1/2 bg-gray-200 rounded-full h-2.5';
+                    
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'bg-blue-600 h-2.5 rounded-full';
+                    progressBar.style.width = `${pred.probability * 100}%`;
+                    
+                    progressContainer.appendChild(progressBar);
+                    
+                    const percentageElement = document.createElement('span');
+                    percentageElement.className = 'ml-2 text-gray-600 text-sm';
+                    percentageElement.textContent = `${(pred.probability * 100).toFixed(1)}%`;
+                    
+                    predictionElement.appendChild(labelElement);
+                    predictionElement.appendChild(progressContainer);
+                    predictionElement.appendChild(percentageElement);
+                    
+                    predictionsDiv.appendChild(predictionElement);
+                });
+
+                resultContainer.classList.remove('hidden');
+            } catch (error) {
+                classificationError.textContent = `Error: ${error.message}`;
+                classificationError.classList.remove('hidden');
+            } finally {
+                classifyBtn.disabled = false;
+                classifyBtn.textContent = 'Classify Image';
+            }
         });
     </script>
-  </body>
+</body>
 </html>

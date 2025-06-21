@@ -2,7 +2,14 @@
 import AppConfidenceChart from "@/components/dashboard/AppConfidenceChart";
 import { Lens } from "@/components/magicui/lens";
 import { Button } from "@/components/ui/button";
-import { ArrowBigLeft, ArrowBigRight, RotateCcw } from "lucide-react";
+import {
+  ArrowBigLeft,
+  ArrowBigRight,
+  DropletIcon,
+  FileUp,
+  RotateCcw,
+  ZapIcon,
+} from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 export default function AdversarialAttackDemo() {
@@ -247,9 +254,6 @@ export default function AdversarialAttackDemo() {
                   <option value="vgg16" className="text-black">
                     VGG16 (ImageNet)
                   </option>
-                  <option value="custom" className="text-black">
-                    Custom Model (Upload .h5)
-                  </option>
                 </select>
                 <p className="mt-1 text-sm text-gray-500">
                   {model === "mnist"
@@ -287,60 +291,75 @@ export default function AdversarialAttackDemo() {
                 </p>
               </div>
             </div>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex flex-col">
-                <label
-                  htmlFor="image-input"
-                  className="block text-sm font-medium mb-2"
+            <div className="mt-6 grid grid-cols-1 gap-4">
+              <div className="relative h-30 rounded-xl overflow-hidden flex w-full bg-muted/30">
+                {/* Upload an Image*/}
+                <div
+                  className="flex items-center justify-center bg-indigo-600 p-4"
+                  style={{
+                    clipPath: "polygon(0% 0%, 100% 0%, 80% 100%, 0% 100%)",
+                  }}
                 >
-                  Upload an Image
-                </label>
-                <input
-                  type="file"
-                  id="image-input"
-                  ref={fileInputRef}
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  disabled={isLoading}
-                  className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-black hover:file:bg-indigo-100"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Select an Image from Gallery
-                </label>
-                <div className="flex items-center gap-4 mt-2">
-                  <Button
-                    variant="outline"
-                    onClick={handlePreviousImage}
-                    disabled={uploadedImages.length === 0}
-                  >
-                    <ArrowBigLeft className="mr-2" /> Previous
-                  </Button>
+                  <div>
+                    <label
+                      htmlFor="image-input"
+                      className="block text-sm font-medium mb-2 text-center text-white"
+                    >
+                      Upload an Image
+                    </label>
+                    <input
+                      type="file"
+                      id="image-input"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      disabled={isLoading}
+                      className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-black hover:file:bg-indigo-100"
+                    />
+                  </div>
+                </div>
 
-                  <span className="text-sm text-muted-foreground">
-                    {uploadedImages.length > 0
-                      ? `Image ${currentImageIndex + 1} of ${
-                          uploadedImages.length
-                        }`
-                      : "No images"}
-                  </span>
+                {/* Select an Image from Gallery */}
+                <div className="flex items-center justify-center overflow-auto">
+                  <div className="p-4">
+                    <label className="block text-sm text-center font-medium mb-2">
+                      Select an Image from Gallery
+                    </label>
+                    <div className="flex items-center gap-4 mt-2">
+                      <Button
+                        variant="outline"
+                        onClick={handlePreviousImage}
+                        disabled={uploadedImages.length === 0}
+                      >
+                        <ArrowBigLeft className="mr-2" /> Previous
+                      </Button>
 
-                  <Button
-                    variant="outline"
-                    onClick={handleNextImage}
-                    disabled={uploadedImages.length === 0}
-                  >
-                    Next <ArrowBigRight className="ml-2" />
-                  </Button>
+                      <span className="text-sm text-muted-foreground">
+                        {uploadedImages.length > 0
+                          ? `Image ${currentImageIndex + 1} of ${
+                              uploadedImages.length
+                            }`
+                          : "No images"}
+                      </span>
+
+                      <Button
+                        variant="outline"
+                        onClick={handleNextImage}
+                        disabled={uploadedImages.length === 0}
+                      >
+                        Next <ArrowBigRight className="ml-2" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
-
+            </div>
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center justify-between flex-wrap gap-4 pt-6">
                 <Button
                   onClick={handleSubmit}
                   disabled={isLoading || !originalImage}
-                  className={`w-fit cursor-pointer flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm text-primary font-medium bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                  className={`w-fit cursor-pointer flex justify-center py-2 px-4 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                     isLoading || !originalImage
                       ? "opacity-50 cursor-not-allowed"
                       : ""
@@ -392,13 +411,12 @@ export default function AdversarialAttackDemo() {
                   disabled={!adversarialImage}
                   className={"bg-lime-400"}
                 >
-                  Save Analysis Result
+                  Save Results
                 </Button>
               </div>
             </div>
-
             {error && (
-              <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400">
+              <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400 rounded-md">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <svg

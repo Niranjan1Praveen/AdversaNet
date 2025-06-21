@@ -7,7 +7,7 @@ import { OrbitingCircles } from "@/components/magicui/orbiting-circles";
 
 const features = [
   "Upload Custom or Sample Images",
-  "Apply FGSM, PGD, DeepFool Attacks",
+  "Apply FGSM, PGD, BIM Attacks",
   "View Original vs. Perturbed Images",
   "Model Confidence Score Charts",
   "Visual Perturbation Heatmaps",

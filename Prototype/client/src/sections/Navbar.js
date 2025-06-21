@@ -6,6 +6,7 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs";
+import { AuroraText } from "@/components/magicui/aurora-text";
 const navLinks = [
   { label: "Home", href: "" },
   { label: "Features", href: "#features" },
@@ -23,9 +24,11 @@ export default function Navbar() {
               <div className="flex items-center">
                 <Image src={logo} alt="Logo Icon" className="h-13 w-12" />
                 <p className="text-2xl font-bold text-white/20 md:inline-flex hidden">
-                  <span className="bg-gradient-to-r from-[#3EDFA3] via-[#30F6F0] to-[#5EF7BA] bg-clip-text">
+                  <AuroraText
+                    colors={["#4ade80", "#30f6d5", "#5EF7BA", "#06b6d4"]}
+                  >
                     AdversaNet
-                  </span>
+                  </AuroraText>
                 </p>
               </div>
               <div className="lg:flex justify-center items-center hidden">

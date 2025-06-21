@@ -2,11 +2,7 @@
 import { AnimatedGradientText } from "@/components/magicui/animated-gradient-text";
 import { AuroraText } from "@/components/magicui/aurora-text";
 import { RainbowButton } from "@/components/magicui/rainbow-button";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
-import { ChevronRight, SparkleIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -45,8 +41,15 @@ export default function Hero() {
             it easier to learn, teach, and build more secure systems.
           </p>
           <div className="flex mt-8 md:max-w-lg mx-auto items-center justify-center gap-5">
-            <RainbowButton variant={"outline"} className="rounded-full text-black p-6">Read Docs</RainbowButton>
-            <RainbowButton className="text-white rounded-full p-6"><a href="#pricing">Get Started Now</a></RainbowButton>
+            <RainbowButton
+              variant={"outline"}
+              className="rounded-full text-black p-5"
+            >
+              Read Docs
+            </RainbowButton>
+            <RainbowButton className="text-white rounded-full p-5">
+              <a href="#pricing">Get Started Now</a>
+            </RainbowButton>
           </div>
         </div>
       </div>
