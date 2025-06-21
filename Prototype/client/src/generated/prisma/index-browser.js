@@ -137,9 +137,25 @@ exports.Prisma.CustomModelScalarFieldEnum = {
   fileType: 'fileType',
   fileSize: 'fileSize',
   filePath: 'filePath',
+  fileData: 'fileData',
   description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AnalysisResultScalarFieldEnum = {
+  id: 'id',
+  modelUsed: 'modelUsed',
+  attackUsed: 'attackUsed',
+  originalPrediction: 'originalPrediction',
+  originalConfidence: 'originalConfidence',
+  adversarialPrediction: 'adversarialPrediction',
+  adversarialConfidence: 'adversarialConfidence',
+  originalImage: 'originalImage',
+  adversarialImage: 'adversarialImage',
+  heatmapImage: 'heatmapImage',
+  createdAt: 'createdAt',
+  userId: 'userId'
 };
 
 exports.Prisma.SortOrder = {
@@ -160,7 +176,8 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  CustomModel: 'CustomModel'
+  CustomModel: 'CustomModel',
+  AnalysisResult: 'AnalysisResult'
 };
 
 /**

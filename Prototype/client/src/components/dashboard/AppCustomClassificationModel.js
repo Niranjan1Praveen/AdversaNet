@@ -18,12 +18,13 @@ const AppCustomClassificationModel = () => {
   const [models, setModels] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Fetch models from API
   const fetchModels = async () => {
     try {
       const res = await fetch("/api/models");
       if (!res.ok) throw new Error("Failed to fetch models");
       const data = await res.json();
+      console.log(data);
+      
       setModels(data);
     } catch (err) {
       toast.error("Error fetching models", { description: err.message });
@@ -34,7 +35,6 @@ const AppCustomClassificationModel = () => {
     fetchModels();
   }, []);
 
-  // Upload handler
   const handleModelUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -79,7 +79,6 @@ const AppCustomClassificationModel = () => {
     }
   };
 
-  // Delete handler
   const handleClear = async (modelId) => {
     try {
       const response = await fetch(`/api/models?id=${modelId}`, {
@@ -117,7 +116,7 @@ const AppCustomClassificationModel = () => {
         disabled={isUploading}
       >
         <UploadCloud className="w-4 h-4" />
-        {isUploading ? "Uploading..." : "Upload Model"}
+        {isUploading ? "Uploading..." : "Upload Model (pt, onnx, pkl, h5)"}
       </Button>
 
       <div className="mt-6">
@@ -129,6 +128,8 @@ const AppCustomClassificationModel = () => {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Uploaded At</TableHead>
+                <TableHead>Size(K.B)</TableHead>
+                <TableHead>File Type</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -139,6 +140,8 @@ const AppCustomClassificationModel = () => {
                   <TableCell>
                     {new Date(model.createdAt).toLocaleString()}
                   </TableCell>
+                  <TableCell>{model.fileSize}</TableCell>
+                  <TableCell>{model.fileType}</TableCell>
                   <TableCell>
                     <Button
                       size="icon"
@@ -150,6 +153,7 @@ const AppCustomClassificationModel = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
+                
               ))}
             </TableBody>
           </Table>

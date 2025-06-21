@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Model File Viewer</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
+      <h1 class="text-2xl font-bold mb-6">Model File Viewer</h1>
+
+      <div class="mb-6">
+        <label
+          for="file-select"
+          class="block text-sm font-medium text-gray-700 mb-2"
+        >
+          Select a Model File
+        </label>
+        <select
+          id="file-select"
+          class="w-full p-2 border border-gray-300 rounded-md"
+        >
+          <option value="">-- Select a file --</option>
+          {% for file in files %}
+          <option value="{{ file.id }}">
+            {{ file.name }} ({{ file.fileType }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div id="file-info" class="hidden">
+        <h2 class="text-xl font-semibold mb-2" id="file-name"></h2>
+        <div class="bg-gray-50 p-4 rounded-md">
+          <pre id="file-content" class="whitespace-pre-wrap"></pre>
+        </div>
+      </div>
+
+      <div id="error-message" class="hidden text-red-500 mt-4"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("file-select")
+        .addEventListener("change", async function () {
+          const fileId = this.value;
+          const fileInfo = document.getElementById("file-info");
+          const errorMessage = document.getElementById("error-message");
+
+          // Reset UI
+          fileInfo.classList.add("hidden");
+          errorMessage.classList.add("hidden");
+
+          if (!fileId) return;
+
+          try {
+            const response = await fetch("/get_file_content", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: `file_id=${encodeURIComponent(fileId)}`,
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              document.getElementById("file-name").textContent = data.name;
+              document.getElementById("file-content").textContent =
+                data.content;
+              fileInfo.classList.remove("hidden");
+            } else {
+              // Show detailed error message
+              let errorMsg = data.error;
+              if (data.debug_info?.attempted_storage_path) {
+                errorMsg += `\n(Tried path: ${data.debug_info.attempted_storage_path})`;
+              }
+              throw new Error(errorMsg);
+            }
+          } catch (error) {
+            errorMessage.textContent = `Error: ${error.message}`;
+            errorMessage.classList.remove("hidden");
+          }
+        });
+    </script>
+  </body>
+</html>

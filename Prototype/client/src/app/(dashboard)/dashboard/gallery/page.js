@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash2, UploadCloud, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
+import { SparklesText } from "@/components/magicui/sparkles-text";
 
 const getLocalStorageImages = () => {
   if (typeof window !== "undefined") {
@@ -18,6 +19,10 @@ const getLocalStorageImages = () => {
 export default function Page() {
   const [images, setImages] = useState(getLocalStorageImages());
   const [isUploading, setIsUploading] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("uploadedImages", JSON.stringify(images));
@@ -67,7 +72,9 @@ export default function Page() {
     <div className="container p-6">
       <div className="flex mb-8 justify-between flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold mb-4">Image Gallery</h1>
+          <SparklesText className="text-3xl font-bold mb-4" sparklesCount={7}>
+            Image Gallery
+          </SparklesText>
           <p className="text-muted-foreground mb-6">
             Upload and manage your images.
           </p>
@@ -105,7 +112,7 @@ export default function Page() {
         </div>
       </div>
 
-      {images.length === 0 ? (
+      {!isHydrated ? null : images.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 border-2 border-dashed rounded-lg w-full">
           <ImageIcon className="w-12 h-12 mb-4" />
           <h3 className="text-lg font-medium">No images uploaded yet</h3>
@@ -118,15 +125,15 @@ export default function Page() {
           {images.map((image) => (
             <Card
               key={image.id}
-              className="overflow-hidden group bg-transparent border-0 rounded-xl"
+              className="overflow-hidden group bg-transparent border-0 rounded-xl shadow-none h-64"
             >
-              <CardContent className="p-0 relative">
+              <CardContent className="p-0 relative h-full">
                 <img
                   src={image.url}
                   alt={image.name}
-                  className="w-full h-48 object-cover rounded-xl"
+                  className="w-full h-full object-cover rounded-xl"
                 />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4 bg-black/30 rounded-xl">
                   <div className="flex justify-between items-center">
                     <p className="text-white text-sm truncate">{image.name}</p>
                     <Button

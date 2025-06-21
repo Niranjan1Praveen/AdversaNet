@@ -23,6 +23,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type CustomModel = $Result.DefaultSelection<Prisma.$CustomModelPayload>
+/**
+ * Model AnalysisResult
+ * 
+ */
+export type AnalysisResult = $Result.DefaultSelection<Prisma.$AnalysisResultPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -168,6 +173,16 @@ export class PrismaClient<
     * ```
     */
   get customModel(): Prisma.CustomModelDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.analysisResult`: Exposes CRUD operations for the **AnalysisResult** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AnalysisResults
+    * const analysisResults = await prisma.analysisResult.findMany()
+    * ```
+    */
+  get analysisResult(): Prisma.AnalysisResultDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -609,7 +624,8 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    CustomModel: 'CustomModel'
+    CustomModel: 'CustomModel',
+    AnalysisResult: 'AnalysisResult'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -628,7 +644,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "customModel"
+      modelProps: "user" | "customModel" | "analysisResult"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -780,6 +796,80 @@ export namespace Prisma {
           }
         }
       }
+      AnalysisResult: {
+        payload: Prisma.$AnalysisResultPayload<ExtArgs>
+        fields: Prisma.AnalysisResultFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AnalysisResultFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AnalysisResultFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>
+          }
+          findFirst: {
+            args: Prisma.AnalysisResultFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AnalysisResultFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>
+          }
+          findMany: {
+            args: Prisma.AnalysisResultFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>[]
+          }
+          create: {
+            args: Prisma.AnalysisResultCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>
+          }
+          createMany: {
+            args: Prisma.AnalysisResultCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AnalysisResultCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>[]
+          }
+          delete: {
+            args: Prisma.AnalysisResultDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>
+          }
+          update: {
+            args: Prisma.AnalysisResultUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>
+          }
+          deleteMany: {
+            args: Prisma.AnalysisResultDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AnalysisResultUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AnalysisResultUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>[]
+          }
+          upsert: {
+            args: Prisma.AnalysisResultUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AnalysisResultPayload>
+          }
+          aggregate: {
+            args: Prisma.AnalysisResultAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAnalysisResult>
+          }
+          groupBy: {
+            args: Prisma.AnalysisResultGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AnalysisResultGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AnalysisResultCountArgs<ExtArgs>
+            result: $Utils.Optional<AnalysisResultCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -866,6 +956,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     customModel?: CustomModelOmit
+    analysisResult?: AnalysisResultOmit
   }
 
   /* Types for Logging */
@@ -961,10 +1052,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     UserModel: number
+    AnalysisResult: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     UserModel?: boolean | UserCountOutputTypeCountUserModelArgs
+    AnalysisResult?: boolean | UserCountOutputTypeCountAnalysisResultArgs
   }
 
   // Custom InputTypes
@@ -983,6 +1076,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUserModelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CustomModelWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAnalysisResultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AnalysisResultWhereInput
   }
 
 
@@ -1163,6 +1263,7 @@ export namespace Prisma {
     profileImage?: boolean
     createdAt?: boolean
     UserModel?: boolean | User$UserModelArgs<ExtArgs>
+    AnalysisResult?: boolean | User$AnalysisResultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1196,6 +1297,7 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "profileImage" | "createdAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     UserModel?: boolean | User$UserModelArgs<ExtArgs>
+    AnalysisResult?: boolean | User$AnalysisResultArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1205,6 +1307,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       UserModel: Prisma.$CustomModelPayload<ExtArgs>[]
+      AnalysisResult: Prisma.$AnalysisResultPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1608,6 +1711,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     UserModel<T extends User$UserModelArgs<ExtArgs> = {}>(args?: Subset<T, User$UserModelArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    AnalysisResult<T extends User$AnalysisResultArgs<ExtArgs> = {}>(args?: Subset<T, User$AnalysisResultArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2055,6 +2159,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.AnalysisResult
+   */
+  export type User$AnalysisResultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    where?: AnalysisResultWhereInput
+    orderBy?: AnalysisResultOrderByWithRelationInput | AnalysisResultOrderByWithRelationInput[]
+    cursor?: AnalysisResultWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AnalysisResultScalarFieldEnum | AnalysisResultScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2101,6 +2229,7 @@ export namespace Prisma {
     fileType: string | null
     fileSize: number | null
     filePath: string | null
+    fileData: Uint8Array | null
     description: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2114,6 +2243,7 @@ export namespace Prisma {
     fileType: string | null
     fileSize: number | null
     filePath: string | null
+    fileData: Uint8Array | null
     description: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2127,6 +2257,7 @@ export namespace Prisma {
     fileType: number
     fileSize: number
     filePath: number
+    fileData: number
     description: number
     createdAt: number
     updatedAt: number
@@ -2150,6 +2281,7 @@ export namespace Prisma {
     fileType?: true
     fileSize?: true
     filePath?: true
+    fileData?: true
     description?: true
     createdAt?: true
     updatedAt?: true
@@ -2163,6 +2295,7 @@ export namespace Prisma {
     fileType?: true
     fileSize?: true
     filePath?: true
+    fileData?: true
     description?: true
     createdAt?: true
     updatedAt?: true
@@ -2176,6 +2309,7 @@ export namespace Prisma {
     fileType?: true
     fileSize?: true
     filePath?: true
+    fileData?: true
     description?: true
     createdAt?: true
     updatedAt?: true
@@ -2276,6 +2410,7 @@ export namespace Prisma {
     fileType: string
     fileSize: number
     filePath: string
+    fileData: Uint8Array | null
     description: string | null
     createdAt: Date
     updatedAt: Date
@@ -2308,6 +2443,7 @@ export namespace Prisma {
     fileType?: boolean
     fileSize?: boolean
     filePath?: boolean
+    fileData?: boolean
     description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2322,6 +2458,7 @@ export namespace Prisma {
     fileType?: boolean
     fileSize?: boolean
     filePath?: boolean
+    fileData?: boolean
     description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2336,6 +2473,7 @@ export namespace Prisma {
     fileType?: boolean
     fileSize?: boolean
     filePath?: boolean
+    fileData?: boolean
     description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2350,12 +2488,13 @@ export namespace Prisma {
     fileType?: boolean
     fileSize?: boolean
     filePath?: boolean
+    fileData?: boolean
     description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CustomModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "fileName" | "fileType" | "fileSize" | "filePath" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["customModel"]>
+  export type CustomModelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "fileName" | "fileType" | "fileSize" | "filePath" | "fileData" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["customModel"]>
   export type CustomModelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2379,6 +2518,7 @@ export namespace Prisma {
       fileType: string
       fileSize: number
       filePath: string
+      fileData: Uint8Array | null
       description: string | null
       createdAt: Date
       updatedAt: Date
@@ -2813,6 +2953,7 @@ export namespace Prisma {
     readonly fileType: FieldRef<"CustomModel", 'String'>
     readonly fileSize: FieldRef<"CustomModel", 'Int'>
     readonly filePath: FieldRef<"CustomModel", 'String'>
+    readonly fileData: FieldRef<"CustomModel", 'Bytes'>
     readonly description: FieldRef<"CustomModel", 'String'>
     readonly createdAt: FieldRef<"CustomModel", 'DateTime'>
     readonly updatedAt: FieldRef<"CustomModel", 'DateTime'>
@@ -3231,6 +3372,1193 @@ export namespace Prisma {
 
 
   /**
+   * Model AnalysisResult
+   */
+
+  export type AggregateAnalysisResult = {
+    _count: AnalysisResultCountAggregateOutputType | null
+    _avg: AnalysisResultAvgAggregateOutputType | null
+    _sum: AnalysisResultSumAggregateOutputType | null
+    _min: AnalysisResultMinAggregateOutputType | null
+    _max: AnalysisResultMaxAggregateOutputType | null
+  }
+
+  export type AnalysisResultAvgAggregateOutputType = {
+    originalConfidence: number | null
+    adversarialConfidence: number | null
+  }
+
+  export type AnalysisResultSumAggregateOutputType = {
+    originalConfidence: number | null
+    adversarialConfidence: number | null
+  }
+
+  export type AnalysisResultMinAggregateOutputType = {
+    id: string | null
+    modelUsed: string | null
+    attackUsed: string | null
+    originalPrediction: string | null
+    originalConfidence: number | null
+    adversarialPrediction: string | null
+    adversarialConfidence: number | null
+    originalImage: string | null
+    adversarialImage: string | null
+    heatmapImage: string | null
+    createdAt: Date | null
+    userId: string | null
+  }
+
+  export type AnalysisResultMaxAggregateOutputType = {
+    id: string | null
+    modelUsed: string | null
+    attackUsed: string | null
+    originalPrediction: string | null
+    originalConfidence: number | null
+    adversarialPrediction: string | null
+    adversarialConfidence: number | null
+    originalImage: string | null
+    adversarialImage: string | null
+    heatmapImage: string | null
+    createdAt: Date | null
+    userId: string | null
+  }
+
+  export type AnalysisResultCountAggregateOutputType = {
+    id: number
+    modelUsed: number
+    attackUsed: number
+    originalPrediction: number
+    originalConfidence: number
+    adversarialPrediction: number
+    adversarialConfidence: number
+    originalImage: number
+    adversarialImage: number
+    heatmapImage: number
+    createdAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type AnalysisResultAvgAggregateInputType = {
+    originalConfidence?: true
+    adversarialConfidence?: true
+  }
+
+  export type AnalysisResultSumAggregateInputType = {
+    originalConfidence?: true
+    adversarialConfidence?: true
+  }
+
+  export type AnalysisResultMinAggregateInputType = {
+    id?: true
+    modelUsed?: true
+    attackUsed?: true
+    originalPrediction?: true
+    originalConfidence?: true
+    adversarialPrediction?: true
+    adversarialConfidence?: true
+    originalImage?: true
+    adversarialImage?: true
+    heatmapImage?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type AnalysisResultMaxAggregateInputType = {
+    id?: true
+    modelUsed?: true
+    attackUsed?: true
+    originalPrediction?: true
+    originalConfidence?: true
+    adversarialPrediction?: true
+    adversarialConfidence?: true
+    originalImage?: true
+    adversarialImage?: true
+    heatmapImage?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type AnalysisResultCountAggregateInputType = {
+    id?: true
+    modelUsed?: true
+    attackUsed?: true
+    originalPrediction?: true
+    originalConfidence?: true
+    adversarialPrediction?: true
+    adversarialConfidence?: true
+    originalImage?: true
+    adversarialImage?: true
+    heatmapImage?: true
+    createdAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type AnalysisResultAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AnalysisResult to aggregate.
+     */
+    where?: AnalysisResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AnalysisResults to fetch.
+     */
+    orderBy?: AnalysisResultOrderByWithRelationInput | AnalysisResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AnalysisResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AnalysisResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AnalysisResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AnalysisResults
+    **/
+    _count?: true | AnalysisResultCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AnalysisResultAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AnalysisResultSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AnalysisResultMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AnalysisResultMaxAggregateInputType
+  }
+
+  export type GetAnalysisResultAggregateType<T extends AnalysisResultAggregateArgs> = {
+        [P in keyof T & keyof AggregateAnalysisResult]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAnalysisResult[P]>
+      : GetScalarType<T[P], AggregateAnalysisResult[P]>
+  }
+
+
+
+
+  export type AnalysisResultGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AnalysisResultWhereInput
+    orderBy?: AnalysisResultOrderByWithAggregationInput | AnalysisResultOrderByWithAggregationInput[]
+    by: AnalysisResultScalarFieldEnum[] | AnalysisResultScalarFieldEnum
+    having?: AnalysisResultScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AnalysisResultCountAggregateInputType | true
+    _avg?: AnalysisResultAvgAggregateInputType
+    _sum?: AnalysisResultSumAggregateInputType
+    _min?: AnalysisResultMinAggregateInputType
+    _max?: AnalysisResultMaxAggregateInputType
+  }
+
+  export type AnalysisResultGroupByOutputType = {
+    id: string
+    modelUsed: string
+    attackUsed: string
+    originalPrediction: string
+    originalConfidence: number
+    adversarialPrediction: string
+    adversarialConfidence: number
+    originalImage: string
+    adversarialImage: string
+    heatmapImage: string | null
+    createdAt: Date
+    userId: string
+    _count: AnalysisResultCountAggregateOutputType | null
+    _avg: AnalysisResultAvgAggregateOutputType | null
+    _sum: AnalysisResultSumAggregateOutputType | null
+    _min: AnalysisResultMinAggregateOutputType | null
+    _max: AnalysisResultMaxAggregateOutputType | null
+  }
+
+  type GetAnalysisResultGroupByPayload<T extends AnalysisResultGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AnalysisResultGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AnalysisResultGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AnalysisResultGroupByOutputType[P]>
+            : GetScalarType<T[P], AnalysisResultGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AnalysisResultSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    modelUsed?: boolean
+    attackUsed?: boolean
+    originalPrediction?: boolean
+    originalConfidence?: boolean
+    adversarialPrediction?: boolean
+    adversarialConfidence?: boolean
+    originalImage?: boolean
+    adversarialImage?: boolean
+    heatmapImage?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["analysisResult"]>
+
+  export type AnalysisResultSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    modelUsed?: boolean
+    attackUsed?: boolean
+    originalPrediction?: boolean
+    originalConfidence?: boolean
+    adversarialPrediction?: boolean
+    adversarialConfidence?: boolean
+    originalImage?: boolean
+    adversarialImage?: boolean
+    heatmapImage?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["analysisResult"]>
+
+  export type AnalysisResultSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    modelUsed?: boolean
+    attackUsed?: boolean
+    originalPrediction?: boolean
+    originalConfidence?: boolean
+    adversarialPrediction?: boolean
+    adversarialConfidence?: boolean
+    originalImage?: boolean
+    adversarialImage?: boolean
+    heatmapImage?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["analysisResult"]>
+
+  export type AnalysisResultSelectScalar = {
+    id?: boolean
+    modelUsed?: boolean
+    attackUsed?: boolean
+    originalPrediction?: boolean
+    originalConfidence?: boolean
+    adversarialPrediction?: boolean
+    adversarialConfidence?: boolean
+    originalImage?: boolean
+    adversarialImage?: boolean
+    heatmapImage?: boolean
+    createdAt?: boolean
+    userId?: boolean
+  }
+
+  export type AnalysisResultOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "modelUsed" | "attackUsed" | "originalPrediction" | "originalConfidence" | "adversarialPrediction" | "adversarialConfidence" | "originalImage" | "adversarialImage" | "heatmapImage" | "createdAt" | "userId", ExtArgs["result"]["analysisResult"]>
+  export type AnalysisResultInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AnalysisResultIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AnalysisResultIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AnalysisResultPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AnalysisResult"
+    objects: {
+      User: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      modelUsed: string
+      attackUsed: string
+      originalPrediction: string
+      originalConfidence: number
+      adversarialPrediction: string
+      adversarialConfidence: number
+      originalImage: string
+      adversarialImage: string
+      heatmapImage: string | null
+      createdAt: Date
+      userId: string
+    }, ExtArgs["result"]["analysisResult"]>
+    composites: {}
+  }
+
+  type AnalysisResultGetPayload<S extends boolean | null | undefined | AnalysisResultDefaultArgs> = $Result.GetResult<Prisma.$AnalysisResultPayload, S>
+
+  type AnalysisResultCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AnalysisResultFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AnalysisResultCountAggregateInputType | true
+    }
+
+  export interface AnalysisResultDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AnalysisResult'], meta: { name: 'AnalysisResult' } }
+    /**
+     * Find zero or one AnalysisResult that matches the filter.
+     * @param {AnalysisResultFindUniqueArgs} args - Arguments to find a AnalysisResult
+     * @example
+     * // Get one AnalysisResult
+     * const analysisResult = await prisma.analysisResult.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AnalysisResultFindUniqueArgs>(args: SelectSubset<T, AnalysisResultFindUniqueArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AnalysisResult that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AnalysisResultFindUniqueOrThrowArgs} args - Arguments to find a AnalysisResult
+     * @example
+     * // Get one AnalysisResult
+     * const analysisResult = await prisma.analysisResult.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AnalysisResultFindUniqueOrThrowArgs>(args: SelectSubset<T, AnalysisResultFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AnalysisResult that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AnalysisResultFindFirstArgs} args - Arguments to find a AnalysisResult
+     * @example
+     * // Get one AnalysisResult
+     * const analysisResult = await prisma.analysisResult.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AnalysisResultFindFirstArgs>(args?: SelectSubset<T, AnalysisResultFindFirstArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AnalysisResult that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AnalysisResultFindFirstOrThrowArgs} args - Arguments to find a AnalysisResult
+     * @example
+     * // Get one AnalysisResult
+     * const analysisResult = await prisma.analysisResult.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AnalysisResultFindFirstOrThrowArgs>(args?: SelectSubset<T, AnalysisResultFindFirstOrThrowArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AnalysisResults that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AnalysisResultFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AnalysisResults
+     * const analysisResults = await prisma.analysisResult.findMany()
+     * 
+     * // Get first 10 AnalysisResults
+     * const analysisResults = await prisma.analysisResult.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const analysisResultWithIdOnly = await prisma.analysisResult.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AnalysisResultFindManyArgs>(args?: SelectSubset<T, AnalysisResultFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AnalysisResult.
+     * @param {AnalysisResultCreateArgs} args - Arguments to create a AnalysisResult.
+     * @example
+     * // Create one AnalysisResult
+     * const AnalysisResult = await prisma.analysisResult.create({
+     *   data: {
+     *     // ... data to create a AnalysisResult
+     *   }
+     * })
+     * 
+     */
+    create<T extends AnalysisResultCreateArgs>(args: SelectSubset<T, AnalysisResultCreateArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AnalysisResults.
+     * @param {AnalysisResultCreateManyArgs} args - Arguments to create many AnalysisResults.
+     * @example
+     * // Create many AnalysisResults
+     * const analysisResult = await prisma.analysisResult.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AnalysisResultCreateManyArgs>(args?: SelectSubset<T, AnalysisResultCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AnalysisResults and returns the data saved in the database.
+     * @param {AnalysisResultCreateManyAndReturnArgs} args - Arguments to create many AnalysisResults.
+     * @example
+     * // Create many AnalysisResults
+     * const analysisResult = await prisma.analysisResult.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AnalysisResults and only return the `id`
+     * const analysisResultWithIdOnly = await prisma.analysisResult.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AnalysisResultCreateManyAndReturnArgs>(args?: SelectSubset<T, AnalysisResultCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AnalysisResult.
+     * @param {AnalysisResultDeleteArgs} args - Arguments to delete one AnalysisResult.
+     * @example
+     * // Delete one AnalysisResult
+     * const AnalysisResult = await prisma.analysisResult.delete({
+     *   where: {
+     *     // ... filter to delete one AnalysisResult
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AnalysisResultDeleteArgs>(args: SelectSubset<T, AnalysisResultDeleteArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AnalysisResult.
+     * @param {AnalysisResultUpdateArgs} args - Arguments to update one AnalysisResult.
+     * @example
+     * // Update one AnalysisResult
+     * const analysisResult = await prisma.analysisResult.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AnalysisResultUpdateArgs>(args: SelectSubset<T, AnalysisResultUpdateArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AnalysisResults.
+     * @param {AnalysisResultDeleteManyArgs} args - Arguments to filter AnalysisResults to delete.
+     * @example
+     * // Delete a few AnalysisResults
+     * const { count } = await prisma.analysisResult.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AnalysisResultDeleteManyArgs>(args?: SelectSubset<T, AnalysisResultDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AnalysisResults.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AnalysisResultUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AnalysisResults
+     * const analysisResult = await prisma.analysisResult.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AnalysisResultUpdateManyArgs>(args: SelectSubset<T, AnalysisResultUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AnalysisResults and returns the data updated in the database.
+     * @param {AnalysisResultUpdateManyAndReturnArgs} args - Arguments to update many AnalysisResults.
+     * @example
+     * // Update many AnalysisResults
+     * const analysisResult = await prisma.analysisResult.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AnalysisResults and only return the `id`
+     * const analysisResultWithIdOnly = await prisma.analysisResult.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AnalysisResultUpdateManyAndReturnArgs>(args: SelectSubset<T, AnalysisResultUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AnalysisResult.
+     * @param {AnalysisResultUpsertArgs} args - Arguments to update or create a AnalysisResult.
+     * @example
+     * // Update or create a AnalysisResult
+     * const analysisResult = await prisma.analysisResult.upsert({
+     *   create: {
+     *     // ... data to create a AnalysisResult
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AnalysisResult we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AnalysisResultUpsertArgs>(args: SelectSubset<T, AnalysisResultUpsertArgs<ExtArgs>>): Prisma__AnalysisResultClient<$Result.GetResult<Prisma.$AnalysisResultPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AnalysisResults.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AnalysisResultCountArgs} args - Arguments to filter AnalysisResults to count.
+     * @example
+     * // Count the number of AnalysisResults
+     * const count = await prisma.analysisResult.count({
+     *   where: {
+     *     // ... the filter for the AnalysisResults we want to count
+     *   }
+     * })
+    **/
+    count<T extends AnalysisResultCountArgs>(
+      args?: Subset<T, AnalysisResultCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AnalysisResultCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AnalysisResult.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AnalysisResultAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AnalysisResultAggregateArgs>(args: Subset<T, AnalysisResultAggregateArgs>): Prisma.PrismaPromise<GetAnalysisResultAggregateType<T>>
+
+    /**
+     * Group by AnalysisResult.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AnalysisResultGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AnalysisResultGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AnalysisResultGroupByArgs['orderBy'] }
+        : { orderBy?: AnalysisResultGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AnalysisResultGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAnalysisResultGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AnalysisResult model
+   */
+  readonly fields: AnalysisResultFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AnalysisResult.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AnalysisResultClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    User<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AnalysisResult model
+   */
+  interface AnalysisResultFieldRefs {
+    readonly id: FieldRef<"AnalysisResult", 'String'>
+    readonly modelUsed: FieldRef<"AnalysisResult", 'String'>
+    readonly attackUsed: FieldRef<"AnalysisResult", 'String'>
+    readonly originalPrediction: FieldRef<"AnalysisResult", 'String'>
+    readonly originalConfidence: FieldRef<"AnalysisResult", 'Float'>
+    readonly adversarialPrediction: FieldRef<"AnalysisResult", 'String'>
+    readonly adversarialConfidence: FieldRef<"AnalysisResult", 'Float'>
+    readonly originalImage: FieldRef<"AnalysisResult", 'String'>
+    readonly adversarialImage: FieldRef<"AnalysisResult", 'String'>
+    readonly heatmapImage: FieldRef<"AnalysisResult", 'String'>
+    readonly createdAt: FieldRef<"AnalysisResult", 'DateTime'>
+    readonly userId: FieldRef<"AnalysisResult", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AnalysisResult findUnique
+   */
+  export type AnalysisResultFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * Filter, which AnalysisResult to fetch.
+     */
+    where: AnalysisResultWhereUniqueInput
+  }
+
+  /**
+   * AnalysisResult findUniqueOrThrow
+   */
+  export type AnalysisResultFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * Filter, which AnalysisResult to fetch.
+     */
+    where: AnalysisResultWhereUniqueInput
+  }
+
+  /**
+   * AnalysisResult findFirst
+   */
+  export type AnalysisResultFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * Filter, which AnalysisResult to fetch.
+     */
+    where?: AnalysisResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AnalysisResults to fetch.
+     */
+    orderBy?: AnalysisResultOrderByWithRelationInput | AnalysisResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AnalysisResults.
+     */
+    cursor?: AnalysisResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AnalysisResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AnalysisResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AnalysisResults.
+     */
+    distinct?: AnalysisResultScalarFieldEnum | AnalysisResultScalarFieldEnum[]
+  }
+
+  /**
+   * AnalysisResult findFirstOrThrow
+   */
+  export type AnalysisResultFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * Filter, which AnalysisResult to fetch.
+     */
+    where?: AnalysisResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AnalysisResults to fetch.
+     */
+    orderBy?: AnalysisResultOrderByWithRelationInput | AnalysisResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AnalysisResults.
+     */
+    cursor?: AnalysisResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AnalysisResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AnalysisResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AnalysisResults.
+     */
+    distinct?: AnalysisResultScalarFieldEnum | AnalysisResultScalarFieldEnum[]
+  }
+
+  /**
+   * AnalysisResult findMany
+   */
+  export type AnalysisResultFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * Filter, which AnalysisResults to fetch.
+     */
+    where?: AnalysisResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AnalysisResults to fetch.
+     */
+    orderBy?: AnalysisResultOrderByWithRelationInput | AnalysisResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AnalysisResults.
+     */
+    cursor?: AnalysisResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AnalysisResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AnalysisResults.
+     */
+    skip?: number
+    distinct?: AnalysisResultScalarFieldEnum | AnalysisResultScalarFieldEnum[]
+  }
+
+  /**
+   * AnalysisResult create
+   */
+  export type AnalysisResultCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AnalysisResult.
+     */
+    data: XOR<AnalysisResultCreateInput, AnalysisResultUncheckedCreateInput>
+  }
+
+  /**
+   * AnalysisResult createMany
+   */
+  export type AnalysisResultCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AnalysisResults.
+     */
+    data: AnalysisResultCreateManyInput | AnalysisResultCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AnalysisResult createManyAndReturn
+   */
+  export type AnalysisResultCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * The data used to create many AnalysisResults.
+     */
+    data: AnalysisResultCreateManyInput | AnalysisResultCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AnalysisResult update
+   */
+  export type AnalysisResultUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AnalysisResult.
+     */
+    data: XOR<AnalysisResultUpdateInput, AnalysisResultUncheckedUpdateInput>
+    /**
+     * Choose, which AnalysisResult to update.
+     */
+    where: AnalysisResultWhereUniqueInput
+  }
+
+  /**
+   * AnalysisResult updateMany
+   */
+  export type AnalysisResultUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AnalysisResults.
+     */
+    data: XOR<AnalysisResultUpdateManyMutationInput, AnalysisResultUncheckedUpdateManyInput>
+    /**
+     * Filter which AnalysisResults to update
+     */
+    where?: AnalysisResultWhereInput
+    /**
+     * Limit how many AnalysisResults to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AnalysisResult updateManyAndReturn
+   */
+  export type AnalysisResultUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * The data used to update AnalysisResults.
+     */
+    data: XOR<AnalysisResultUpdateManyMutationInput, AnalysisResultUncheckedUpdateManyInput>
+    /**
+     * Filter which AnalysisResults to update
+     */
+    where?: AnalysisResultWhereInput
+    /**
+     * Limit how many AnalysisResults to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AnalysisResult upsert
+   */
+  export type AnalysisResultUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AnalysisResult to update in case it exists.
+     */
+    where: AnalysisResultWhereUniqueInput
+    /**
+     * In case the AnalysisResult found by the `where` argument doesn't exist, create a new AnalysisResult with this data.
+     */
+    create: XOR<AnalysisResultCreateInput, AnalysisResultUncheckedCreateInput>
+    /**
+     * In case the AnalysisResult was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AnalysisResultUpdateInput, AnalysisResultUncheckedUpdateInput>
+  }
+
+  /**
+   * AnalysisResult delete
+   */
+  export type AnalysisResultDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+    /**
+     * Filter which AnalysisResult to delete.
+     */
+    where: AnalysisResultWhereUniqueInput
+  }
+
+  /**
+   * AnalysisResult deleteMany
+   */
+  export type AnalysisResultDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AnalysisResults to delete
+     */
+    where?: AnalysisResultWhereInput
+    /**
+     * Limit how many AnalysisResults to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AnalysisResult without action
+   */
+  export type AnalysisResultDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AnalysisResult
+     */
+    select?: AnalysisResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AnalysisResult
+     */
+    omit?: AnalysisResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AnalysisResultInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -3264,12 +4592,31 @@ export namespace Prisma {
     fileType: 'fileType',
     fileSize: 'fileSize',
     filePath: 'filePath',
+    fileData: 'fileData',
     description: 'description',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type CustomModelScalarFieldEnum = (typeof CustomModelScalarFieldEnum)[keyof typeof CustomModelScalarFieldEnum]
+
+
+  export const AnalysisResultScalarFieldEnum: {
+    id: 'id',
+    modelUsed: 'modelUsed',
+    attackUsed: 'attackUsed',
+    originalPrediction: 'originalPrediction',
+    originalConfidence: 'originalConfidence',
+    adversarialPrediction: 'adversarialPrediction',
+    adversarialConfidence: 'adversarialConfidence',
+    originalImage: 'originalImage',
+    adversarialImage: 'adversarialImage',
+    heatmapImage: 'heatmapImage',
+    createdAt: 'createdAt',
+    userId: 'userId'
+  };
+
+  export type AnalysisResultScalarFieldEnum = (typeof AnalysisResultScalarFieldEnum)[keyof typeof AnalysisResultScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -3344,6 +4691,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Bytes'
+   */
+  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+  /**
+   * Reference to a field of type 'Bytes[]'
+   */
+  export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -3371,6 +4732,7 @@ export namespace Prisma {
     profileImage?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     UserModel?: CustomModelListRelationFilter
+    AnalysisResult?: AnalysisResultListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3381,6 +4743,7 @@ export namespace Prisma {
     profileImage?: SortOrder
     createdAt?: SortOrder
     UserModel?: CustomModelOrderByRelationAggregateInput
+    AnalysisResult?: AnalysisResultOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -3394,6 +4757,7 @@ export namespace Prisma {
     profileImage?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     UserModel?: CustomModelListRelationFilter
+    AnalysisResult?: AnalysisResultListRelationFilter
   }, "id" | "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -3431,6 +4795,7 @@ export namespace Prisma {
     fileType?: StringFilter<"CustomModel"> | string
     fileSize?: IntFilter<"CustomModel"> | number
     filePath?: StringFilter<"CustomModel"> | string
+    fileData?: BytesNullableFilter<"CustomModel"> | Uint8Array | null
     description?: StringNullableFilter<"CustomModel"> | string | null
     createdAt?: DateTimeFilter<"CustomModel"> | Date | string
     updatedAt?: DateTimeFilter<"CustomModel"> | Date | string
@@ -3445,6 +4810,7 @@ export namespace Prisma {
     fileType?: SortOrder
     fileSize?: SortOrder
     filePath?: SortOrder
+    fileData?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3462,6 +4828,7 @@ export namespace Prisma {
     fileName?: StringFilter<"CustomModel"> | string
     fileType?: StringFilter<"CustomModel"> | string
     fileSize?: IntFilter<"CustomModel"> | number
+    fileData?: BytesNullableFilter<"CustomModel"> | Uint8Array | null
     description?: StringNullableFilter<"CustomModel"> | string | null
     createdAt?: DateTimeFilter<"CustomModel"> | Date | string
     updatedAt?: DateTimeFilter<"CustomModel"> | Date | string
@@ -3476,6 +4843,7 @@ export namespace Prisma {
     fileType?: SortOrder
     fileSize?: SortOrder
     filePath?: SortOrder
+    fileData?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3497,9 +4865,102 @@ export namespace Prisma {
     fileType?: StringWithAggregatesFilter<"CustomModel"> | string
     fileSize?: IntWithAggregatesFilter<"CustomModel"> | number
     filePath?: StringWithAggregatesFilter<"CustomModel"> | string
+    fileData?: BytesNullableWithAggregatesFilter<"CustomModel"> | Uint8Array | null
     description?: StringNullableWithAggregatesFilter<"CustomModel"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CustomModel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CustomModel"> | Date | string
+  }
+
+  export type AnalysisResultWhereInput = {
+    AND?: AnalysisResultWhereInput | AnalysisResultWhereInput[]
+    OR?: AnalysisResultWhereInput[]
+    NOT?: AnalysisResultWhereInput | AnalysisResultWhereInput[]
+    id?: StringFilter<"AnalysisResult"> | string
+    modelUsed?: StringFilter<"AnalysisResult"> | string
+    attackUsed?: StringFilter<"AnalysisResult"> | string
+    originalPrediction?: StringFilter<"AnalysisResult"> | string
+    originalConfidence?: FloatFilter<"AnalysisResult"> | number
+    adversarialPrediction?: StringFilter<"AnalysisResult"> | string
+    adversarialConfidence?: FloatFilter<"AnalysisResult"> | number
+    originalImage?: StringFilter<"AnalysisResult"> | string
+    adversarialImage?: StringFilter<"AnalysisResult"> | string
+    heatmapImage?: StringNullableFilter<"AnalysisResult"> | string | null
+    createdAt?: DateTimeFilter<"AnalysisResult"> | Date | string
+    userId?: StringFilter<"AnalysisResult"> | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type AnalysisResultOrderByWithRelationInput = {
+    id?: SortOrder
+    modelUsed?: SortOrder
+    attackUsed?: SortOrder
+    originalPrediction?: SortOrder
+    originalConfidence?: SortOrder
+    adversarialPrediction?: SortOrder
+    adversarialConfidence?: SortOrder
+    originalImage?: SortOrder
+    adversarialImage?: SortOrder
+    heatmapImage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    User?: UserOrderByWithRelationInput
+  }
+
+  export type AnalysisResultWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AnalysisResultWhereInput | AnalysisResultWhereInput[]
+    OR?: AnalysisResultWhereInput[]
+    NOT?: AnalysisResultWhereInput | AnalysisResultWhereInput[]
+    modelUsed?: StringFilter<"AnalysisResult"> | string
+    attackUsed?: StringFilter<"AnalysisResult"> | string
+    originalPrediction?: StringFilter<"AnalysisResult"> | string
+    originalConfidence?: FloatFilter<"AnalysisResult"> | number
+    adversarialPrediction?: StringFilter<"AnalysisResult"> | string
+    adversarialConfidence?: FloatFilter<"AnalysisResult"> | number
+    originalImage?: StringFilter<"AnalysisResult"> | string
+    adversarialImage?: StringFilter<"AnalysisResult"> | string
+    heatmapImage?: StringNullableFilter<"AnalysisResult"> | string | null
+    createdAt?: DateTimeFilter<"AnalysisResult"> | Date | string
+    userId?: StringFilter<"AnalysisResult"> | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type AnalysisResultOrderByWithAggregationInput = {
+    id?: SortOrder
+    modelUsed?: SortOrder
+    attackUsed?: SortOrder
+    originalPrediction?: SortOrder
+    originalConfidence?: SortOrder
+    adversarialPrediction?: SortOrder
+    adversarialConfidence?: SortOrder
+    originalImage?: SortOrder
+    adversarialImage?: SortOrder
+    heatmapImage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    _count?: AnalysisResultCountOrderByAggregateInput
+    _avg?: AnalysisResultAvgOrderByAggregateInput
+    _max?: AnalysisResultMaxOrderByAggregateInput
+    _min?: AnalysisResultMinOrderByAggregateInput
+    _sum?: AnalysisResultSumOrderByAggregateInput
+  }
+
+  export type AnalysisResultScalarWhereWithAggregatesInput = {
+    AND?: AnalysisResultScalarWhereWithAggregatesInput | AnalysisResultScalarWhereWithAggregatesInput[]
+    OR?: AnalysisResultScalarWhereWithAggregatesInput[]
+    NOT?: AnalysisResultScalarWhereWithAggregatesInput | AnalysisResultScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AnalysisResult"> | string
+    modelUsed?: StringWithAggregatesFilter<"AnalysisResult"> | string
+    attackUsed?: StringWithAggregatesFilter<"AnalysisResult"> | string
+    originalPrediction?: StringWithAggregatesFilter<"AnalysisResult"> | string
+    originalConfidence?: FloatWithAggregatesFilter<"AnalysisResult"> | number
+    adversarialPrediction?: StringWithAggregatesFilter<"AnalysisResult"> | string
+    adversarialConfidence?: FloatWithAggregatesFilter<"AnalysisResult"> | number
+    originalImage?: StringWithAggregatesFilter<"AnalysisResult"> | string
+    adversarialImage?: StringWithAggregatesFilter<"AnalysisResult"> | string
+    heatmapImage?: StringNullableWithAggregatesFilter<"AnalysisResult"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AnalysisResult"> | Date | string
+    userId?: StringWithAggregatesFilter<"AnalysisResult"> | string
   }
 
   export type UserCreateInput = {
@@ -3510,6 +4971,7 @@ export namespace Prisma {
     profileImage: string
     createdAt?: Date | string
     UserModel?: CustomModelCreateNestedManyWithoutUserInput
+    AnalysisResult?: AnalysisResultCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3520,6 +4982,7 @@ export namespace Prisma {
     profileImage: string
     createdAt?: Date | string
     UserModel?: CustomModelUncheckedCreateNestedManyWithoutUserInput
+    AnalysisResult?: AnalysisResultUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -3530,6 +4993,7 @@ export namespace Prisma {
     profileImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     UserModel?: CustomModelUpdateManyWithoutUserNestedInput
+    AnalysisResult?: AnalysisResultUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3540,6 +5004,7 @@ export namespace Prisma {
     profileImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     UserModel?: CustomModelUncheckedUpdateManyWithoutUserNestedInput
+    AnalysisResult?: AnalysisResultUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3576,6 +5041,7 @@ export namespace Prisma {
     fileType: string
     fileSize: number
     filePath: string
+    fileData?: Uint8Array | null
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3590,6 +5056,7 @@ export namespace Prisma {
     fileType: string
     fileSize: number
     filePath: string
+    fileData?: Uint8Array | null
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3602,6 +5069,7 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     filePath?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3616,6 +5084,7 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     filePath?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3629,6 +5098,7 @@ export namespace Prisma {
     fileType: string
     fileSize: number
     filePath: string
+    fileData?: Uint8Array | null
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -3641,6 +5111,7 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     filePath?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -3654,9 +5125,114 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     filePath?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AnalysisResultCreateInput = {
+    id?: string
+    modelUsed: string
+    attackUsed: string
+    originalPrediction: string
+    originalConfidence: number
+    adversarialPrediction: string
+    adversarialConfidence: number
+    originalImage: string
+    adversarialImage: string
+    heatmapImage?: string | null
+    createdAt?: Date | string
+    User: UserCreateNestedOneWithoutAnalysisResultInput
+  }
+
+  export type AnalysisResultUncheckedCreateInput = {
+    id?: string
+    modelUsed: string
+    attackUsed: string
+    originalPrediction: string
+    originalConfidence: number
+    adversarialPrediction: string
+    adversarialConfidence: number
+    originalImage: string
+    adversarialImage: string
+    heatmapImage?: string | null
+    createdAt?: Date | string
+    userId: string
+  }
+
+  export type AnalysisResultUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelUsed?: StringFieldUpdateOperationsInput | string
+    attackUsed?: StringFieldUpdateOperationsInput | string
+    originalPrediction?: StringFieldUpdateOperationsInput | string
+    originalConfidence?: FloatFieldUpdateOperationsInput | number
+    adversarialPrediction?: StringFieldUpdateOperationsInput | string
+    adversarialConfidence?: FloatFieldUpdateOperationsInput | number
+    originalImage?: StringFieldUpdateOperationsInput | string
+    adversarialImage?: StringFieldUpdateOperationsInput | string
+    heatmapImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneRequiredWithoutAnalysisResultNestedInput
+  }
+
+  export type AnalysisResultUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelUsed?: StringFieldUpdateOperationsInput | string
+    attackUsed?: StringFieldUpdateOperationsInput | string
+    originalPrediction?: StringFieldUpdateOperationsInput | string
+    originalConfidence?: FloatFieldUpdateOperationsInput | number
+    adversarialPrediction?: StringFieldUpdateOperationsInput | string
+    adversarialConfidence?: FloatFieldUpdateOperationsInput | number
+    originalImage?: StringFieldUpdateOperationsInput | string
+    adversarialImage?: StringFieldUpdateOperationsInput | string
+    heatmapImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AnalysisResultCreateManyInput = {
+    id?: string
+    modelUsed: string
+    attackUsed: string
+    originalPrediction: string
+    originalConfidence: number
+    adversarialPrediction: string
+    adversarialConfidence: number
+    originalImage: string
+    adversarialImage: string
+    heatmapImage?: string | null
+    createdAt?: Date | string
+    userId: string
+  }
+
+  export type AnalysisResultUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelUsed?: StringFieldUpdateOperationsInput | string
+    attackUsed?: StringFieldUpdateOperationsInput | string
+    originalPrediction?: StringFieldUpdateOperationsInput | string
+    originalConfidence?: FloatFieldUpdateOperationsInput | number
+    adversarialPrediction?: StringFieldUpdateOperationsInput | string
+    adversarialConfidence?: FloatFieldUpdateOperationsInput | number
+    originalImage?: StringFieldUpdateOperationsInput | string
+    adversarialImage?: StringFieldUpdateOperationsInput | string
+    heatmapImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AnalysisResultUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelUsed?: StringFieldUpdateOperationsInput | string
+    attackUsed?: StringFieldUpdateOperationsInput | string
+    originalPrediction?: StringFieldUpdateOperationsInput | string
+    originalConfidence?: FloatFieldUpdateOperationsInput | number
+    adversarialPrediction?: StringFieldUpdateOperationsInput | string
+    adversarialConfidence?: FloatFieldUpdateOperationsInput | number
+    originalImage?: StringFieldUpdateOperationsInput | string
+    adversarialImage?: StringFieldUpdateOperationsInput | string
+    heatmapImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -3691,7 +5267,17 @@ export namespace Prisma {
     none?: CustomModelWhereInput
   }
 
+  export type AnalysisResultListRelationFilter = {
+    every?: AnalysisResultWhereInput
+    some?: AnalysisResultWhereInput
+    none?: AnalysisResultWhereInput
+  }
+
   export type CustomModelOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AnalysisResultOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -3765,6 +5351,13 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type BytesNullableFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Uint8Array | null
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -3798,6 +5391,7 @@ export namespace Prisma {
     fileType?: SortOrder
     fileSize?: SortOrder
     filePath?: SortOrder
+    fileData?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3815,6 +5409,7 @@ export namespace Prisma {
     fileType?: SortOrder
     fileSize?: SortOrder
     filePath?: SortOrder
+    fileData?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3828,6 +5423,7 @@ export namespace Prisma {
     fileType?: SortOrder
     fileSize?: SortOrder
     filePath?: SortOrder
+    fileData?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -3853,6 +5449,16 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type BytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Uint8Array | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -3871,6 +5477,88 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type AnalysisResultCountOrderByAggregateInput = {
+    id?: SortOrder
+    modelUsed?: SortOrder
+    attackUsed?: SortOrder
+    originalPrediction?: SortOrder
+    originalConfidence?: SortOrder
+    adversarialPrediction?: SortOrder
+    adversarialConfidence?: SortOrder
+    originalImage?: SortOrder
+    adversarialImage?: SortOrder
+    heatmapImage?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type AnalysisResultAvgOrderByAggregateInput = {
+    originalConfidence?: SortOrder
+    adversarialConfidence?: SortOrder
+  }
+
+  export type AnalysisResultMaxOrderByAggregateInput = {
+    id?: SortOrder
+    modelUsed?: SortOrder
+    attackUsed?: SortOrder
+    originalPrediction?: SortOrder
+    originalConfidence?: SortOrder
+    adversarialPrediction?: SortOrder
+    adversarialConfidence?: SortOrder
+    originalImage?: SortOrder
+    adversarialImage?: SortOrder
+    heatmapImage?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type AnalysisResultMinOrderByAggregateInput = {
+    id?: SortOrder
+    modelUsed?: SortOrder
+    attackUsed?: SortOrder
+    originalPrediction?: SortOrder
+    originalConfidence?: SortOrder
+    adversarialPrediction?: SortOrder
+    adversarialConfidence?: SortOrder
+    originalImage?: SortOrder
+    adversarialImage?: SortOrder
+    heatmapImage?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type AnalysisResultSumOrderByAggregateInput = {
+    originalConfidence?: SortOrder
+    adversarialConfidence?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type CustomModelCreateNestedManyWithoutUserInput = {
     create?: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput> | CustomModelCreateWithoutUserInput[] | CustomModelUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CustomModelCreateOrConnectWithoutUserInput | CustomModelCreateOrConnectWithoutUserInput[]
@@ -3878,11 +5566,25 @@ export namespace Prisma {
     connect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
   }
 
+  export type AnalysisResultCreateNestedManyWithoutUserInput = {
+    create?: XOR<AnalysisResultCreateWithoutUserInput, AnalysisResultUncheckedCreateWithoutUserInput> | AnalysisResultCreateWithoutUserInput[] | AnalysisResultUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AnalysisResultCreateOrConnectWithoutUserInput | AnalysisResultCreateOrConnectWithoutUserInput[]
+    createMany?: AnalysisResultCreateManyUserInputEnvelope
+    connect?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+  }
+
   export type CustomModelUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput> | CustomModelCreateWithoutUserInput[] | CustomModelUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CustomModelCreateOrConnectWithoutUserInput | CustomModelCreateOrConnectWithoutUserInput[]
     createMany?: CustomModelCreateManyUserInputEnvelope
     connect?: CustomModelWhereUniqueInput | CustomModelWhereUniqueInput[]
+  }
+
+  export type AnalysisResultUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AnalysisResultCreateWithoutUserInput, AnalysisResultUncheckedCreateWithoutUserInput> | AnalysisResultCreateWithoutUserInput[] | AnalysisResultUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AnalysisResultCreateOrConnectWithoutUserInput | AnalysisResultCreateOrConnectWithoutUserInput[]
+    createMany?: AnalysisResultCreateManyUserInputEnvelope
+    connect?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -3907,6 +5609,20 @@ export namespace Prisma {
     deleteMany?: CustomModelScalarWhereInput | CustomModelScalarWhereInput[]
   }
 
+  export type AnalysisResultUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AnalysisResultCreateWithoutUserInput, AnalysisResultUncheckedCreateWithoutUserInput> | AnalysisResultCreateWithoutUserInput[] | AnalysisResultUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AnalysisResultCreateOrConnectWithoutUserInput | AnalysisResultCreateOrConnectWithoutUserInput[]
+    upsert?: AnalysisResultUpsertWithWhereUniqueWithoutUserInput | AnalysisResultUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AnalysisResultCreateManyUserInputEnvelope
+    set?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    disconnect?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    delete?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    connect?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    update?: AnalysisResultUpdateWithWhereUniqueWithoutUserInput | AnalysisResultUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AnalysisResultUpdateManyWithWhereWithoutUserInput | AnalysisResultUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AnalysisResultScalarWhereInput | AnalysisResultScalarWhereInput[]
+  }
+
   export type CustomModelUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<CustomModelCreateWithoutUserInput, CustomModelUncheckedCreateWithoutUserInput> | CustomModelCreateWithoutUserInput[] | CustomModelUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CustomModelCreateOrConnectWithoutUserInput | CustomModelCreateOrConnectWithoutUserInput[]
@@ -3919,6 +5635,20 @@ export namespace Prisma {
     update?: CustomModelUpdateWithWhereUniqueWithoutUserInput | CustomModelUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: CustomModelUpdateManyWithWhereWithoutUserInput | CustomModelUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: CustomModelScalarWhereInput | CustomModelScalarWhereInput[]
+  }
+
+  export type AnalysisResultUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AnalysisResultCreateWithoutUserInput, AnalysisResultUncheckedCreateWithoutUserInput> | AnalysisResultCreateWithoutUserInput[] | AnalysisResultUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AnalysisResultCreateOrConnectWithoutUserInput | AnalysisResultCreateOrConnectWithoutUserInput[]
+    upsert?: AnalysisResultUpsertWithWhereUniqueWithoutUserInput | AnalysisResultUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AnalysisResultCreateManyUserInputEnvelope
+    set?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    disconnect?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    delete?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    connect?: AnalysisResultWhereUniqueInput | AnalysisResultWhereUniqueInput[]
+    update?: AnalysisResultUpdateWithWhereUniqueWithoutUserInput | AnalysisResultUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AnalysisResultUpdateManyWithWhereWithoutUserInput | AnalysisResultUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AnalysisResultScalarWhereInput | AnalysisResultScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutUserModelInput = {
@@ -3935,6 +5665,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableBytesFieldUpdateOperationsInput = {
+    set?: Uint8Array | null
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -3945,6 +5679,28 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutUserModelInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserModelInput, UserUpdateWithoutUserModelInput>, UserUncheckedUpdateWithoutUserModelInput>
+  }
+
+  export type UserCreateNestedOneWithoutAnalysisResultInput = {
+    create?: XOR<UserCreateWithoutAnalysisResultInput, UserUncheckedCreateWithoutAnalysisResultInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAnalysisResultInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutAnalysisResultNestedInput = {
+    create?: XOR<UserCreateWithoutAnalysisResultInput, UserUncheckedCreateWithoutAnalysisResultInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAnalysisResultInput
+    upsert?: UserUpsertWithoutAnalysisResultInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAnalysisResultInput, UserUpdateWithoutAnalysisResultInput>, UserUncheckedUpdateWithoutAnalysisResultInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -4014,6 +5770,13 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBytesNullableFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableFilter<$PrismaModel> | Uint8Array | null
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -4055,6 +5818,27 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedBytesNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    in?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    notIn?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    not?: NestedBytesNullableWithAggregatesFilter<$PrismaModel> | Uint8Array | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBytesNullableFilter<$PrismaModel>
+    _max?: NestedBytesNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -4072,15 +5856,20 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type CustomModelCreateWithoutUserInput = {
@@ -4090,6 +5879,7 @@ export namespace Prisma {
     fileType: string
     fileSize: number
     filePath: string
+    fileData?: Uint8Array | null
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4102,6 +5892,7 @@ export namespace Prisma {
     fileType: string
     fileSize: number
     filePath: string
+    fileData?: Uint8Array | null
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4114,6 +5905,44 @@ export namespace Prisma {
 
   export type CustomModelCreateManyUserInputEnvelope = {
     data: CustomModelCreateManyUserInput | CustomModelCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AnalysisResultCreateWithoutUserInput = {
+    id?: string
+    modelUsed: string
+    attackUsed: string
+    originalPrediction: string
+    originalConfidence: number
+    adversarialPrediction: string
+    adversarialConfidence: number
+    originalImage: string
+    adversarialImage: string
+    heatmapImage?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AnalysisResultUncheckedCreateWithoutUserInput = {
+    id?: string
+    modelUsed: string
+    attackUsed: string
+    originalPrediction: string
+    originalConfidence: number
+    adversarialPrediction: string
+    adversarialConfidence: number
+    originalImage: string
+    adversarialImage: string
+    heatmapImage?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AnalysisResultCreateOrConnectWithoutUserInput = {
+    where: AnalysisResultWhereUniqueInput
+    create: XOR<AnalysisResultCreateWithoutUserInput, AnalysisResultUncheckedCreateWithoutUserInput>
+  }
+
+  export type AnalysisResultCreateManyUserInputEnvelope = {
+    data: AnalysisResultCreateManyUserInput | AnalysisResultCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -4144,9 +5973,44 @@ export namespace Prisma {
     fileType?: StringFilter<"CustomModel"> | string
     fileSize?: IntFilter<"CustomModel"> | number
     filePath?: StringFilter<"CustomModel"> | string
+    fileData?: BytesNullableFilter<"CustomModel"> | Uint8Array | null
     description?: StringNullableFilter<"CustomModel"> | string | null
     createdAt?: DateTimeFilter<"CustomModel"> | Date | string
     updatedAt?: DateTimeFilter<"CustomModel"> | Date | string
+  }
+
+  export type AnalysisResultUpsertWithWhereUniqueWithoutUserInput = {
+    where: AnalysisResultWhereUniqueInput
+    update: XOR<AnalysisResultUpdateWithoutUserInput, AnalysisResultUncheckedUpdateWithoutUserInput>
+    create: XOR<AnalysisResultCreateWithoutUserInput, AnalysisResultUncheckedCreateWithoutUserInput>
+  }
+
+  export type AnalysisResultUpdateWithWhereUniqueWithoutUserInput = {
+    where: AnalysisResultWhereUniqueInput
+    data: XOR<AnalysisResultUpdateWithoutUserInput, AnalysisResultUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AnalysisResultUpdateManyWithWhereWithoutUserInput = {
+    where: AnalysisResultScalarWhereInput
+    data: XOR<AnalysisResultUpdateManyMutationInput, AnalysisResultUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AnalysisResultScalarWhereInput = {
+    AND?: AnalysisResultScalarWhereInput | AnalysisResultScalarWhereInput[]
+    OR?: AnalysisResultScalarWhereInput[]
+    NOT?: AnalysisResultScalarWhereInput | AnalysisResultScalarWhereInput[]
+    id?: StringFilter<"AnalysisResult"> | string
+    modelUsed?: StringFilter<"AnalysisResult"> | string
+    attackUsed?: StringFilter<"AnalysisResult"> | string
+    originalPrediction?: StringFilter<"AnalysisResult"> | string
+    originalConfidence?: FloatFilter<"AnalysisResult"> | number
+    adversarialPrediction?: StringFilter<"AnalysisResult"> | string
+    adversarialConfidence?: FloatFilter<"AnalysisResult"> | number
+    originalImage?: StringFilter<"AnalysisResult"> | string
+    adversarialImage?: StringFilter<"AnalysisResult"> | string
+    heatmapImage?: StringNullableFilter<"AnalysisResult"> | string | null
+    createdAt?: DateTimeFilter<"AnalysisResult"> | Date | string
+    userId?: StringFilter<"AnalysisResult"> | string
   }
 
   export type UserCreateWithoutUserModelInput = {
@@ -4156,6 +6020,7 @@ export namespace Prisma {
     lastName: string
     profileImage: string
     createdAt?: Date | string
+    AnalysisResult?: AnalysisResultCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserModelInput = {
@@ -4165,6 +6030,7 @@ export namespace Prisma {
     lastName: string
     profileImage: string
     createdAt?: Date | string
+    AnalysisResult?: AnalysisResultUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserModelInput = {
@@ -4190,6 +6056,7 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     profileImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    AnalysisResult?: AnalysisResultUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserModelInput = {
@@ -4199,6 +6066,63 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     profileImage?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    AnalysisResult?: AnalysisResultUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutAnalysisResultInput = {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    profileImage: string
+    createdAt?: Date | string
+    UserModel?: CustomModelCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAnalysisResultInput = {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    profileImage: string
+    createdAt?: Date | string
+    UserModel?: CustomModelUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAnalysisResultInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAnalysisResultInput, UserUncheckedCreateWithoutAnalysisResultInput>
+  }
+
+  export type UserUpsertWithoutAnalysisResultInput = {
+    update: XOR<UserUpdateWithoutAnalysisResultInput, UserUncheckedUpdateWithoutAnalysisResultInput>
+    create: XOR<UserCreateWithoutAnalysisResultInput, UserUncheckedCreateWithoutAnalysisResultInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAnalysisResultInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAnalysisResultInput, UserUncheckedUpdateWithoutAnalysisResultInput>
+  }
+
+  export type UserUpdateWithoutAnalysisResultInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    profileImage?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UserModel?: CustomModelUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAnalysisResultInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    profileImage?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    UserModel?: CustomModelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CustomModelCreateManyUserInput = {
@@ -4208,9 +6132,24 @@ export namespace Prisma {
     fileType: string
     fileSize: number
     filePath: string
+    fileData?: Uint8Array | null
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type AnalysisResultCreateManyUserInput = {
+    id?: string
+    modelUsed: string
+    attackUsed: string
+    originalPrediction: string
+    originalConfidence: number
+    adversarialPrediction: string
+    adversarialConfidence: number
+    originalImage: string
+    adversarialImage: string
+    heatmapImage?: string | null
+    createdAt?: Date | string
   }
 
   export type CustomModelUpdateWithoutUserInput = {
@@ -4220,6 +6159,7 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     filePath?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4232,6 +6172,7 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     filePath?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4244,9 +6185,52 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     filePath?: StringFieldUpdateOperationsInput | string
+    fileData?: NullableBytesFieldUpdateOperationsInput | Uint8Array | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AnalysisResultUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelUsed?: StringFieldUpdateOperationsInput | string
+    attackUsed?: StringFieldUpdateOperationsInput | string
+    originalPrediction?: StringFieldUpdateOperationsInput | string
+    originalConfidence?: FloatFieldUpdateOperationsInput | number
+    adversarialPrediction?: StringFieldUpdateOperationsInput | string
+    adversarialConfidence?: FloatFieldUpdateOperationsInput | number
+    originalImage?: StringFieldUpdateOperationsInput | string
+    adversarialImage?: StringFieldUpdateOperationsInput | string
+    heatmapImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AnalysisResultUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelUsed?: StringFieldUpdateOperationsInput | string
+    attackUsed?: StringFieldUpdateOperationsInput | string
+    originalPrediction?: StringFieldUpdateOperationsInput | string
+    originalConfidence?: FloatFieldUpdateOperationsInput | number
+    adversarialPrediction?: StringFieldUpdateOperationsInput | string
+    adversarialConfidence?: FloatFieldUpdateOperationsInput | number
+    originalImage?: StringFieldUpdateOperationsInput | string
+    adversarialImage?: StringFieldUpdateOperationsInput | string
+    heatmapImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AnalysisResultUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    modelUsed?: StringFieldUpdateOperationsInput | string
+    attackUsed?: StringFieldUpdateOperationsInput | string
+    originalPrediction?: StringFieldUpdateOperationsInput | string
+    originalConfidence?: FloatFieldUpdateOperationsInput | number
+    adversarialPrediction?: StringFieldUpdateOperationsInput | string
+    adversarialConfidence?: FloatFieldUpdateOperationsInput | number
+    originalImage?: StringFieldUpdateOperationsInput | string
+    adversarialImage?: StringFieldUpdateOperationsInput | string
+    heatmapImage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

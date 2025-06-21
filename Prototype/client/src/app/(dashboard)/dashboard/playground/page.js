@@ -4,7 +4,7 @@ import { Lens } from "@/components/magicui/lens";
 import { Button } from "@/components/ui/button";
 import { ArrowBigLeft, ArrowBigRight, RotateCcw } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-
+import { toast } from "sonner";
 export default function AdversarialAttackDemo() {
   const [model, setModel] = useState("mnist");
   const [attack, setAttack] = useState("fgsm");
@@ -82,6 +82,43 @@ export default function AdversarialAttackDemo() {
     setAdversialScore(0);
     setError(null);
   };
+  const handleSave = async () => {
+    try {
+      await fetch("/api/playground", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          modelUsed: model,
+          attackUsed: attack,
+          originalPrediction:
+            model === "mnist"
+              ? originalPrediction.replace("Original: ", "")
+              : originalPrediction
+                  .split("(")[0]
+                  .replace("Original: ", "")
+                  .trim(),
+          originalConfidence: originalScore,
+          adversarialPrediction:
+            model === "mnist"
+              ? adversarialPrediction.replace("Adversarial: ", "")
+              : adversarialPrediction
+                  .split("(")[0]
+                  .replace("Adversarial: ", "")
+                  .trim(),
+          adversarialConfidence: adversialScore,
+          originalImage,
+          adversarialImage,
+          heatmapImage,
+        }),
+      });
+      toast.success("Analysis result saved successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save analysis result.");
+    }
+  };
 
   const handleSubmit = async () => {
     const fileInputFile = fileInputRef.current?.files?.[0];
@@ -101,8 +138,6 @@ export default function AdversarialAttackDemo() {
     setIsLoading(true);
     setAdversarialPrediction("Generating...");
     setError(null);
-
-    
 
     if (fileInputFile) {
       formData.append("image", fileInputFile);
@@ -350,6 +385,16 @@ export default function AdversarialAttackDemo() {
                   Reset
                 </Button>
               </div>
+              {/* Save Analysis Results to Database */}
+              <div className="flex gap-4 pt-6 justify-end">
+                <Button
+                  onClick={handleSave}
+                  disabled={!adversarialImage}
+                  className={"bg-lime-400"}
+                >
+                  Save Analysis Result
+                </Button>
+              </div>
             </div>
 
             {error && (
@@ -487,7 +532,6 @@ export default function AdversarialAttackDemo() {
             )}
           </div>
         </div>
-        
       </section>
     </main>
   );

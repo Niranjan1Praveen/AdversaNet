@@ -6,6 +6,8 @@ import {
   Grid,
   Sword,
   SwordsIcon,
+  Database,
+  History,
 } from "lucide-react";
 
 import {
@@ -51,6 +53,11 @@ const items = [
     title: "Custom Models",
     url: "/dashboard/customModel",
     icon: SwordsIcon, 
+  },
+  {
+    title: "Attack History",
+    url: "/dashboard/logs",
+    icon: History, 
   },
 ];
 const AppSidebar = async () => {

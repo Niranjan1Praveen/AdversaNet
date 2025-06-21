@@ -10,10 +10,44 @@ datasource db {
 }
 
 model User {
-  id           String   @id @unique
-  email        String   @unique
-  firstName    String
-  lastName     String
-  profileImage String
-  createdAt    DateTime @default(now())
+  id             String           @id @unique
+  email          String           @unique
+  firstName      String
+  lastName       String
+  profileImage   String
+  createdAt      DateTime         @default(now())
+  UserModel      CustomModel[]
+  AnalysisResult AnalysisResult[]
+}
+
+model CustomModel {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  name        String
+  fileName    String
+  fileType    String
+  fileSize    Int
+  filePath    String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model AnalysisResult {
+  id                    String   @id @default(cuid())
+  modelUsed             String
+  attackUsed            String
+  originalPrediction    String
+  originalConfidence    Float
+  adversarialPrediction String
+  adversarialConfidence Float
+  originalImage         String
+  adversarialImage      String
+  heatmapImage          String?
+  createdAt             DateTime @default(now())
+  userId                String
+  User                  User     @relation(fields: [userId], references: [id])
 }
