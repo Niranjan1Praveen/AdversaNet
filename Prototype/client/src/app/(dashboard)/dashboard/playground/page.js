@@ -11,7 +11,7 @@ import {
   ZapIcon,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 export default function AdversarialAttackDemo() {
   const [model, setModel] = useState("mnist");
   const [attack, setAttack] = useState("fgsm");
@@ -215,6 +215,7 @@ export default function AdversarialAttackDemo() {
 
   return (
     <main className="p-6">
+      <Toaster richColors/>
       <section className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Main Functionality */}
         <div className="container">

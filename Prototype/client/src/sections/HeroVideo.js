@@ -1,7 +1,9 @@
+import { BorderBeam } from "@/components/magicui/border-beam";
 import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
 function HeroVideo(props) {
   return (
-    <div className="relative max-w-6xl mx-auto px-4 py-10">
+    <div className="px-4">
+      <div className="relative max-w-6xl mx-auto">
       <HeroVideoDialog
         className="block dark:hidden"
         animationStyle="from-center"
@@ -16,6 +18,8 @@ function HeroVideo(props) {
         thumbnailSrc="/heroVideoThumbnail.png"
         thumbnailAlt="Hero Video"
       />
+      <BorderBeam duration={8} size={100} />
+    </div>
     </div>
   );
 }

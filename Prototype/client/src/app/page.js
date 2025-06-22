@@ -1,4 +1,5 @@
 import { DotPattern } from "@/components/magicui/dot-pattern";
+import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { Particles } from "@/components/magicui/particles";
 import { cn } from "@/lib/utils";
 import Faqs from "@/sections/Faqs";
@@ -22,7 +23,7 @@ const Home = () => {
           refresh
         />
         <Hero />
-        <HeroVideo/>
+        <HeroVideo />
       </div>
       <Introduction />
       <div className="relative flex size-full w-full flex-col items-center justify-center overflow-hidden">
@@ -37,6 +38,17 @@ const Home = () => {
         />
       </div>
       <Footer />
+      {/* <div className="relative h-[300px] w-full flex items-center justify-center overflow-hidden">
+        <h3 className="z-0 md:text-6xl text-transparent">AdversaNet</h3>
+        <FlickeringGrid
+          className="absolute inset-0 z-10 size-full"
+          squareSize={4}
+          gridGap={6}
+          color="#6B7280"
+          maxOpacity={0.5}
+          flickerChance={0.1}
+          />
+      </div> */}
     </main>
   );
 };
