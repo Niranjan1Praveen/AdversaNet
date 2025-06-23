@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Model Classifier</title>
+    <title>Custom Model Classifier</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen p-8">
     <div class="max-w-6xl mx-auto space-y-8">
         <!-- Header -->
         <div class="bg-white rounded-lg shadow p-6">
-            <h1 class="text-3xl font-bold text-gray-800">Model Classifier</h1>
+            <h1 class="text-3xl font-bold text-gray-800">Custom Model Classifier</h1>
             <p class="text-gray-600 mt-2">Upload images and classify them using your custom models</p>
         </div>
 
@@ -30,7 +30,11 @@
 
                 <div id="model-info" class="hidden bg-gray-50 p-4 rounded-md">
                     <h3 class="font-medium text-gray-800" id="model-name"></h3>
-                    <pre id="model-content" class="mt-2 whitespace-pre-wrap text-sm text-gray-600 overflow-auto max-h-40"></pre>
+                    <div id="model-binary-info" class="mt-2 text-sm text-gray-600">
+                        <p>Type: <span id="model-type"></span></p>
+                        <p>Size: <span id="model-size"></span></p>
+                    </div>
+                    <pre id="model-content" class="hidden mt-2 whitespace-pre-wrap text-sm text-gray-600 overflow-auto max-h-40"></pre>
                 </div>
 
                 <div id="model-error" class="hidden text-red-500 text-sm"></div>
@@ -52,6 +56,9 @@
                         </label>
                         <span id="file-name" class="ml-2 text-sm text-gray-500">No file selected</span>
                     </div>
+                    <div id="image-preview-container" class="hidden mt-2">
+                        <img id="image-preview" class="max-w-xs max-h-40 border rounded-md" src="#" alt="Preview">
+                    </div>
                 </div>
 
                 <button id="classify-btn" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50" disabled>
@@ -69,6 +76,11 @@
         </div>
     </div>
 
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
     <script>
         // Model Viewer Functionality
         document.getElementById('model-select').addEventListener('change', async function() {
@@ -83,6 +95,7 @@
             if (!fileId) return;
 
             try {
+                showLoading();
                 const response = await fetch('/get_file_content', {
                     method: 'POST',
                     headers: {
@@ -95,14 +108,30 @@
 
                 if (data.success) {
                     document.getElementById('model-name').textContent = data.name;
-                    document.getElementById('model-content').textContent = data.content;
+                    document.getElementById('model-type').textContent = data.fileType || 'HDF5';
+                    document.getElementById('model-size').textContent = formatFileSize(data.size);
+                    
+                    if (data.isBinary) {
+                        document.getElementById('model-binary-info').classList.remove('hidden');
+                        document.getElementById('model-content').classList.add('hidden');
+                    } else {
+                        document.getElementById('model-binary-info').classList.add('hidden');
+                        document.getElementById('model-content').classList.remove('hidden');
+                        document.getElementById('model-content').textContent = data.content;
+                    }
                     modelInfo.classList.remove('hidden');
                 } else {
                     throw new Error(data.error || 'Failed to load model');
                 }
             } catch (error) {
-                modelError.textContent = `Error: ${error.message}`;
+                let errorMessage = error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Could not connect to the server. Please try again later.';
+                }
+                modelError.textContent = `Error: ${errorMessage}`;
                 modelError.classList.remove('hidden');
+            } finally {
+                hideLoading();
             }
         });
 
@@ -115,9 +144,20 @@
             if (this.files.length > 0) {
                 fileName.textContent = this.files[0].name;
                 classifyBtn.disabled = !document.getElementById('model-select').value;
+                
+                // Show preview
+                const preview = document.getElementById('image-preview');
+                const previewContainer = document.getElementById('image-preview-container');
+                if (this.files[0].type.startsWith('image/')) {
+                    preview.src = URL.createObjectURL(this.files[0]);
+                    previewContainer.classList.remove('hidden');
+                } else {
+                    previewContainer.classList.add('hidden');
+                }
             } else {
                 fileName.textContent = 'No file selected';
                 classifyBtn.disabled = true;
+                document.getElementById('image-preview-container').classList.add('hidden');
             }
         });
 
@@ -144,6 +184,7 @@
             try {
                 classifyBtn.disabled = true;
                 classifyBtn.textContent = 'Processing...';
+                showLoading();
 
                 const response = await fetch('/classify', {
                     method: 'POST',
@@ -167,7 +208,7 @@
                     
                     const labelElement = document.createElement('span');
                     labelElement.className = 'text-gray-800';
-                    labelElement.textContent = `Class ${pred.class}`;
+                    labelElement.textContent = pred.class_name || `Class ${pred.class}`;
                     
                     const progressContainer = document.createElement('div');
                     progressContainer.className = 'w-1/2 bg-gray-200 rounded-full h-2.5';
@@ -191,13 +232,35 @@
 
                 resultContainer.classList.remove('hidden');
             } catch (error) {
-                classificationError.textContent = `Error: ${error.message}`;
+                let errorMessage = error.message;
+                if (error.message.includes('Invalid model type')) {
+                    errorMessage = 'The selected model is not a valid Keras model (.h5 file)';
+                }
+                classificationError.textContent = `Error: ${errorMessage}`;
                 classificationError.classList.remove('hidden');
             } finally {
                 classifyBtn.disabled = false;
                 classifyBtn.textContent = 'Classify Image';
+                hideLoading();
             }
         });
+
+        // Helper functions
+        function showLoading() {
+            document.getElementById('loading-spinner').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-spinner').classList.add('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
     </script>
 </body>
 </html>

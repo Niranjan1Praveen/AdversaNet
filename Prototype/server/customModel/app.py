@@ -10,6 +10,8 @@ import io
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
+import h5py
+import re
 
 # Load environment variables
 load_dotenv()
@@ -69,57 +71,47 @@ def classify_image():
                 
             model_data = model_response.data[0]
             
-            # Verify model file type
-            if not model_data['fileType'].lower() == '.h5':
-                return jsonify({
-                    'error': 'Invalid model type',
-                    'details': f"Expected .h5 file, got {model_data['fileType']}"
-                }), 400
+            # Get file data from storage instead of hex
+            if 'fileData' not in model_data or not model_data['fileData']:
+                return jsonify({'error': 'Model data not available'}), 400
 
-            # Convert hex data to bytes with verification
-            try:
-                if not model_data['fileData'].startswith(r'\x'):
-                    return jsonify({
-                        'error': 'Invalid model data format',
-                        'details': 'Model data should start with \\x'
-                    }), 400
-                
-                clean_hex = model_data['fileData'].replace(r'\x', '')
-                if len(clean_hex) % 2 != 0:
-                    return jsonify({
-                        'error': 'Invalid hex data length',
-                        'details': 'Hex string should have even number of characters'
-                    }), 400
-                
-                model_bytes = bytes.fromhex(clean_hex)
-                if len(model_bytes) < 100:  # Minimum reasonable size for .h5 file
-                    return jsonify({
-                        'error': 'Model file too small',
-                        'details': f"File size only {len(model_bytes)} bytes"
-                    }), 400
-            except ValueError as e:
-                return jsonify({
-                    'error': 'Failed to convert model data',
-                    'details': str(e)
-                }), 400
+            # Handle base64 encoded data
+            if isinstance(model_data['fileData'], str):
+                import base64
+                try:
+                    model_bytes = base64.b64decode(model_data['fileData'])
+                except:
+                    # Fallback to direct bytes if not base64
+                    model_bytes = model_data['fileData'].encode('latin-1')
+            else:
+                model_bytes = model_data['fileData']
 
             # Create temporary model file
             with tempfile.NamedTemporaryFile(suffix='.h5', delete=False) as temp_model:
                 temp_model.write(model_bytes)
                 temp_model_path = temp_model.name
 
-            # Verify file magic number (HDF5 format)
-            with open(temp_model_path, 'rb') as f:
-                magic = f.read(8)
-                if magic != b'\x89HDF\r\n\x1a\n':
-                    return jsonify({
-                        'error': 'Invalid HDF5 file format',
-                        'details': 'File header does not match HDF5 specification'
-                    }), 400
+            # Verify it's an HDF5 file
+            try:
+                with h5py.File(temp_model_path, 'r') as f:
+                    if not f.keys():
+                        return jsonify({'error': 'Invalid HDF5 file (no keys found)'}), 400
+            except Exception as e:
+                return jsonify({
+                    'error': 'Invalid model file',
+                    'details': 'The file is not a valid HDF5 model',
+                    'debug': str(e)
+                }), 400
 
-            # Load Keras model with custom objects support
+            # Load Keras model
             try:
                 model = load_model(temp_model_path, compile=False)
+                
+                # Get expected input shape from model
+                if hasattr(model, 'input_shape'):
+                    input_shape = model.input_shape[1:3]  # Get height and width
+                else:
+                    input_shape = (32, 32)  # Default to CIFAR-10 size
                 
                 # Recompile model if needed
                 if model.optimizer is None:
@@ -129,13 +121,12 @@ def classify_image():
             except Exception as e:
                 return jsonify({
                     'error': 'Failed to load Keras model',
-                    'details': str(e),
-                    'solution': 'Ensure model was saved with model.save() and uses supported layers'
+                    'details': str(e)
                 }), 400
 
             # Load and preprocess image
             try:
-                img = image.load_img(io.BytesIO(image_file.read()), target_size=(32, 32))
+                img = image.load_img(io.BytesIO(image_file.read()), target_size=input_shape)
                 img_array = image.img_to_array(img)
                 img_array = np.expand_dims(img_array, axis=0) / 255.0
             except Exception as e:
@@ -157,7 +148,7 @@ def classify_image():
                 'predictions': [
                     {
                         'class': int(cat),
-                        'class_name': class_names[int(cat)],
+                        'class_name': class_names[int(cat)] if int(cat) < len(class_names) else str(int(cat)),
                         'probability': float(prob)
                     } for prob, cat in zip(top_prob, top_cat)
                 ],
@@ -203,36 +194,38 @@ def get_file_content():
         if not file_data.get('fileData'):
             raise Exception("File content not available in database")
         
-        # Convert the stored hex data back to original form
-        hex_str = file_data['fileData']
+        # Handle different data formats
+        if isinstance(file_data['fileData'], str):
+            if file_data['fileData'].startswith(r'\x'):
+                # Hex format
+                byte_data = bytes.fromhex(file_data['fileData'].replace(r'\x', ''))
+            else:
+                # Try base64 first
+                try:
+                    import base64
+                    byte_data = base64.b64decode(file_data['fileData'])
+                except:
+                    # Fallback to raw string
+                    byte_data = file_data['fileData'].encode('latin-1')
+        else:
+            byte_data = file_data['fileData']
+        
+        # Check if it's a binary file
+        is_binary = True
         try:
-            # Remove the \x prefixes and convert from hex
-            byte_data = bytes.fromhex(hex_str.replace(r'\x', ''))
-            
-            # Try to decode as UTF-8 if it's text
-            try:
-                content = byte_data.decode('utf-8')
-                return jsonify({
-                    'success': True,
-                    'name': file_data['name'],
-                    'content': content,
-                    'fileType': file_data['fileType'],
-                    'isBinary': False
-                })
-            except UnicodeDecodeError:
-                # If not UTF-8, return as binary
-                import base64
-                return jsonify({
-                    'success': True,
-                    'name': file_data['name'],
-                    'content': "Binary file content",
-                    'fileType': file_data['fileType'],
-                    'isBinary': True,
-                    'base64Data': base64.b64encode(byte_data).decode('utf-8')
-                })
-                
-        except Exception as conversion_error:
-            raise Exception(f"Failed to convert file data: {str(conversion_error)}")
+            content = byte_data.decode('utf-8')
+            is_binary = False
+        except UnicodeDecodeError:
+            content = "Binary data (HDF5 model file)"
+        
+        return jsonify({
+            'success': True,
+            'name': file_data['name'],
+            'content': content,
+            'fileType': file_data.get('fileType', '.h5'),
+            'isBinary': is_binary,
+            'size': len(byte_data)
+        })
         
     except Exception as e:
         return jsonify({
@@ -242,4 +235,4 @@ def get_file_content():
         })
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)   
+    app.run(debug=True, port=5001)
