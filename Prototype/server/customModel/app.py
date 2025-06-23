@@ -123,7 +123,21 @@ def classify_image():
                     'error': 'Failed to load Keras model',
                     'details': str(e)
                 }), 400
-
+            # Add this right after loading the model
+            try:
+                # Verify model structure
+                if not all(key in model.__dict__ for key in ['layers', 'optimizer', 'loss']):
+                    raise ValueError("Invalid Keras model structure")
+                
+                # Verify input shape
+                if model.input_shape[1:] != (32, 32, 3):
+                    raise ValueError(f"Model expects input shape {model.input_shape[1:]}, not 32x32x3")
+                    
+            except AttributeError as e:
+                return jsonify({
+                    'error': 'Invalid model architecture',
+                    'details': str(e)
+                }), 400
             # Load and preprocess image
             try:
                 img = image.load_img(io.BytesIO(image_file.read()), target_size=input_shape)
