@@ -9,11 +9,6 @@
 
 **Adversarial Robustness Testing for Machine Learning Models**: Develop a web application that enables users to upload their own machine learning models (image classifiers) and test their robustness against adversarial attacks. The app should allow users to upload models and images, apply attacks like Fast Gradient Sign Method (FGSM) or Projected Gradient Descent (PGD), and visualize the results to identify vulnerabilities, helping ML practitioners improve model security and reliability.
 
-<<<<<<< HEAD
-**Team Leader Email**: your-email@example.com
-
-=======
->>>>>>> 3189f74ff19e4072ee7ab0fe0d8a0a7099eb42e8
 ## Web App Title
 
 **AdversaNet – AI-Powered Adversarial Attack Testing Platform**
