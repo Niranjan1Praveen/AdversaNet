@@ -153,7 +153,6 @@ def predict():
     file = request.files['image']
     custom_model_file = request.files.get('custom_model')
 
-    # If a custom model is provided
     if model_type == 'custom' and custom_model_file:
         import tempfile
         with tempfile.NamedTemporaryFile(delete=False, suffix=".h5") as tmp:
