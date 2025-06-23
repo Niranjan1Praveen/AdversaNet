@@ -82,6 +82,19 @@ export async function GET(request) {
       orderBy: {
         createdAt: "desc",
       },
+      select: {
+        id: true,
+        userId: true,
+        name: true,
+        fileName: true,
+        fileType: true,
+        fileSize: true,
+        filePath: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        // fileData is intentionally excluded
+      },
     });
 
     return NextResponse.json(models);
