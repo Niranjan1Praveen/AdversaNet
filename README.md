@@ -9,15 +9,22 @@
 
 **Adversarial Robustness Testing for Machine Learning Models**: Develop a web application that enables users to upload their own machine learning models (image classifiers) and test their robustness against adversarial attacks. The app should allow users to upload models and images, apply attacks like Fast Gradient Sign Method (FGSM) or Projected Gradient Descent (PGD), and visualize the results to identify vulnerabilities, helping ML practitioners improve model security and reliability.
 
+<<<<<<< HEAD
 **Team Leader Email**: your-email@example.com
 
+=======
+>>>>>>> 3189f74ff19e4072ee7ab0fe0d8a0a7099eb42e8
 ## Web App Title
 
 **AdversaNet – AI-Powered Adversarial Attack Testing Platform**
 
 ## A Brief of the Prototype
 
+<<<<<<< HEAD
 Interact with the UI of the website here – https://adversary-lab.example.com (replace with your deployed URL)
+=======
+Interact with the website here – https://adversary-lab.example.com
+>>>>>>> 3189f74ff19e4072ee7ab0fe0d8a0a7099eb42e8
 
 **AdversaNet** is a modular web platform designed to test the robustness of user-uploaded machine learning models against adversarial attacks. Users can upload image classifier models (e.g., TensorFlow `.h5`, PyTorch `.pt`) and test images, apply adversarial attacks, and visualize the impact through predictions, confidence scores, and difference maps. Built with React and Tailwind CSS on the front-end and Python (Flask/FastAPI) on the backend, **AdversaNet** leverages libraries like CleverHans or Foolbox for attack generation and provides an intuitive interface for ML practitioners to assess model weaknesses.
 
@@ -114,4 +121,8 @@ Interact with the UI of the website here – https://adversary-lab.example.com (
 
 ## Summary
 
+<<<<<<< HEAD
 **AdversaNet** empowers ML practitioners to test and improve the robustness of their image classifier models by providing an intuitive platform for adversarial attack testing. Combining a React-based front-end with a Python-powered backend, it enables users to upload models and images, apply attacks like FGSM or PGD, and visualize vulnerabilities through predictions, difference maps, and metrics. This AI-driven tool reduces the complexity of adversarial testing, helping developers build more secure and reliable machine learning systems.
+=======
+**AdversaNet** empowers ML practitioners to test and improve the robustness of their image classifier models by providing an intuitive platform for adversarial attack testing. Combining a React-based front-end with a Python-powered backend, it enables users to upload models and images, apply attacks like FGSM or PGD, and visualize vulnerabilities through predictions, difference maps, and metrics. This AI-driven tool reduces the complexity of adversarial testing, helping developers build more secure and reliable machine learning systems.
+>>>>>>> 3189f74ff19e4072ee7ab0fe0d8a0a7099eb42e8
