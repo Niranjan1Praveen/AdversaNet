@@ -53,8 +53,16 @@ def preprocess_image(img_path):
     return img_array
 
 def image_to_base64(img_array):
+    if isinstance(img_array, tf.Tensor):
+        img_array = img_array.numpy()  # Convert tensor to numpy array
+    
     img_array = (img_array * 255).astype('uint8')
-    img = Image.fromarray(img_array[0])
+    
+    # Handle single image in batch
+    if len(img_array.shape) == 4:
+        img_array = img_array[0]
+    
+    img = Image.fromarray(img_array)
     buffered = io.BytesIO()
     img.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode('utf-8')
@@ -67,6 +75,35 @@ def index():
         return render_template("index.html", models=models)
     except Exception as e:
         return jsonify({"error": "Failed to fetch models", "details": str(e)}), 500
+
+def pgd_attack(image, label, model, epsilon=0.03, alpha=0.01, iters=40):
+    adv_image = tf.identity(image)
+    for i in range(iters):
+        with tf.GradientTape() as tape:
+            tape.watch(adv_image)
+            prediction = model(adv_image)
+            loss = tf.keras.losses.categorical_crossentropy(label, prediction)
+        gradient = tape.gradient(loss, adv_image)
+        adv_image = adv_image + alpha * tf.sign(gradient)
+        perturbation = tf.clip_by_value(adv_image - image, -epsilon, epsilon)
+        adv_image = tf.clip_by_value(image + perturbation, 0, 1)
+    return adv_image
+
+def bim_attack(image, label, model, epsilon=0.03, alpha=0.01, iters=10):
+    adv_image = tf.identity(image)
+    for i in range(iters):
+        with tf.GradientTape() as tape:
+            tape.watch(adv_image)
+            prediction = model(adv_image)
+            loss = tf.keras.losses.categorical_crossentropy(label, prediction)
+        gradient = tape.gradient(loss, adv_image)
+        adv_image = adv_image + alpha * tf.sign(gradient)
+        adv_image = tf.clip_by_value(adv_image, 0, 1)
+    
+    # Apply epsilon constraint after iterations
+    perturbation = tf.clip_by_value(adv_image - image, -epsilon, epsilon)
+    adv_image = tf.clip_by_value(image + perturbation, 0, 1)
+    return adv_image
 
 @app.route('/classify', methods=['POST'])
 def classify():
@@ -159,7 +196,58 @@ def classify():
                 'adversarial_image': adversarial_image_base64,
                 'epsilon': epsilon
             })
+        elif attack_type == 'pgd':
+            original_class = np.argmax(predictions[0])
+            target_label = np.zeros((1, 10))
+            target_label[0, original_class] = 1
 
+            adversarial_image = pgd_attack(tf.convert_to_tensor(img_array), 
+                                        tf.convert_to_tensor(target_label), 
+                                        model, 
+                                        epsilon=epsilon, 
+                                        alpha=0.01, 
+                                        iters=40)
+
+            # Convert to numpy array if it's a tensor
+            if isinstance(adversarial_image, tf.Tensor):
+                adversarial_image = adversarial_image.numpy()
+
+            adv_predictions = model.predict(adversarial_image)
+            top_adv_indices = np.argsort(adv_predictions[0])[::-1][:5]
+            adversarial_results = [{
+                'class': int(i),
+                'class_name': class_names[i] if i < len(class_names) else str(i),
+                'probability': float(adv_predictions[0][i])
+            } for i in top_adv_indices]
+
+            adversarial_image_base64 = image_to_base64(adversarial_image)
+            response_data.update({
+                'adversarial_predictions': adversarial_results,
+                'adversarial_image': adversarial_image_base64,
+                'epsilon': epsilon
+            })
+        elif attack_type == 'bim':
+            original_class = np.argmax(predictions[0])
+            target_label = np.zeros((1, 10))
+            target_label[0, original_class] = 1
+
+            adversarial_image = bim_attack(img_array, target_label, model, epsilon=epsilon, alpha=0.01, iters=10)
+
+            adv_predictions = model.predict(adversarial_image)
+            top_adv_indices = np.argsort(adv_predictions[0])[::-1][:5]
+            adversarial_results = [{
+                'class': int(i),
+                'class_name': class_names[i] if i < len(class_names) else str(i),
+                'probability': float(adv_predictions[0][i])
+            } for i in top_adv_indices]
+
+            adversarial_image_base64 = image_to_base64(adversarial_image)
+
+            response_data.update({
+                'adversarial_predictions': adversarial_results,
+                'adversarial_image': adversarial_image_base64,
+                'epsilon': epsilon
+            })
         os.remove(img_path)
         os.remove(model_path)
 

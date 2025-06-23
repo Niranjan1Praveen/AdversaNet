@@ -144,15 +144,15 @@ callbacks = [
 # Generate and save models
 models_to_train = {
     "residual_cnn": create_residual_model(),
-    "dense_cnn": create_dense_model(),
-    "efficient_cnn": create_efficient_model()
+    # "dense_cnn": create_dense_model(),
+    # "efficient_cnn": create_efficient_model()
 }
 
 for name, model in models_to_train.items():
     print(f"\nTraining {name}...")
     history = model.fit(
         x_train, y_train,
-        epochs=5,
+        epochs=50,
         validation_data=(x_test, y_test),
         batch_size=64,
         callbacks=callbacks
@@ -166,5 +166,3 @@ for name, model in models_to_train.items():
     filename = f"{name}_cifar10.h5"
     model.save(filename)
     print(f"Saved {filename}\n")
-
-print("All models generated successfully!")
