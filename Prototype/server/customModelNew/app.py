@@ -17,7 +17,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/images'
-app.config['ALLOWED_EXTENSIONS'] = {'h5', 'hdf5', 'png', 'jpg', 'jpeg'}
+app.config['ALLOWED_EXTENSIONS'] = {'h5', 'hdf5', 'png', 'jpg', 'jpeg', 'jfif', 'webp'}
 
 # Ensure image directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -47,16 +47,31 @@ def generate_adversarial_pattern(input_image, input_label, model, epsilon):
     return adversarial_image.numpy()
 
 def preprocess_image(img_path):
-    img = image.load_img(img_path, target_size=(32, 32))
+    img = image.load_img(img_path, target_size=(32, 32))  # keep it 32x32
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0) / 255.0
     return img_array
 
-def image_to_base64(img_array):
+
+
+def image_to_base64(img_array, upscale_to=(256, 256)):
     if isinstance(img_array, tf.Tensor):
-        img_array = img_array.numpy()  # Convert tensor to numpy array
-    
+        img_array = img_array.numpy()
+
     img_array = (img_array * 255).astype('uint8')
+
+    # Get first image in batch if necessary
+    if img_array.ndim == 4:
+        img_array = img_array[0]
+
+    img = Image.fromarray(img_array)
+
+    # Upscale for better visibility
+    img = img.resize(upscale_to, Image.NEAREST)
+
+    buffered = io.BytesIO()
+    img.save(buffered, format="JPEG")
+    return base64.b64encode(buffered.getvalue()).decode('utf-8')
     
     # Handle single image in batch
     if len(img_array.shape) == 4:
@@ -76,7 +91,7 @@ def index():
     except Exception as e:
         return jsonify({"error": "Failed to fetch models", "details": str(e)}), 500
 
-def pgd_attack(image, label, model, epsilon=0.03, alpha=0.01, iters=40):
+def pgd_attack(image, label, model, epsilon=0.3, alpha=0.01, iters=40):
     adv_image = tf.identity(image)
     for i in range(iters):
         with tf.GradientTape() as tape:
@@ -89,7 +104,7 @@ def pgd_attack(image, label, model, epsilon=0.03, alpha=0.01, iters=40):
         adv_image = tf.clip_by_value(image + perturbation, 0, 1)
     return adv_image
 
-def bim_attack(image, label, model, epsilon=0.03, alpha=0.01, iters=10):
+def bim_attack(image, label, model, epsilon=0.3, alpha=0.01, iters=10):
     adv_image = tf.identity(image)
     for i in range(iters):
         with tf.GradientTape() as tape:

@@ -221,14 +221,14 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+  @layer base {
+    * {
+      @apply border-border outline-ring/50;
+    }
+    body {
+      @apply text-foreground bg-background bg-repeat;
+    }
   }
-  body {
-    @apply text-foreground bg-background bg-repeat;
-  }
-}
 /* Global Styles */
 html {
   scroll-behavior: smooth;

@@ -4,9 +4,8 @@ import {
   User2,
   ChevronUp,
   Grid,
-  Sword,
+  Mic,
   SwordsIcon,
-  Database,
   History,
 } from "lucide-react";
 
@@ -19,7 +18,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
@@ -33,33 +31,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const items = [
-  {
-    title: "Home",
-    url: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "Gallery",
-    url: "/dashboard/gallery",
-    icon: Grid, 
-  },
-  {
-    title: "Attack Playground",
-    url: "/dashboard/playground",
-    icon: FlaskConical, 
-  },
-  {
-    title: "Custom Models",
-    url: "/dashboard/customModel",
-    icon: SwordsIcon, 
-  },
-  {
-    title: "Attack History",
-    url: "/dashboard/logs",
-    icon: History, 
-  },
-];
 const AppSidebar = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
@@ -85,23 +56,75 @@ const AppSidebar = async () => {
       </SidebarHeader>
       <hr />
       <SidebarContent>
+        {/* Application */}
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                    <Link href="/dashboard">
+                      <Home />
+                      <span>Home</span>
                     </Link>
                   </SidebarMenuButton>
-                  {item.title === "Inbox" && (
-                    <SidebarMenuBadge>0</SidebarMenuBadge>
-                  )}
                 </SidebarMenuItem>
-              ))}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/dashboard/gallery">
+                      <Grid />
+                      <span>Gallery</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        {/* Image */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Image</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/dashboard/playground">
+                      <FlaskConical />
+                      <span>Attack Playground</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/dashboard/logs">
+                      <History />
+                      <span>Attack History</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/dashboard/customModel">
+                      <SwordsIcon />
+                      <span>Custom Models</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        {/* Voice */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Voice</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/dashboard/liveConversation">
+                      <Mic />
+                      <span>Live Conversation</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
