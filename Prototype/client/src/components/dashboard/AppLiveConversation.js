@@ -10,10 +10,9 @@ import { Label } from "../ui/label";
 const barHeights = [20, 32, 16, 40, 24, 40, 16, 32, 20];
 import axios from "axios";
 
-
 const classifySentiment = async (text) => {
-  const HF_TOKEN = "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";
-  const API_URL = "https://router.huggingface.co/hf-inference/models/cardiffnlp/twitter-roberta-base-sentiment";
+  const HF_TOKEN = process.env.NEXT_PUBLIC_HF_TOKEN;
+  const API_URL = process.env.NEXT_PUBLIC_HF_API_URL;
 
   try {
     const response = await axios.post(
@@ -51,8 +50,6 @@ const classifySentiment = async (text) => {
     return null;
   }
 };
-
-
 
 export default function AppLiveConversation() {
   const [recording, setRecording] = useState(false);
