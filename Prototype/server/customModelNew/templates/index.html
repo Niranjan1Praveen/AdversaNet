@@ -15,7 +15,7 @@
   <body>
     <div class="container py-5">
       <h2 class="mb-4 text-center">
-        Classify with Your <span style="color: #0d6efd">Custom Models</span>
+        Classify with Your <span class="title">Custom Models</span>
       </h2>
 
       {% if models|length == 0 %}
@@ -42,7 +42,7 @@
 
       <form id="uploadForm" enctype="multipart/form-data">
         <div class="mb-3">
-          <label class="form-label">Select multiple Images</label>
+          <label class="form-label">Select multiple Images (JPEG, PNG, JFIF, WEBP etc.)</label>
           <input
             type="file"
             name="images"
@@ -51,13 +51,11 @@
             multiple
             required
           />
-          <div class="form-text">Select multiple images (JPEG, PNG, etc.)</div>
         </div>
 
         <div class="mb-3">
           <label class="form-label">Attack Type</label>
           <select name="attack_type" class="form-select" id="attackTypeSelect">
-            <option value="none" selected>No attack</option>
             <option value="fgsm">FGSM Attack</option>
             <option value="pgd">PGD Attack</option>
             <option value="bim">BIM Attack</option>
@@ -113,7 +111,7 @@
         </div>
 
         <input type="hidden" name="model_id" id="selectedModelId" required />
-        <button type="submit" class="btn btn-primary w-100 py-2">
+        <button type="submit" class="btn btn-primary w-fit py-2">
           Classify and Attack
         </button>
       </form>
@@ -123,7 +121,7 @@
 
         <div class="row">
           <div class="col-md-6 mb-4">
-            <div class="card metric-card bg-light">
+            <div class="card metric-card">
               <div class="card-body">
                 <h5 class="card-title">Summary</h5>
                 <div id="summaryStats"></div>
@@ -132,7 +130,7 @@
           </div>
 
           <div class="col-md-6 mb-4">
-            <div class="card metric-card bg-light">
+            <div class="card metric-card">
               <div class="card-body">
                 <h5 class="card-title">Confidence Metrics</h5>
                 <div id="confidenceMetrics"></div>
@@ -141,7 +139,7 @@
           </div>
 
           <div class="col-md-6 mb-4">
-            <div class="card metric-card bg-light">
+            <div class="card metric-card">
               <div class="card-body">
                 <h5 class="card-title">Classification Flip Rate</h5>
                 <div id="flipRate"></div>
@@ -150,7 +148,7 @@
           </div>
 
           <div class="col-md-6 mb-4">
-            <div class="card metric-card bg-light">
+            <div class="card metric-card">
               <div class="card-body">
                 <h5 class="card-title">Average Confidence Drop</h5>
                 <div id="confidenceDrop"></div>
@@ -261,11 +259,11 @@
           document.getElementById("confidenceMetrics").innerHTML = `
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
-                            <span>Original Confidence:</span>
+                            <span>Average Original Confidence:</span>
                             <span class="metric-value">${data.avg_original_confidence}%</span>
                         </div>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" 
+                            <div class="progress-bar bg-indigo-600" role="progressbar" 
                                 style="width: ${data.avg_original_confidence}%" 
                                 aria-valuenow="${data.avg_original_confidence}" 
                                 aria-valuemin="0" 
@@ -274,7 +272,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
-                            <span>Adversarial Confidence:</span>
+                            <span>Average Adversarial Confidence:</span>
                             <span class="metric-value">${data.avg_adversarial_confidence}%</span>
                         </div>
                         <div class="progress">
