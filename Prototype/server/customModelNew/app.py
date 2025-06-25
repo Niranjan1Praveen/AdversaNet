@@ -13,6 +13,7 @@ from supabase import create_client, Client
 from dotenv import load_dotenv
 import base64
 
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -53,7 +54,6 @@ def preprocess_image(img_path):
     return img_array
 
 
-
 def image_to_base64(img_array, upscale_to=(256, 256)):
     if isinstance(img_array, tf.Tensor):
         img_array = img_array.numpy()
@@ -92,6 +92,7 @@ def index():
         return jsonify({"error": "Failed to fetch models", "details": str(e)}), 500
 
 def pgd_attack(image, label, model, epsilon=0.3, alpha=0.01, iters=40):
+    """Projected Gradient Descent attack"""
     adv_image = tf.identity(image)
     for i in range(iters):
         with tf.GradientTape() as tape:
@@ -105,6 +106,7 @@ def pgd_attack(image, label, model, epsilon=0.3, alpha=0.01, iters=40):
     return adv_image
 
 def bim_attack(image, label, model, epsilon=0.3, alpha=0.01, iters=10):
+    """Basic Iterative Method attack"""
     adv_image = tf.identity(image)
     for i in range(iters):
         with tf.GradientTape() as tape:
@@ -113,12 +115,10 @@ def bim_attack(image, label, model, epsilon=0.3, alpha=0.01, iters=10):
             loss = tf.keras.losses.categorical_crossentropy(label, prediction)
         gradient = tape.gradient(loss, adv_image)
         adv_image = adv_image + alpha * tf.sign(gradient)
+        adv_image = tf.clip_by_value(adv_image, image - epsilon, image + epsilon)
         adv_image = tf.clip_by_value(adv_image, 0, 1)
-    
-    # Apply epsilon constraint after iterations
-    perturbation = tf.clip_by_value(adv_image - image, -epsilon, epsilon)
-    adv_image = tf.clip_by_value(image + perturbation, 0, 1)
     return adv_image
+
 
 @app.route('/classify', methods=['POST'])
 def classify():
@@ -212,21 +212,31 @@ def classify():
                 'epsilon': epsilon
             })
         elif attack_type == 'pgd':
+            # Get the original predicted class
             original_class = np.argmax(predictions[0])
             target_label = np.zeros((1, 10))
             target_label[0, original_class] = 1
-
-            adversarial_image = pgd_attack(tf.convert_to_tensor(img_array), 
-                                        tf.convert_to_tensor(target_label), 
-                                        model, 
-                                        epsilon=epsilon, 
-                                        alpha=0.01, 
-                                        iters=40)
-
+            
+            # Get attack parameters from the form
+            pgd_epsilon = float(request.form.get('epsilon', 0.05))
+            pgd_alpha = float(request.form.get('alpha', 0.01))
+            pgd_iters = int(request.form.get('iterations', 40))
+            
+            # Generate adversarial image with PGD
+            adversarial_image = pgd_attack(
+                tf.convert_to_tensor(img_array), 
+                tf.convert_to_tensor(target_label), 
+                model,
+                epsilon=pgd_epsilon,
+                alpha=pgd_alpha,
+                iters=pgd_iters
+            )
+            
             # Convert to numpy array if it's a tensor
             if isinstance(adversarial_image, tf.Tensor):
                 adversarial_image = adversarial_image.numpy()
-
+            
+            # Classify adversarial image
             adv_predictions = model.predict(adversarial_image)
             top_adv_indices = np.argsort(adv_predictions[0])[::-1][:5]
             adversarial_results = [{
@@ -234,20 +244,47 @@ def classify():
                 'class_name': class_names[i] if i < len(class_names) else str(i),
                 'probability': float(adv_predictions[0][i])
             } for i in top_adv_indices]
-
+            
+            # Convert adversarial image to base64 for display
             adversarial_image_base64 = image_to_base64(adversarial_image)
+            
+            # Update response data with PGD-specific parameters
             response_data.update({
                 'adversarial_predictions': adversarial_results,
                 'adversarial_image': adversarial_image_base64,
-                'epsilon': epsilon
-            })
+                'epsilon': pgd_epsilon,
+                'alpha': pgd_alpha,
+                'iterations': pgd_iters,
+                'attack_params': {
+                    'name': 'Projected Gradient Descent (PGD)',
+                    'epsilon': pgd_epsilon,
+                    'alpha': pgd_alpha,
+                    'iterations': pgd_iters
+                }
+        })
+
         elif attack_type == 'bim':
+            # Get the original predicted class
             original_class = np.argmax(predictions[0])
             target_label = np.zeros((1, 10))
             target_label[0, original_class] = 1
-
-            adversarial_image = bim_attack(img_array, target_label, model, epsilon=epsilon, alpha=0.01, iters=10)
-
+            
+            # Get attack parameters from the form
+            bim_epsilon = float(request.form.get('epsilon', 0.05))
+            bim_alpha = float(request.form.get('alpha', 0.01))
+            bim_iters = int(request.form.get('iterations', 10))
+            
+            # Generate adversarial image with BIM
+            adversarial_image = bim_attack(
+                tf.convert_to_tensor(img_array),
+                tf.convert_to_tensor(target_label),
+                model,
+                epsilon=bim_epsilon,
+                alpha=bim_alpha,
+                iters=bim_iters
+            )
+        
+            # Classify adversarial image
             adv_predictions = model.predict(adversarial_image)
             top_adv_indices = np.argsort(adv_predictions[0])[::-1][:5]
             adversarial_results = [{
@@ -255,14 +292,24 @@ def classify():
                 'class_name': class_names[i] if i < len(class_names) else str(i),
                 'probability': float(adv_predictions[0][i])
             } for i in top_adv_indices]
-
+            
+            # Convert adversarial image to base64 for display
             adversarial_image_base64 = image_to_base64(adversarial_image)
-
+            
+            # Update response data with BIM-specific parameters
             response_data.update({
                 'adversarial_predictions': adversarial_results,
                 'adversarial_image': adversarial_image_base64,
-                'epsilon': epsilon
-            })
+                'epsilon': bim_epsilon,
+                'alpha': bim_alpha,
+                'iterations': bim_iters,
+                'attack_params': {
+                    'name': 'Basic Iterative Method (BIM)',
+                    'epsilon': bim_epsilon,
+                    'alpha': bim_alpha,
+                    'iterations': bim_iters
+                }
+        })
         os.remove(img_path)
         os.remove(model_path)
 

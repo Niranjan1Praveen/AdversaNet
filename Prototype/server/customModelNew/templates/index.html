@@ -53,7 +53,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Attack Type</label>
-          <select name="attack_type" class="form-select">
+          <select name="attack_type" class="form-select" id="attackTypeSelect">
             <option value="none" selected>No attack</option>
             <option value="fgsm">FGSM Attack</option>
             <option value="pgd">PGD Attack</option>
@@ -61,18 +61,50 @@
           </select>
         </div>
 
-        <div class="mb-3" id="epsilonContainer" style="display: none">
-          <label class="form-label">Epsilon (perturbation strength)</label>
-          <input
-            type="number"
-            name="epsilon"
-            class="form-control"
-            value="0.05"
-            step="0.01"
-            min="0.01"
-            max="0.3"
-          />
+        <!-- Attack Parameters Container -->
+        <div id="attackParamsContainer">
+          <!-- Epsilon parameter (common to all attacks) -->
+          <div class="mb-3 attack-param" id="epsilonContainer">
+            <label class="form-label">Epsilon (perturbation strength)</label>
+            <input
+              type="number"
+              name="epsilon"
+              class="form-control"
+              value="0.05"
+              step="0.01"
+              min="0.01"
+              max="0.3"
+            />
+          </div>
+
+          <!-- Alpha parameter (for PGD and BIM) -->
+          <div class="mb-3 attack-param" id="alphaContainer" style="display: none">
+            <label class="form-label">Alpha (step size)</label>
+            <input
+              type="number"
+              name="alpha"
+              class="form-control"
+              value="0.01"
+              step="0.001"
+              min="0.001"
+              max="0.1"
+            />
+          </div>
+
+          <!-- Iterations parameter (for PGD and BIM) -->
+          <div class="mb-3 attack-param" id="iterationsContainer" style="display: none">
+            <label class="form-label">Iterations</label>
+            <input
+              type="number"
+              name="iterations"
+              class="form-control"
+              value="40"
+              min="1"
+              max="100"
+            />
+          </div>
         </div>
+
         <input type="hidden" name="model_id" id="selectedModelId" required />
         <button type="submit" class="btn btn-primary">Classify Image</button>
       </form>

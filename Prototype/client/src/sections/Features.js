@@ -81,8 +81,8 @@ export default function Features() {
             <div className="aspect-video flex items-center justify-center relative w-full overflow-hidden min-h-[200px]">
               <OrbitingCircles radius={100}>
                 <Key className={"w-28 p-5 text-sm md:text-lg"}>Epsilon</Key>
-                <Key className={"w-28 p-5 text-sm md:text-lg"}>Steps</Key>
-                <Key className={"w-28 p-5 text-sm md:text-lg"}>Method</Key>
+                <Key className={"w-28 p-5 text-sm md:text-lg"}>Alpha</Key>
+                <Key className={"w-28 p-5 text-sm md:text-lg"}>Iterations</Key>
               </OrbitingCircles>
             </div>
           </FeatureCard>
