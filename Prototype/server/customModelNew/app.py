@@ -120,203 +120,134 @@ def bim_attack(image, label, model, epsilon=0.3, alpha=0.01, iters=10):
     return adv_image
 
 
-@app.route('/classify', methods=['POST'])
-def classify():
-    if 'image' not in request.files or 'model_id' not in request.form:
-        return jsonify({'error': 'Missing image or model ID'}), 400
-
-    image_file = request.files['image']
-    model_id = request.form['model_id']
-    attack_type = request.form.get('attack_type', 'none')
-    epsilon = float(request.form.get('epsilon', 0.05))
-
-    if image_file.filename == '' or not allowed_file(image_file.filename):
-        return jsonify({'error': 'Invalid image file'}), 400
-
-    # Save image temporarily
-    img_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{uuid.uuid4().hex}.jpg")
-    image_file.save(img_path)
-
+@app.route('/bulk_classify', methods=['POST'])
+def bulk_classify():
     try:
-        # Fetch model data from Supabase
-        response = supabase.table("CustomModel").select("fileData").eq("id", model_id).single().execute()
-        model_row = response.data
-        file_data = model_row.get("fileData")
+        # Get form data
+        images = request.files.getlist("images")
+        model_id = request.form.get("model_id")
+        attack_type = request.form.get("attack_type", "none")
+        epsilon = float(request.form.get("epsilon", 0.05))
+        alpha = float(request.form.get("alpha", 0.01))
+        iterations = int(request.form.get("iterations", 10))
 
-        if not file_data:
-            return jsonify({"error": "No model data found"}), 404
+        if not images or not model_id:
+            return jsonify({"error": "Missing image files or model ID"}), 400
 
-        # If it starts with \x, it's a hex string from PostgreSQL's bytea
-        if isinstance(file_data, str) and file_data.startswith("\\x"):
-            hex_data = file_data[2:]  # strip off the '\x'
-            try:
-                model_bytes = bytes.fromhex(hex_data)
-            except Exception as e:
-                return jsonify({"error": "Failed to decode hex model data", "details": str(e)}), 500
-        else:
-            return jsonify({"error": "Unsupported fileData format"}), 400
-
-        # Save and load the model
-        model_path = os.path.join("uploads/models", f"{uuid.uuid4().hex}_temp.h5")
-        with open(model_path, "wb") as f:
-            f.write(model_bytes)
-
-        model = load_model(model_path)
-
-        # Preprocess image
-        img_array = preprocess_image(img_path)
-        original_image_base64 = image_to_base64(img_array)
-
-        # Classify original image
-        predictions = model.predict(img_array)
-        class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
-                      'dog', 'frog', 'horse', 'ship', 'truck']
-
-        top_indices = np.argsort(predictions[0])[::-1][:5]
-        original_results = [{
-            'class': int(i),
-            'class_name': class_names[i] if i < len(class_names) else str(i),
-            'probability': float(predictions[0][i])
-        } for i in top_indices]
-
-        response_data = {
-            'success': True,
-            'original_predictions': original_results,
-            'original_image': original_image_base64
-        }
-
-        # Generate adversarial image if requested
-        if attack_type == 'fgsm':
-            # Get the original predicted class
-            original_class = np.argmax(predictions[0])
-            target_label = np.zeros((1, 10))
-            target_label[0, original_class] = 1  # Using the original class as target
+        # Fetch model from Supabase with error handling
+        try:
+            response = supabase.table("CustomModel").select("fileData").eq("id", model_id).execute()
+            if not response.data:
+                return jsonify({"error": "Model not found"}), 404
             
-            adversarial_image = generate_adversarial_pattern(img_array, target_label, model, epsilon)
-            
-            # Classify adversarial image
-            adv_predictions = model.predict(adversarial_image)
-            
-            top_adv_indices = np.argsort(adv_predictions[0])[::-1][:5]
-            adversarial_results = [{
-                'class': int(i),
-                'class_name': class_names[i] if i < len(class_names) else str(i),
-                'probability': float(adv_predictions[0][i])
-            } for i in top_adv_indices]
+            model_row = response.data[0]  # Get first item instead of using .single()
+            file_data = model_row.get("fileData")
 
-            adversarial_image_base64 = image_to_base64(adversarial_image)
+            if not file_data or not file_data.startswith("\\x"):
+                return jsonify({"error": "Invalid model data format"}), 400
+
+            # Save model to temporary file
+            model_bytes = bytes.fromhex(file_data[2:])
+            model_path = os.path.join("uploads/models", f"{uuid.uuid4().hex}_bulk.h5")
+            os.makedirs(os.path.dirname(model_path), exist_ok=True)
             
-            response_data.update({
-                'adversarial_predictions': adversarial_results,
-                'adversarial_image': adversarial_image_base64,
-                'epsilon': epsilon
+            with open(model_path, "wb") as f:
+                f.write(model_bytes)
+
+            model = load_model(model_path)
+
+            # Initialize counters
+            total_original_conf, total_adv_conf, flip_count = 0, 0, 0
+            total_images = len(images)
+            processed_images = 0
+
+            for img_file in images:
+                try:
+                    # Load and process image
+                    img = Image.open(img_file).convert('RGB').resize((32, 32))
+                    img_array = image.img_to_array(img)
+                    img_array = np.expand_dims(img_array, axis=0) / 255.0
+
+                    # Original prediction
+                    original_pred = model.predict(img_array, verbose=0)
+                    original_class = np.argmax(original_pred[0])
+                    original_conf = float(original_pred[0][original_class])
+
+                    label = np.zeros((1, 10))  # Assuming 10 classes - adjust as needed
+                    label[0, original_class] = 1
+
+                    # Generate adversarial image
+                    if attack_type == 'fgsm':
+                        adversarial_image = generate_adversarial_pattern(img_array, label, model, epsilon)
+                    elif attack_type == 'pgd':
+                        adversarial_image = pgd_attack(
+                            tf.convert_to_tensor(img_array),
+                            tf.convert_to_tensor(label),
+                            model,
+                            epsilon=epsilon,
+                            alpha=alpha,
+                            iters=iterations
+                        )
+                    elif attack_type == 'bim':
+                        adversarial_image = bim_attack(
+                            tf.convert_to_tensor(img_array),
+                            tf.convert_to_tensor(label),
+                            model,
+                            epsilon=epsilon,
+                            alpha=alpha,
+                            iters=iterations
+                        )
+                    else:
+                        adversarial_image = img_array  # no attack
+
+                    # Adversarial prediction
+                    adv_pred = model.predict(adversarial_image, verbose=0)
+                    adv_class = np.argmax(adv_pred[0])
+                    adv_conf = float(adv_pred[0][original_class])  # Confidence in original class
+
+                    # Update counters
+                    total_original_conf += original_conf
+                    total_adv_conf += adv_conf
+                    if original_class != adv_class:
+                        flip_count += 1
+
+                    processed_images += 1
+
+                except Exception as e:
+                    print(f"Error processing image {img_file.filename}: {str(e)}")
+                    continue
+
+            # Calculate averages
+            if processed_images == 0:
+                return jsonify({"error": "No images processed successfully"}), 400
+
+            avg_original_conf = total_original_conf / processed_images
+            avg_adv_conf = total_adv_conf / processed_images
+            avg_drop = avg_original_conf - avg_adv_conf
+            flip_percent = (flip_count / processed_images) * 100
+
+            return jsonify({
+                "success": True,
+                "total_images": total_images,
+                "processed_images": processed_images,
+                "avg_original_confidence": round(avg_original_conf * 100, 2),
+                "avg_adversarial_confidence": round(avg_adv_conf * 100, 2),
+                "avg_confidence_drop": round(avg_drop * 100, 2),
+                "flip_percent": round(flip_percent, 2),
+                "attack_type": attack_type
             })
-        elif attack_type == 'pgd':
-            # Get the original predicted class
-            original_class = np.argmax(predictions[0])
-            target_label = np.zeros((1, 10))
-            target_label[0, original_class] = 1
-            
-            # Get attack parameters from the form
-            pgd_epsilon = float(request.form.get('epsilon', 0.05))
-            pgd_alpha = float(request.form.get('alpha', 0.01))
-            pgd_iters = int(request.form.get('iterations', 40))
-            
-            # Generate adversarial image with PGD
-            adversarial_image = pgd_attack(
-                tf.convert_to_tensor(img_array), 
-                tf.convert_to_tensor(target_label), 
-                model,
-                epsilon=pgd_epsilon,
-                alpha=pgd_alpha,
-                iters=pgd_iters
-            )
-            
-            # Convert to numpy array if it's a tensor
-            if isinstance(adversarial_image, tf.Tensor):
-                adversarial_image = adversarial_image.numpy()
-            
-            # Classify adversarial image
-            adv_predictions = model.predict(adversarial_image)
-            top_adv_indices = np.argsort(adv_predictions[0])[::-1][:5]
-            adversarial_results = [{
-                'class': int(i),
-                'class_name': class_names[i] if i < len(class_names) else str(i),
-                'probability': float(adv_predictions[0][i])
-            } for i in top_adv_indices]
-            
-            # Convert adversarial image to base64 for display
-            adversarial_image_base64 = image_to_base64(adversarial_image)
-            
-            # Update response data with PGD-specific parameters
-            response_data.update({
-                'adversarial_predictions': adversarial_results,
-                'adversarial_image': adversarial_image_base64,
-                'epsilon': pgd_epsilon,
-                'alpha': pgd_alpha,
-                'iterations': pgd_iters,
-                'attack_params': {
-                    'name': 'Projected Gradient Descent (PGD)',
-                    'epsilon': pgd_epsilon,
-                    'alpha': pgd_alpha,
-                    'iterations': pgd_iters
-                }
-        })
 
-        elif attack_type == 'bim':
-            # Get the original predicted class
-            original_class = np.argmax(predictions[0])
-            target_label = np.zeros((1, 10))
-            target_label[0, original_class] = 1
-            
-            # Get attack parameters from the form
-            bim_epsilon = float(request.form.get('epsilon', 0.05))
-            bim_alpha = float(request.form.get('alpha', 0.01))
-            bim_iters = int(request.form.get('iterations', 10))
-            
-            # Generate adversarial image with BIM
-            adversarial_image = bim_attack(
-                tf.convert_to_tensor(img_array),
-                tf.convert_to_tensor(target_label),
-                model,
-                epsilon=bim_epsilon,
-                alpha=bim_alpha,
-                iters=bim_iters
-            )
-        
-            # Classify adversarial image
-            adv_predictions = model.predict(adversarial_image)
-            top_adv_indices = np.argsort(adv_predictions[0])[::-1][:5]
-            adversarial_results = [{
-                'class': int(i),
-                'class_name': class_names[i] if i < len(class_names) else str(i),
-                'probability': float(adv_predictions[0][i])
-            } for i in top_adv_indices]
-            
-            # Convert adversarial image to base64 for display
-            adversarial_image_base64 = image_to_base64(adversarial_image)
-            
-            # Update response data with BIM-specific parameters
-            response_data.update({
-                'adversarial_predictions': adversarial_results,
-                'adversarial_image': adversarial_image_base64,
-                'epsilon': bim_epsilon,
-                'alpha': bim_alpha,
-                'iterations': bim_iters,
-                'attack_params': {
-                    'name': 'Basic Iterative Method (BIM)',
-                    'epsilon': bim_epsilon,
-                    'alpha': bim_alpha,
-                    'iterations': bim_iters
-                }
-        })
-        os.remove(img_path)
-        os.remove(model_path)
-
-        return jsonify(response_data)
+        finally:
+            # Clean up model file
+            if 'model_path' in locals() and os.path.exists(model_path):
+                os.remove(model_path)
 
     except Exception as e:
-        return jsonify({'error': 'Classification failed', 'details': str(e)}), 500
+        return jsonify({
+            "error": "An error occurred during processing",
+            "details": str(e)
+        }), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

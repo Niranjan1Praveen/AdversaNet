@@ -15,7 +15,7 @@
   <body>
     <div class="container py-5">
       <h2 class="mb-4 text-center">
-        Classify with Your <span class="title">Custom Models</span>
+        Classify with Your <span style="color: #0d6efd">Custom Models</span>
       </h2>
 
       {% if models|length == 0 %}
@@ -42,15 +42,18 @@
 
       <form id="uploadForm" enctype="multipart/form-data">
         <div class="mb-3">
-          <label class="form-label">Select an Image</label>
+          <label class="form-label">Select multiple Images</label>
           <input
             type="file"
-            name="image"
+            name="images"
             class="form-control"
             accept="image/*"
+            multiple
             required
           />
+          <div class="form-text">Select multiple images (JPEG, PNG, etc.)</div>
         </div>
+
         <div class="mb-3">
           <label class="form-label">Attack Type</label>
           <select name="attack_type" class="form-select" id="attackTypeSelect">
@@ -61,9 +64,7 @@
           </select>
         </div>
 
-        <!-- Attack Parameters Container -->
         <div id="attackParamsContainer">
-          <!-- Epsilon parameter (common to all attacks) -->
           <div class="mb-3 attack-param" id="epsilonContainer">
             <label class="form-label">Epsilon (perturbation strength)</label>
             <input
@@ -77,8 +78,11 @@
             />
           </div>
 
-          <!-- Alpha parameter (for PGD and BIM) -->
-          <div class="mb-3 attack-param" id="alphaContainer" style="display: none">
+          <div
+            class="mb-3 attack-param"
+            id="alphaContainer"
+            style="display: none"
+          >
             <label class="form-label">Alpha (step size)</label>
             <input
               type="number"
@@ -91,8 +95,11 @@
             />
           </div>
 
-          <!-- Iterations parameter (for PGD and BIM) -->
-          <div class="mb-3 attack-param" id="iterationsContainer" style="display: none">
+          <div
+            class="mb-3 attack-param"
+            id="iterationsContainer"
+            style="display: none"
+          >
             <label class="form-label">Iterations</label>
             <input
               type="number"
@@ -106,31 +113,214 @@
         </div>
 
         <input type="hidden" name="model_id" id="selectedModelId" required />
-        <button type="submit" class="btn btn-primary">Classify Image</button>
+        <button type="submit" class="btn btn-primary w-100 py-2">
+          Classify and Attack
+        </button>
       </form>
 
-      <hr class="my-4" />
+      <div id="resultBox" class="mt-4" style="display: none">
+        <h4 class="mb-4">Aggregated Results</h4>
 
-      <div id="resultBox" style="display: none">
-        <h4 class="mb-4">Prediction Results</h4>
-        <div class="image-container" id="imageComparison"></div>
-        <div class="row mt-4">
-          <div class="col-md-6">
-            <h5 class="mb-3">Original Predictions</h5>
-            <ul id="originalResults" class="list-group"></ul>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card metric-card bg-light">
+              <div class="card-body">
+                <h5 class="card-title">Summary</h5>
+                <div id="summaryStats"></div>
+              </div>
+            </div>
           </div>
-          <div class="col-md-6">
-            <h5 class="mb-3">Adversarial Predictions</h5>
-            <ul
-              id="adversarialResults"
-              class="list-group"
-              style="display: none"
-            ></ul>
+
+          <div class="col-md-6 mb-4">
+            <div class="card metric-card bg-light">
+              <div class="card-body">
+                <h5 class="card-title">Confidence Metrics</h5>
+                <div id="confidenceMetrics"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <div class="card metric-card bg-light">
+              <div class="card-body">
+                <h5 class="card-title">Classification Flip Rate</h5>
+                <div id="flipRate"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <div class="card metric-card bg-light">
+              <div class="card-body">
+                <h5 class="card-title">Average Confidence Drop</h5>
+                <div id="confidenceDrop"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <div class="alert alert-info" id="processingInfo" style="display: none">
+      Processing <span id="fileCount">0</span> images...
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Model selection
+        document.querySelectorAll(".model-card").forEach((card) => {
+          card.addEventListener("click", function () {
+            document
+              .querySelectorAll(".model-card")
+              .forEach((c) => c.classList.remove("selected"));
+            this.classList.add("selected");
+            document.getElementById("selectedModelId").value = this.dataset.id;
+          });
+        });
+
+        // Attack type parameter visibility
+        document
+          .getElementById("attackTypeSelect")
+          .addEventListener("change", function () {
+            const attackType = this.value;
+            document.getElementById("epsilonContainer").style.display =
+              attackType === "none" ? "none" : "block";
+            document.getElementById("alphaContainer").style.display =
+              attackType === "pgd" || attackType === "bim" ? "block" : "none";
+            document.getElementById("iterationsContainer").style.display =
+              attackType === "pgd" || attackType === "bim" ? "block" : "none";
+          });
+
+        // Form submission
+        document
+          .getElementById("uploadForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const files = document.querySelector('input[name="images"]').files;
+            const resultBox = document.getElementById("resultBox");
+            const submitBtn = this.querySelector('button[type="submit"]');
+
+            if (files.length === 0) {
+              alert("Please select at least one image");
+              return;
+            }
+
+            if (!document.getElementById("selectedModelId").value) {
+              alert("Please select a model first");
+              return;
+            }
+
+            // Show processing info
+            document.getElementById("processingInfo").style.display = "block";
+            document.getElementById("fileCount").textContent = files.length;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML =
+              '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+            try {
+              const response = await fetch("/bulk_classify", {
+                method: "POST",
+                body: formData,
+              });
+
+              const data = await response.json();
+
+              if (!response.ok) {
+                throw new Error(data.error || "Unknown error occurred");
+              }
+
+              if (data.success) {
+                displayResults(data);
+                resultBox.style.display = "block";
+              } else {
+                throw new Error(data.error || "Processing failed");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("Error: " + error.message);
+            } finally {
+              document.getElementById("processingInfo").style.display = "none";
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Classify and Attack";
+            }
+          });
+
+        function displayResults(data) {
+          // Summary Stats
+          document.getElementById("summaryStats").innerHTML = `
+                    <p><strong>Total Images:</strong> ${data.total_images}</p>
+                    <p><strong>Processed:</strong> ${data.processed_images}</p>
+                    <p><strong>Attack Type:</strong> ${formatAttackType(
+                      data.attack_type
+                    )}</p>
+                `;
+
+          // Confidence Metrics
+          document.getElementById("confidenceMetrics").innerHTML = `
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Original Confidence:</span>
+                            <span class="metric-value">${data.avg_original_confidence}%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" 
+                                style="width: ${data.avg_original_confidence}%" 
+                                aria-valuenow="${data.avg_original_confidence}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Adversarial Confidence:</span>
+                            <span class="metric-value">${data.avg_adversarial_confidence}%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" 
+                                style="width: ${data.avg_adversarial_confidence}%" 
+                                aria-valuenow="${data.avg_adversarial_confidence}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                `;
+
+          // Flip Rate
+          document.getElementById("flipRate").innerHTML = `
+                    <div class="metric-value ${
+                      data.flip_percent > 0 ? "text-danger" : ""
+                    }">
+                        ${data.flip_percent}%
+                    </div>
+                    <p>Percentage of images where classification changed</p>
+                `;
+
+          // Confidence Drop
+          const dropClass =
+            data.avg_confidence_drop > 0
+              ? "confidence-drop"
+              : "confidence-gain";
+          const dropSign = data.avg_confidence_drop > 0 ? "-" : "+";
+          document.getElementById("confidenceDrop").innerHTML = `
+                    <div class="metric-value ${dropClass}">
+                        ${dropSign}${Math.abs(data.avg_confidence_drop)}%
+                    </div>
+                    <p>Average change in confidence score</p>
+                `;
+        }
+
+        function formatAttackType(type) {
+          const types = {
+            none: "No Attack",
+            fgsm: "FGSM Attack",
+            pgd: "PGD Attack",
+            bim: "BIM Attack",
+          };
+          return types[type] || type;
+        }
+      });
+    </script>
   </body>
 </html>
