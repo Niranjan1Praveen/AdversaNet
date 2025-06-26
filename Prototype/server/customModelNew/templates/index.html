@@ -248,8 +248,8 @@
         function displayResults(data) {
           // Summary Stats
           document.getElementById("summaryStats").innerHTML = `
-                    <p><strong>Total Images:</strong> ${data.total_images}</p>
-                    <p><strong>Processed:</strong> ${data.processed_images}</p>
+                    <p><strong>Total Images Selected:</strong> ${data.total_images}</p>
+                    <p><strong>Total Images Processed:</strong> ${data.processed_images}</p>
                     <p><strong>Attack Type:</strong> ${formatAttackType(
                       data.attack_type
                     )}</p>
@@ -260,7 +260,7 @@
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
                             <span>Average Original Confidence:</span>
-                            <span class="metric-value">${data.avg_original_confidence}%</span>
+                            <span class="metric-value-original">${data.avg_original_confidence}%</span>
                         </div>
                         <div class="progress">
                             <div class="progress-bar bg-indigo-600" role="progressbar" 

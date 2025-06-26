@@ -7,14 +7,18 @@ import { Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { pricingPlans } from "@/assets/data/pricingPlans";
 import Tags from "@/components/ui/tags";
+import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
 
 function Pricing() {
   return (
-    <section className="py-24 px-4 flex items-center justify-center" id="pricing">
+    <section
+      className="py-24 px-4 flex items-center justify-center"
+      id="pricing"
+    >
       <div className="container">
         <div className="flex justify-center">
-                    <Tags title={"Pricing"} />
-                  </div>  
+          <Tags title={"Pricing"} />
+        </div>
         <h3 className="text-3xl font-medium text-center mt-6 max-w-4xl mx-auto">
           Flexible Plans for Researchers, Educators & ML Teams
         </h3>
@@ -55,9 +59,16 @@ function Pricing() {
                       {plan.frequency}
                     </span>
                   </div>
-                  <Button variant={"outline"} className={cn("mt-6 w-full")}>
-                    {plan.buttonText}
-                  </Button>
+                  <RegisterLink>
+                    <Button
+                      variant={"outline"}
+                      className={cn("mt-6 w-full")}
+                      disabled={idx == 0 ? false : true}
+                    >
+                      {plan.buttonText}
+                    </Button>
+                  </RegisterLink>
+
                   <ul className="mt-6 space-y-2 text-sm">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start">

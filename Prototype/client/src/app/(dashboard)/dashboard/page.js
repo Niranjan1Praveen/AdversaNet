@@ -20,7 +20,7 @@ const Homepage = () => {
           <p className="text-muted-foreground max-w-3xl">
             This interactive dashboard helps you visualize, simulate, and
             understand adversarial attacks on deep learning image classifiers.
-            Whether you're a researcher, student, or security engineer, you're
+            Whether you&apos;re a researcher, student, or security engineer, you&apos;re
             in the right place to explore model robustness in action.
           </p>
           <Link href="/dashboard/playground">

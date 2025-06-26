@@ -215,7 +215,7 @@ export default function AdversarialAttackDemo() {
 
   return (
     <main className="p-6">
-      <Toaster richColors/>
+      <Toaster richColors />
       <section className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Main Functionality */}
         <div className="container">
@@ -280,11 +280,11 @@ export default function AdversarialAttackDemo() {
                   <option value="fgsm" className="text-black">
                     Fast Gradient Sign Method (weak)
                   </option>
-                  <option value="pgd" className="text-black">
-                    Projected Gradient Descent (stronger)
-                  </option>
                   <option value="bim" className="text-black">
-                    Basic Iterative Method (strongest)
+                    Basic Iterative Method (stronger)
+                  </option>
+                  <option value="pgd" className="text-black">
+                    Projected Gradient Descent (strongest)
                   </option>
                 </select>
                 <p className="mt-1 text-sm text-gray-500">
