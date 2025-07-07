@@ -160,7 +160,9 @@ const AppCustomClassificationModel = () => {
           </Table>
         )}
       </div>
-      <Button className={"bg-indigo-600 text-primary hover:bg-indigo-700 mt-5"}><Link href={"http://127.0.0.1:5001/"}>Test your Models</Link></Button>
+      {/* <Button className={"bg-indigo-600 text-primary hover:bg-indigo-700 mt-5"}><Link href={"http://127.0.0.1:5001/"}>Test your Models</Link></Button> */}
+      <Button className={"bg-indigo-600 text-primary hover:bg-indigo-700 mt-5"}><Link href={"https://adversanet-custommodels.onrender.com/"}>Test your Models</Link></Button>
+
     </div>
   );
 };
